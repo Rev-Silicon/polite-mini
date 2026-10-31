@@ -34,3 +34,9 @@ How to apply: any freeze that reports "this cycle's" result must preview pending
 
 ## R5 (F22): DUMP_LOAD on phase 2 captures the committed result
 DUMP_LOAD on the RUN phase-2 cycle copies the pending wrap24(psum+mul) into outbuf, so the stream equals the committed psum. The OVF from that copy goes to a local scratch, and c->ovf still commits via the deferred acc. This extends the R4 rule: any snapshot that outlives the cycle (dump capture) must see pending deferred effects. Only raw same-cycle register reads (DBG_PSUM/DBG_MUL) stay pre-commit.
+
+## RTL (2026-10-31)
+- [measured] RTL in rtl/ matches golden 89dad4e cycle-exact on uo_out: 3x200k random cycles per config, 4 configs, 0 mismatches (verify/rtl_sim).
+- [measured] Live flag bit order is uo[4]=OVF uo[5]=illegal uo[6]=dump_busy uo[7]=debug_busy (golden). The old stub comment `{OVF,illegal,dump_busy,debug_busy}` read MSB-first is backwards; first RTL attempt got it wrong.
+- [measured] dump_paused needs no register: it is only observable via DBG_FLAGS on the freezing cycle, where it equals dump_adv.
+- uo_out is registered (pure function of post-edge state) — clean pad timing.

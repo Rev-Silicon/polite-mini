@@ -1,0 +1,12 @@
+a0_outbuf_place0 seed1 PASS cycles=200000 mismatches=0
+a0_outbuf_place0 seed2 PASS cycles=200000 mismatches=0
+a0_outbuf_place0 seed3 PASS cycles=200000 mismatches=0
+a1_outbuf_place1 seed1 PASS cycles=200000 mismatches=0
+a1_outbuf_place1 seed2 PASS cycles=200000 mismatches=0
+a1_outbuf_place1 seed3 PASS cycles=200000 mismatches=0
+b0_no_outbuf_place0 seed1 PASS cycles=200000 mismatches=0
+b0_no_outbuf_place0 seed2 PASS cycles=200000 mismatches=0
+b0_no_outbuf_place0 seed3 PASS cycles=200000 mismatches=0
+b1_no_outbuf_place1 seed1 PASS cycles=200000 mismatches=0
+b1_no_outbuf_place1 seed2 PASS cycles=200000 mismatches=0
+b1_no_outbuf_place1 seed3 PASS cycles=200000 mismatches=0

@@ -1,0 +1,1042 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.62 (git sha1 7326bb7d6641500ecb285c291a54a662cb1e76cf, clang++ 21.1.2 -fPIC -O3)
+
+-- Running command `read_verilog -sv rtl/pe/polite_pe.sv rtl/ctrl/polite_ctrl.sv rtl/mac/polite_mac.sv rtl/outbuf/polite_outbuf.sv rtl/dbg/polite_dbg.sv rtl/top/tt_um_polite_vneg1.sv ; chparam -set HAS_OUTBUF 1 tt_um_polite_vneg1; synth -top tt_um_polite_vneg1 -flatten; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/pe/polite_pe.sv
+Parsing SystemVerilog input from `rtl/pe/polite_pe.sv' to AST representation.
+Generating RTLIL representation for module `\polite_pe'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/ctrl/polite_ctrl.sv
+Parsing SystemVerilog input from `rtl/ctrl/polite_ctrl.sv' to AST representation.
+Generating RTLIL representation for module `\polite_ctrl'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/mac/polite_mac.sv
+Parsing SystemVerilog input from `rtl/mac/polite_mac.sv' to AST representation.
+Generating RTLIL representation for module `\polite_mac'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/outbuf/polite_outbuf.sv
+Parsing SystemVerilog input from `rtl/outbuf/polite_outbuf.sv' to AST representation.
+Generating RTLIL representation for module `\polite_outbuf'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/dbg/polite_dbg.sv
+Parsing SystemVerilog input from `rtl/dbg/polite_dbg.sv' to AST representation.
+Generating RTLIL representation for module `\polite_dbg'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/top/tt_um_polite_vneg1.sv
+Parsing SystemVerilog input from `rtl/top/tt_um_polite_vneg1.sv' to AST representation.
+Generating RTLIL representation for module `\tt_um_polite_vneg1'.
+Successfully finished Verilog frontend.
+Parameter \HAS_OUTBUF = 1
+
+7. Executing AST frontend in derive mode using pre-parsed AST for module `\tt_um_polite_vneg1'.
+Parameter \HAS_OUTBUF = 1
+Generating RTLIL representation for module `$paramod\tt_um_polite_vneg1\HAS_OUTBUF=32'00000000000000000000000000000001'.
+
+8. Executing SYNTH pass.
+
+8.1. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1.1. Analyzing design hierarchy..
+Top module:  \tt_um_polite_vneg1
+Used module:     \polite_ctrl
+Used module:     \polite_outbuf
+Used module:     \polite_dbg
+Used module:     \polite_pe
+Used module:         \polite_mac
+Parameter \HAS_OUTBUF = 1'1
+Parameter \OP_PLACE = 1'0
+
+8.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\polite_ctrl'.
+Parameter \HAS_OUTBUF = 1'1
+Parameter \OP_PLACE = 1'0
+Generating RTLIL representation for module `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0'.
+Parameter \HAS_OUTBUF = 1'1
+
+8.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\polite_outbuf'.
+Parameter \HAS_OUTBUF = 1'1
+Generating RTLIL representation for module `$paramod\polite_outbuf\HAS_OUTBUF=1'1'.
+
+8.1.4. Analyzing design hierarchy..
+Top module:  \tt_um_polite_vneg1
+Used module:     $paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0
+Used module:     $paramod\polite_outbuf\HAS_OUTBUF=1'1
+Used module:     \polite_dbg
+Used module:     \polite_pe
+Used module:         \polite_mac
+
+8.1.5. Analyzing design hierarchy..
+Top module:  \tt_um_polite_vneg1
+Used module:     $paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0
+Used module:     $paramod\polite_outbuf\HAS_OUTBUF=1'1
+Used module:     \polite_dbg
+Used module:     \polite_pe
+Used module:         \polite_mac
+Removing unused module `\polite_outbuf'.
+Removing unused module `\polite_ctrl'.
+Removed 2 unused modules.
+
+8.2. Executing PROC pass (convert processes to netlists).
+
+8.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+Cleaned up 1 empty switch.
+
+8.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/top/tt_um_polite_vneg1.sv:34$97 in module tt_um_polite_vneg1.
+Marked 3 switch rules as full_case in process $proc$rtl/dbg/polite_dbg.sv:8$78 in module polite_dbg.
+Marked 1 switch rules as full_case in process $proc$rtl/outbuf/polite_outbuf.sv:18$160 in module $paramod\polite_outbuf\HAS_OUTBUF=1'1.
+Marked 3 switch rules as full_case in process $proc$rtl/outbuf/polite_outbuf.sv:8$146 in module $paramod\polite_outbuf\HAS_OUTBUF=1'1.
+Marked 1 switch rules as full_case in process $proc$rtl/ctrl/polite_ctrl.sv:36$140 in module $paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.
+Marked 3 switch rules as full_case in process $proc$rtl/pe/polite_pe.sv:12$3 in module polite_pe.
+Removed a total of 0 dead cases.
+
+8.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 5 assignments to connections.
+
+8.2.4. Executing PROC_INIT pass (extract init attributes).
+
+8.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\tt_um_polite_vneg1.$proc$rtl/top/tt_um_polite_vneg1.sv:34$97'.
+Found async reset \rst_n in `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:18$160'.
+Found async reset \rst_n in `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+Found async reset \rst_n in `\polite_pe.$proc$rtl/pe/polite_pe.sv:12$3'.
+
+8.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~24 debug messages>
+
+8.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\tt_um_polite_vneg1.$proc$rtl/top/tt_um_polite_vneg1.sv:34$97'.
+     1/3: $0\dnib_q[3:0]
+     2/3: $0\fval_q[7:0]
+     3/3: $0\frozen_q[0:0]
+Creating decoders for process `\polite_dbg.$proc$rtl/dbg/polite_dbg.sv:8$78'.
+     1/9: $3\illegal[0:0]
+     2/9: $3\val[7:0]
+     3/9: $3\freeze[0:0]
+     4/9: $2\illegal[0:0]
+     5/9: $2\val[7:0]
+     6/9: $2\freeze[0:0]
+     7/9: $1\val[7:0]
+     8/9: $1\freeze[0:0]
+     9/9: $1\illegal[0:0]
+Creating decoders for process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:18$160'.
+     1/3: $0\g_ob.busy_q[0:0]
+     2/3: $0\g_ob.idx[4:0]
+     3/3: $0\g_ob.buf_q[95:0]
+Creating decoders for process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:8$146'.
+     1/6: $3\g_ob.sub[2:0]
+     2/6: $3\g_ob.pe[1:0]
+     3/6: $2\g_ob.sub[2:0]
+     4/6: $2\g_ob.pe[1:0]
+     5/6: $1\g_ob.sub[2:0]
+     6/6: $1\g_ob.pe[1:0]
+Creating decoders for process `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+     1/6: $0\run_busy[0:0]
+     2/6: $0\debug_busy[0:0]
+     3/6: $0\illegal[0:0]
+     4/6: $0\ovf[0:0]
+     5/6: $0\left[7:0]
+     6/6: $0\top[7:0]
+Creating decoders for process `\polite_pe.$proc$rtl/pe/polite_pe.sv:12$3'.
+     1/2: $0\mul_q[7:0]
+     2/2: $0\psum[23:0]
+
+8.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\polite_dbg.\illegal' from process `\polite_dbg.$proc$rtl/dbg/polite_dbg.sv:8$78'.
+No latch inferred for signal `\polite_dbg.\freeze' from process `\polite_dbg.$proc$rtl/dbg/polite_dbg.sv:8$78'.
+No latch inferred for signal `\polite_dbg.\val' from process `\polite_dbg.$proc$rtl/dbg/polite_dbg.sv:8$78'.
+No latch inferred for signal `$paramod\polite_outbuf\HAS_OUTBUF=1'1.\g_ob.pe' from process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:8$146'.
+No latch inferred for signal `$paramod\polite_outbuf\HAS_OUTBUF=1'1.\g_ob.sub' from process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:8$146'.
+
+8.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\tt_um_polite_vneg1.\frozen_q' using process `\tt_um_polite_vneg1.$proc$rtl/top/tt_um_polite_vneg1.sv:34$97'.
+  created $adff cell `$procdff$359' with positive edge clock and positive level reset.
+Creating register for signal `\tt_um_polite_vneg1.\fval_q' using process `\tt_um_polite_vneg1.$proc$rtl/top/tt_um_polite_vneg1.sv:34$97'.
+  created $adff cell `$procdff$364' with positive edge clock and positive level reset.
+Creating register for signal `\tt_um_polite_vneg1.\dnib_q' using process `\tt_um_polite_vneg1.$proc$rtl/top/tt_um_polite_vneg1.sv:34$97'.
+  created $adff cell `$procdff$369' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_outbuf\HAS_OUTBUF=1'1.\g_ob.buf_q' using process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:18$160'.
+  created $adff cell `$procdff$374' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_outbuf\HAS_OUTBUF=1'1.\g_ob.idx' using process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:18$160'.
+  created $adff cell `$procdff$379' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_outbuf\HAS_OUTBUF=1'1.\g_ob.busy_q' using process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:18$160'.
+  created $adff cell `$procdff$384' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.\top' using process `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+  created $adff cell `$procdff$389' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.\left' using process `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+  created $adff cell `$procdff$394' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.\ovf' using process `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+  created $adff cell `$procdff$399' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.\illegal' using process `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+  created $adff cell `$procdff$404' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.\debug_busy' using process `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+  created $adff cell `$procdff$409' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.\run_busy' using process `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+  created $adff cell `$procdff$414' with positive edge clock and positive level reset.
+Creating register for signal `\polite_pe.\psum' using process `\polite_pe.$proc$rtl/pe/polite_pe.sv:12$3'.
+  created $adff cell `$procdff$419' with positive edge clock and positive level reset.
+Creating register for signal `\polite_pe.\mul_q' using process `\polite_pe.$proc$rtl/pe/polite_pe.sv:12$3'.
+  created $adff cell `$procdff$424' with positive edge clock and positive level reset.
+
+8.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\tt_um_polite_vneg1.$proc$rtl/top/tt_um_polite_vneg1.sv:34$97'.
+Removing empty process `tt_um_polite_vneg1.$proc$rtl/top/tt_um_polite_vneg1.sv:34$97'.
+Found and cleaned up 3 empty switches in `\polite_dbg.$proc$rtl/dbg/polite_dbg.sv:8$78'.
+Removing empty process `polite_dbg.$proc$rtl/dbg/polite_dbg.sv:8$78'.
+Found and cleaned up 6 empty switches in `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:18$160'.
+Removing empty process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:18$160'.
+Found and cleaned up 3 empty switches in `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:8$146'.
+Removing empty process `$paramod\polite_outbuf\HAS_OUTBUF=1'1.$proc$rtl/outbuf/polite_outbuf.sv:8$146'.
+Found and cleaned up 6 empty switches in `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+Removing empty process `$paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.$proc$rtl/ctrl/polite_ctrl.sv:36$140'.
+Found and cleaned up 5 empty switches in `\polite_pe.$proc$rtl/pe/polite_pe.sv:12$3'.
+Removing empty process `polite_pe.$proc$rtl/pe/polite_pe.sv:12$3'.
+Cleaned up 24 empty switches.
+
+8.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+<suppressed ~6 debug messages>
+Optimizing module polite_dbg.
+<suppressed ~1 debug messages>
+Optimizing module $paramod\polite_outbuf\HAS_OUTBUF=1'1.
+<suppressed ~6 debug messages>
+Optimizing module polite_mac.
+Optimizing module $paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.
+<suppressed ~22 debug messages>
+Optimizing module polite_pe.
+<suppressed ~4 debug messages>
+
+8.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module polite_dbg.
+Deleting now unused module $paramod\polite_outbuf\HAS_OUTBUF=1'1.
+Deleting now unused module polite_mac.
+Deleting now unused module $paramod\polite_ctrl\HAS_OUTBUF=1'1\OP_PLACE=1'0.
+Deleting now unused module polite_pe.
+<suppressed ~8 debug messages>
+
+8.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+<suppressed ~15 debug messages>
+
+8.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 29 unused cells and 216 unused wires.
+<suppressed ~36 debug messages>
+
+8.6. Executing CHECK pass (checking for obvious problems).
+Checking module tt_um_polite_vneg1...
+Found and reported 0 problems.
+
+8.7. Executing OPT pass (performing simple optimizations).
+
+8.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 201 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 184 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+<suppressed ~51 debug messages>
+Removed a total of 17 cells.
+
+8.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $flatten\u_dbg.$procmux$179.
+    dead port 2/2 on $mux $flatten\u_dbg.$procmux$188.
+    dead port 2/2 on $mux $flatten\u_dbg.$procmux$197.
+    dead port 2/2 on $mux $flatten\u_dbg.$procmux$208.
+    dead port 2/2 on $mux $flatten\u_dbg.$procmux$219.
+    dead port 2/2 on $mux $flatten\u_dbg.$procmux$230.
+    dead port 1/2 on $mux $flatten\u_ob.$procmux$281.
+    dead port 1/2 on $mux $flatten\u_ob.$procmux$284.
+    dead port 1/2 on $mux $flatten\u_ob.$procmux$290.
+    dead port 1/2 on $mux $flatten\u_ob.$procmux$293.
+    dead port 1/2 on $mux $flatten\u_ob.$procmux$299.
+    dead port 1/2 on $mux $flatten\u_ob.$procmux$305.
+Removed 12 multiplexer ports.
+<suppressed ~111 debug messages>
+
+8.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+    New ctrl vector for $pmux cell $flatten\u_dbg.$procmux$241: { $flatten\u_dbg.$procmux$209_CMP $flatten\u_dbg.$procmux$180_CMP $auto$opt_reduce.cc:137:opt_pmux$434 }
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 1 changes.
+
+8.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 173 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 0 unused cells and 29 unused wires.
+<suppressed ~1 debug messages>
+
+8.7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~99 debug messages>
+
+8.7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 0 changes.
+
+8.7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 173 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.7.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.7.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8.8. Executing FSM pass (extract and optimize FSM).
+
+8.8.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+8.8.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+8.8.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.8.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.8.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.8.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+8.8.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+8.8.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+8.9. Executing OPT pass (performing simple optimizations).
+
+8.9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 173 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~99 debug messages>
+
+8.9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 0 changes.
+
+8.9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 173 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.9.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$369 ($adff) from module tt_um_polite_vneg1 (D = \dnib, Q = \dnib_q).
+Adding EN signal on $procdff$364 ($adff) from module tt_um_polite_vneg1 (D = \dbg_val, Q = \fval_q).
+Adding EN signal on $procdff$359 ($adff) from module tt_um_polite_vneg1 (D = \freeze_now, Q = \frozen_q).
+Adding EN signal on $flatten\u_ob.$procdff$384 ($adff) from module tt_um_polite_vneg1 (D = $flatten\u_ob.$procmux$261_Y, Q = \u_ob.g_ob.busy_q).
+Adding EN signal on $flatten\u_ob.$procdff$379 ($adff) from module tt_um_polite_vneg1 (D = $flatten\u_ob.$procmux$267_Y, Q = \u_ob.g_ob.idx).
+Adding EN signal on $flatten\u_ob.$procdff$374 ($adff) from module tt_um_polite_vneg1 (D = $flatten\u_ob.$procmux$273_Y, Q = \u_ob.g_ob.buf_q).
+Adding EN signal on $flatten\u_ctrl.$procdff$414 ($adff) from module tt_um_polite_vneg1 (D = \g_pe[0].u_pe.mul_en, Q = \u_ctrl.run_busy).
+Adding EN signal on $flatten\u_ctrl.$procdff$409 ($adff) from module tt_um_polite_vneg1 (D = \freeze_now, Q = \u_ctrl.debug_busy).
+Adding EN signal on $flatten\u_ctrl.$procdff$404 ($adff) from module tt_um_polite_vneg1 (D = $flatten\u_ctrl.$procmux$319_Y, Q = \u_ctrl.illegal).
+Adding EN signal on $flatten\u_ctrl.$procdff$399 ($adff) from module tt_um_polite_vneg1 (D = $flatten\u_ctrl.$procmux$325_Y, Q = \u_ctrl.ovf).
+Adding EN signal on $flatten\u_ctrl.$procdff$394 ($adff) from module tt_um_polite_vneg1 (D = $flatten\u_ctrl.$procmux$331_Y, Q = \u_ctrl.left).
+Adding EN signal on $flatten\u_ctrl.$procdff$389 ($adff) from module tt_um_polite_vneg1 (D = $flatten\u_ctrl.$procmux$337_Y, Q = \u_ctrl.top).
+Adding EN signal on $flatten\g_pe[3].u_pe.$procdff$424 ($adff) from module tt_um_polite_vneg1 (D = $flatten\g_pe[3].u_pe.$procmux$344_Y, Q = \g_pe[3].u_pe.mul_q).
+Adding EN signal on $flatten\g_pe[3].u_pe.$procdff$419 ($adff) from module tt_um_polite_vneg1 (D = $flatten\g_pe[3].u_pe.$procmux$351_Y, Q = \g_pe[3].u_pe.psum).
+Adding EN signal on $flatten\g_pe[2].u_pe.$procdff$424 ($adff) from module tt_um_polite_vneg1 (D = $flatten\g_pe[2].u_pe.$procmux$344_Y, Q = \g_pe[2].u_pe.mul_q).
+Adding EN signal on $flatten\g_pe[2].u_pe.$procdff$419 ($adff) from module tt_um_polite_vneg1 (D = $flatten\g_pe[2].u_pe.$procmux$351_Y, Q = \g_pe[2].u_pe.psum).
+Adding EN signal on $flatten\g_pe[1].u_pe.$procdff$424 ($adff) from module tt_um_polite_vneg1 (D = $flatten\g_pe[1].u_pe.$procmux$344_Y, Q = \g_pe[1].u_pe.mul_q).
+Adding EN signal on $flatten\g_pe[1].u_pe.$procdff$419 ($adff) from module tt_um_polite_vneg1 (D = $flatten\g_pe[1].u_pe.$procmux$351_Y, Q = \g_pe[1].u_pe.psum).
+Adding EN signal on $flatten\g_pe[0].u_pe.$procdff$424 ($adff) from module tt_um_polite_vneg1 (D = $flatten\g_pe[0].u_pe.$procmux$344_Y, Q = \g_pe[0].u_pe.mul_q).
+Adding EN signal on $flatten\g_pe[0].u_pe.$procdff$419 ($adff) from module tt_um_polite_vneg1 (D = $flatten\g_pe[0].u_pe.$procmux$351_Y, Q = \g_pe[0].u_pe.psum).
+
+8.9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 20 unused cells and 20 unused wires.
+<suppressed ~21 debug messages>
+
+8.9.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+<suppressed ~16 debug messages>
+
+8.9.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~76 debug messages>
+
+8.9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 0 changes.
+
+8.9.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 184 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 172 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 165 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+<suppressed ~57 debug messages>
+Removed a total of 19 cells.
+
+8.9.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 0 unused cells and 18 unused wires.
+<suppressed ~1 debug messages>
+
+8.9.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.9.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.9.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $ternary$rtl/top/tt_um_polite_vneg1.sv:38$99: { \frozen_q \u_ob.g_ob.busy_q \u_ctrl.illegal \u_ctrl.ovf \dnib_q } -> { 1'0 \u_ob.g_ob.busy_q \u_ctrl.illegal \u_ctrl.ovf \dnib_q }
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~80 debug messages>
+
+8.9.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 0 changes.
+
+8.9.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 165 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.9.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.9.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.9.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.9.23. Finished fast OPT passes. (There is nothing left to do.)
+
+8.10. Executing WREDUCE pass (reducing word size of cells).
+Converting cell tt_um_polite_vneg1.$flatten\g_pe[3].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add) from unsigned to signed.
+Removed top 1 bits (of 25) from port A of cell tt_um_polite_vneg1.$flatten\g_pe[3].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+Removed top 17 bits (of 25) from port B of cell tt_um_polite_vneg1.$flatten\g_pe[3].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+Converting cell tt_um_polite_vneg1.$flatten\g_pe[2].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add) from unsigned to signed.
+Removed top 1 bits (of 25) from port A of cell tt_um_polite_vneg1.$flatten\g_pe[2].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+Removed top 17 bits (of 25) from port B of cell tt_um_polite_vneg1.$flatten\g_pe[2].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+Converting cell tt_um_polite_vneg1.$flatten\g_pe[1].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add) from unsigned to signed.
+Removed top 1 bits (of 25) from port A of cell tt_um_polite_vneg1.$flatten\g_pe[1].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+Removed top 17 bits (of 25) from port B of cell tt_um_polite_vneg1.$flatten\g_pe[1].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+Converting cell tt_um_polite_vneg1.$flatten\g_pe[0].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add) from unsigned to signed.
+Removed top 1 bits (of 25) from port A of cell tt_um_polite_vneg1.$flatten\g_pe[0].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+Removed top 17 bits (of 25) from port B of cell tt_um_polite_vneg1.$flatten\g_pe[0].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+Removed top 1 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_dbg.$procmux$238_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_dbg.$procmux$209_CMP0 ($eq).
+Removed top 26 bits (of 32) from port B of cell tt_um_polite_vneg1.$flatten\u_dbg.$shiftx$rtl/dbg/polite_dbg.sv:14$87 ($shiftx).
+Removed top 26 bits (of 32) from port B of cell tt_um_polite_vneg1.$flatten\u_dbg.$shiftx$rtl/dbg/polite_dbg.sv:13$84 ($shiftx).
+Removed top 27 bits (of 29) from port A of cell tt_um_polite_vneg1.$flatten\u_dbg.$mul$rtl/dbg/polite_dbg.sv:6$72 ($mul).
+Removed top 25 bits (of 29) from port Y of cell tt_um_polite_vneg1.$flatten\u_dbg.$mul$rtl/dbg/polite_dbg.sv:6$72 ($mul).
+Removed top 1 bits (of 2) from mux cell tt_um_polite_vneg1.$flatten\u_ob.$procmux$287 ($mux).
+Removed top 4 bits (of 5) from port B of cell tt_um_polite_vneg1.$flatten\u_ob.$add$rtl/outbuf/polite_outbuf.sv:21$164 ($add).
+Removed top 26 bits (of 32) from port B of cell tt_um_polite_vneg1.$flatten\u_ob.$shiftx$rtl/outbuf/polite_outbuf.sv:16$158 ($shiftx).
+Removed top 27 bits (of 29) from port A of cell tt_um_polite_vneg1.$flatten\u_ob.$mul$rtl/outbuf/polite_outbuf.sv:15$153 ($mul).
+Removed top 25 bits (of 29) from port Y of cell tt_um_polite_vneg1.$flatten\u_ob.$mul$rtl/outbuf/polite_outbuf.sv:15$153 ($mul).
+Removed top 2 bits (of 5) from port B of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:12$152 ($sub).
+Removed top 2 bits (of 5) from port Y of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:12$152 ($sub).
+Removed top 2 bits (of 5) from port A of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:12$152 ($sub).
+Removed top 2 bits (of 5) from port B of cell tt_um_polite_vneg1.$flatten\u_ob.$ge$rtl/outbuf/polite_outbuf.sv:12$151 ($ge).
+Removed top 1 bits (of 5) from port B of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:11$150 ($sub).
+Removed top 2 bits (of 5) from port Y of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:11$150 ($sub).
+Removed top 2 bits (of 5) from port A of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:11$150 ($sub).
+Removed top 1 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:11$150 ($sub).
+Removed top 1 bits (of 5) from port B of cell tt_um_polite_vneg1.$flatten\u_ob.$ge$rtl/outbuf/polite_outbuf.sv:11$149 ($ge).
+Removed top 2 bits (of 5) from port Y of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:10$148 ($sub).
+Removed top 2 bits (of 5) from port A of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:10$148 ($sub).
+Removed top 3 bits (of 5) from port B of cell tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:10$148 ($sub).
+Removed top 3 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_ctrl.$eq$rtl/ctrl/polite_ctrl.sv:40$142 ($eq).
+Removed top 1 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_ctrl.$eq$rtl/ctrl/polite_ctrl.sv:23$119 ($eq).
+Removed top 1 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_ctrl.$eq$rtl/ctrl/polite_ctrl.sv:22$117 ($eq).
+Removed top 2 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_ctrl.$eq$rtl/ctrl/polite_ctrl.sv:19$109 ($eq).
+Removed top 2 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_ctrl.$eq$rtl/ctrl/polite_ctrl.sv:18$106 ($eq).
+Removed top 2 bits (of 4) from port B of cell tt_um_polite_vneg1.$flatten\u_ctrl.$eq$rtl/ctrl/polite_ctrl.sv:13$100 ($eq).
+Removed top 24 bits (of 32) from port B of cell tt_um_polite_vneg1.$flatten\u_dbg.$shiftx$rtl/dbg/polite_dbg.sv:6$74 ($shiftx).
+Removed top 25 bits (of 32) from wire tt_um_polite_vneg1.$flatten\u_dbg.$add$rtl/dbg/polite_dbg.sv:6$73_Y.
+Removed top 1 bits (of 2) from wire tt_um_polite_vneg1.$flatten\u_ob.$3\g_ob.pe[1:0].
+Removed top 25 bits (of 32) from wire tt_um_polite_vneg1.$flatten\u_ob.$add$rtl/outbuf/polite_outbuf.sv:15$154_Y.
+Removed top 1 bits (of 4) from wire tt_um_polite_vneg1.$flatten\u_ob.$shiftx$rtl/outbuf/polite_outbuf.sv:16$158_Y.
+Removed top 2 bits (of 5) from wire tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:10$148_Y.
+Removed top 2 bits (of 5) from wire tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:11$150_Y.
+Removed top 2 bits (of 5) from wire tt_um_polite_vneg1.$flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:12$152_Y.
+Removed top 2 bits (of 8) from wire tt_um_polite_vneg1.flags8.
+
+8.11. Executing PEEPOPT pass (run peephole optimizers).
+right shiftmul pattern in tt_um_polite_vneg1: shift=$flatten\u_dbg.$shiftx$rtl/dbg/polite_dbg.sv:6$74, mul=$flatten\u_dbg.$mul$rtl/dbg/polite_dbg.sv:6$72
+right shiftmul pattern in tt_um_polite_vneg1: shift=$flatten\u_dbg.$shiftx$rtl/dbg/polite_dbg.sv:7$77, mul=$flatten\u_dbg.$mul$rtl/dbg/polite_dbg.sv:6$72
+right shiftmul pattern in tt_um_polite_vneg1: shift=$flatten\u_ob.$shiftx$rtl/outbuf/polite_outbuf.sv:15$155, mul=$flatten\u_ob.$mul$rtl/outbuf/polite_outbuf.sv:15$153
+
+8.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 2 unused cells and 10 unused wires.
+<suppressed ~3 debug messages>
+
+8.13. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module tt_um_polite_vneg1:
+  creating $macc model for $flatten\g_pe[0].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+  creating $macc model for $flatten\g_pe[0].u_pe.\u_mac.$mul$rtl/mac/polite_mac.sv:3$51 ($mul).
+  creating $macc model for $flatten\g_pe[1].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+  creating $macc model for $flatten\g_pe[1].u_pe.\u_mac.$mul$rtl/mac/polite_mac.sv:3$51 ($mul).
+  creating $macc model for $flatten\g_pe[2].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+  creating $macc model for $flatten\g_pe[2].u_pe.\u_mac.$mul$rtl/mac/polite_mac.sv:3$51 ($mul).
+  creating $macc model for $flatten\g_pe[3].u_pe.$add$rtl/pe/polite_pe.sv:9$1 ($add).
+  creating $macc model for $flatten\g_pe[3].u_pe.\u_mac.$mul$rtl/mac/polite_mac.sv:3$51 ($mul).
+  creating $macc model for $flatten\u_ob.$add$rtl/outbuf/polite_outbuf.sv:21$164 ($add).
+  creating $macc model for $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:10$148 ($sub).
+  creating $macc model for $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:11$150 ($sub).
+  creating $macc model for $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:12$152 ($sub).
+  creating $alu model for $macc $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:12$152.
+  creating $alu model for $macc $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:11$150.
+  creating $alu model for $macc $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:10$148.
+  creating $alu model for $macc $flatten\u_ob.$add$rtl/outbuf/polite_outbuf.sv:21$164.
+  creating $alu model for $macc $flatten\g_pe[3].u_pe.$add$rtl/pe/polite_pe.sv:9$1.
+  creating $alu model for $macc $flatten\g_pe[2].u_pe.$add$rtl/pe/polite_pe.sv:9$1.
+  creating $alu model for $macc $flatten\g_pe[1].u_pe.$add$rtl/pe/polite_pe.sv:9$1.
+  creating $alu model for $macc $flatten\g_pe[0].u_pe.$add$rtl/pe/polite_pe.sv:9$1.
+  creating $macc cell for $flatten\g_pe[1].u_pe.\u_mac.$mul$rtl/mac/polite_mac.sv:3$51: $auto$alumacc.cc:382:replace_macc$525
+  creating $macc cell for $flatten\g_pe[2].u_pe.\u_mac.$mul$rtl/mac/polite_mac.sv:3$51: $auto$alumacc.cc:382:replace_macc$526
+  creating $macc cell for $flatten\g_pe[0].u_pe.\u_mac.$mul$rtl/mac/polite_mac.sv:3$51: $auto$alumacc.cc:382:replace_macc$527
+  creating $macc cell for $flatten\g_pe[3].u_pe.\u_mac.$mul$rtl/mac/polite_mac.sv:3$51: $auto$alumacc.cc:382:replace_macc$528
+  creating $alu model for $flatten\u_ctrl.$ge$rtl/ctrl/polite_ctrl.sv:27$130 ($ge): new $alu
+  creating $alu model for $flatten\u_ob.$ge$rtl/outbuf/polite_outbuf.sv:10$147 ($ge): new $alu
+  creating $alu model for $flatten\u_ob.$ge$rtl/outbuf/polite_outbuf.sv:11$149 ($ge): new $alu
+  creating $alu model for $flatten\u_ob.$ge$rtl/outbuf/polite_outbuf.sv:12$151 ($ge): new $alu
+  creating $alu cell for $flatten\u_ob.$ge$rtl/outbuf/polite_outbuf.sv:12$151: $auto$alumacc.cc:512:replace_alu$533
+  creating $alu cell for $flatten\u_ob.$ge$rtl/outbuf/polite_outbuf.sv:11$149: $auto$alumacc.cc:512:replace_alu$546
+  creating $alu cell for $flatten\u_ob.$ge$rtl/outbuf/polite_outbuf.sv:10$147: $auto$alumacc.cc:512:replace_alu$559
+  creating $alu cell for $flatten\u_ctrl.$ge$rtl/ctrl/polite_ctrl.sv:27$130: $auto$alumacc.cc:512:replace_alu$572
+  creating $alu cell for $flatten\g_pe[0].u_pe.$add$rtl/pe/polite_pe.sv:9$1: $auto$alumacc.cc:512:replace_alu$585
+  creating $alu cell for $flatten\g_pe[1].u_pe.$add$rtl/pe/polite_pe.sv:9$1: $auto$alumacc.cc:512:replace_alu$588
+  creating $alu cell for $flatten\g_pe[2].u_pe.$add$rtl/pe/polite_pe.sv:9$1: $auto$alumacc.cc:512:replace_alu$591
+  creating $alu cell for $flatten\g_pe[3].u_pe.$add$rtl/pe/polite_pe.sv:9$1: $auto$alumacc.cc:512:replace_alu$594
+  creating $alu cell for $flatten\u_ob.$add$rtl/outbuf/polite_outbuf.sv:21$164: $auto$alumacc.cc:512:replace_alu$597
+  creating $alu cell for $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:10$148: $auto$alumacc.cc:512:replace_alu$600
+  creating $alu cell for $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:11$150: $auto$alumacc.cc:512:replace_alu$603
+  creating $alu cell for $flatten\u_ob.$sub$rtl/outbuf/polite_outbuf.sv:12$152: $auto$alumacc.cc:512:replace_alu$606
+  created 12 $alu and 4 $macc cells.
+
+8.14. Executing SHARE pass (SAT-based resource sharing).
+
+8.15. Executing OPT pass (performing simple optimizations).
+
+8.15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 183 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~80 debug messages>
+
+8.15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 0 changes.
+
+8.15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 183 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+8.15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~80 debug messages>
+
+8.15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 0 changes.
+
+8.15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 183 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.15.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.15.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8.16. Executing MEMORY pass.
+
+8.16.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+8.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+8.16.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+8.16.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+8.16.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+8.16.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.16.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+8.16.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+8.16.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.16.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+8.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.18. Executing OPT pass (performing simple optimizations).
+
+8.18.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+<suppressed ~30 debug messages>
+
+8.18.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 175 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 169 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+<suppressed ~18 debug messages>
+Removed a total of 6 cells.
+
+8.18.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.18.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 0 unused cells and 28 unused wires.
+<suppressed ~1 debug messages>
+
+8.18.5. Finished fast OPT passes.
+
+8.19. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+8.20. Executing OPT pass (performing simple optimizations).
+
+8.20.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.20.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 169 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.20.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~50 debug messages>
+
+8.20.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+    Consolidated identical input bits for $mux cell $flatten\u_dbg.$procmux$217:
+      Old ports: A={ 2'10 \u_ob.g_ob.busy_q \u_ctrl.run_busy 1'1 \u_ob.g_ob.busy_q \u_ctrl.illegal \u_dbg.flags8 [0] }, B=8'00000000, Y=$flatten\u_dbg.$2\val[7:0]
+      New ports: A={ \u_ctrl.run_busy 1'1 \u_ob.g_ob.busy_q \u_ctrl.illegal \u_dbg.flags8 [0] }, B=5'00000, Y=$flatten\u_dbg.$2\val[7:0] [4:0]
+      New connections: $flatten\u_dbg.$2\val[7:0] [7:5] = { $flatten\u_dbg.$2\val[7:0] [3] 1'0 $flatten\u_dbg.$2\val[7:0] [2] }
+    Consolidated identical input bits for $mux cell $flatten\u_ob.$procmux$278:
+      Old ports: A=\u_ob.g_ob.idx [2:0], B={ $auto$wreduce.cc:514:run$523 [2:1] \u_ob.g_ob.idx [0] }, Y=$flatten\u_ob.$3\g_ob.sub[2:0]
+      New ports: A=\u_ob.g_ob.idx [2:1], B=$auto$wreduce.cc:514:run$523 [2:1], Y=$flatten\u_ob.$3\g_ob.sub[2:0] [2:1]
+      New connections: $flatten\u_ob.$3\g_ob.sub[2:0] [0] = \u_ob.g_ob.idx [0]
+  Optimizing cells in module \tt_um_polite_vneg1.
+    Consolidated identical input bits for $mux cell $flatten\u_ob.$procmux$296:
+      Old ports: A=$flatten\u_ob.$3\g_ob.sub[2:0], B={ $auto$wreduce.cc:514:run$522 [2] \u_ob.g_ob.idx [1:0] }, Y=$flatten\u_ob.$2\g_ob.sub[2:0]
+      New ports: A=$flatten\u_ob.$3\g_ob.sub[2:0] [2:1], B={ $auto$wreduce.cc:514:run$522 [2] \u_ob.g_ob.idx [1] }, Y=$flatten\u_ob.$2\g_ob.sub[2:0] [2:1]
+      New connections: $flatten\u_ob.$2\g_ob.sub[2:0] [0] = \u_ob.g_ob.idx [0]
+  Optimizing cells in module \tt_um_polite_vneg1.
+    Consolidated identical input bits for $mux cell $flatten\u_ob.$procmux$308:
+      Old ports: A=$flatten\u_ob.$2\g_ob.sub[2:0], B={ $auto$wreduce.cc:514:run$521 [2:1] \u_ob.g_ob.idx [0] }, Y=\u_ob.g_ob.sub
+      New ports: A=$flatten\u_ob.$2\g_ob.sub[2:0] [2:1], B=$auto$wreduce.cc:514:run$521 [2:1], Y=\u_ob.g_ob.sub [2:1]
+      New connections: \u_ob.g_ob.sub [0] = \u_ob.g_ob.idx [0]
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 4 changes.
+
+8.20.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 169 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.20.6. Executing OPT_SHARE pass.
+
+8.20.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.20.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.20.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.20.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.20.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tt_um_polite_vneg1..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~50 debug messages>
+
+8.20.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tt_um_polite_vneg1.
+Performed a total of 0 changes.
+
+8.20.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 169 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Removed a total of 0 cells.
+
+8.20.14. Executing OPT_SHARE pass.
+
+8.20.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.20.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+
+8.20.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+
+8.20.18. Finished fast OPT passes. (There is nothing left to do.)
+
+8.21. Executing TECHMAP pass (map to technology primitives).
+
+8.21.1. Executing Verilog-2005 frontend: /nix/store/f1q0w7rd0a4ny4hqvfxlhs4cmariidcy-yosys-0.62/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/nix/store/f1q0w7rd0a4ny4hqvfxlhs4cmariidcy-yosys-0.62/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+8.21.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$7e708ae28ab761f11d0fb59d3ffc72f6a4baf5d9\_90_alu for cells of type $alu.
+Using template $paramod$fc972a7a46956c1788f3cb5257b53c8f1df2d0cc\_90_alu for cells of type $alu.
+Using template $paramod$ba698a254f9a5947e85cbe7beae6b161eefc5386\_90_alu for cells of type $alu.
+Using template $paramod$672a140277c71df8314410f22acc08d55222c3c7\_90_alu for cells of type $alu.
+Using template $paramod$8033dc29391d45a5d3cc663b427fac326fdb7f57\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$740b056ede97228d3eae64ea2fdc81f0a33e0fe7\_90_alu for cells of type $alu.
+Using template $paramod$2116a631f856d4d4902c2618dca73dafa3b8c9c0\_90_alu for cells of type $alu.
+Using template $paramod$5ccf584370207a3ccc3032757a8e590623d4de56\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \u_ctrl.left [3:0] * \u_ctrl.top [3:0] (4x4 bits, signed)
+  add \u_ctrl.left [7:4] * \u_ctrl.top [7:4] (4x4 bits, signed)
+  add \u_ctrl.left [3:0] * \u_ctrl.top [7:4] (4x4 bits, signed)
+  add \u_ctrl.left [7:4] * \u_ctrl.top [3:0] (4x4 bits, signed)
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$c5c783b17ab1d780abfad8cfe6563a0a7b47a3b0\_90_pmux for cells of type $pmux.
+Using template $paramod$d629d85c8826a74239b9178d1930215a43b0ceb0\_90_pmux for cells of type $pmux.
+Using extmapper simplemap for cells of type $eq.
+Using template $paramod$constmap:37b3cc4e06391b7a7ef418215dc52e2abb59f048$paramod$282e2f6c0b1116d84b8f8102ddacd7ff760b6794\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$e830d104b5de63a966ae948f6aff012e63986700\_90_pmux for cells of type $pmux.
+Using template $paramod$constmap:5b7ce9a4f40160397f7ded6b9221b5c39dd59abf$paramod$458dcc41a3f456a89dcf1397f4d7cfaadbe91c89\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$constmap:2a9e242831cf20e554fa0cebd87bd43397156fd8$paramod$1e55a851c8b7e77f4f821a4e3d4e704d5280356c\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$constmap:4fadb1dcf9e1d4d7e8f2f04a242b366a563ec2b8$paramod$75f12284c389fc9f9aafa93ff334502becc1031e\_90_shift_shiftx for cells of type $shiftx.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_not.
+Using template $paramod$constmap:ad2de7285ec034361f6b12dc3166aa2b85abe7c0$paramod$b91fa698eefc347770feec23424bd9c909d238ae\_90_shift_shiftx for cells of type $shiftx.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $logic_or.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001000 for cells of type $fa.
+Using template $paramod$a1bc51c02ce12ac21eb18988e83292af48ed7d72\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000011001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000011001 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001000 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~3298 debug messages>
+
+8.22. Executing OPT pass (performing simple optimizations).
+
+8.22.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+<suppressed ~2296 debug messages>
+
+8.22.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 3137 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 3027 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 3010 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 3001 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 2993 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 2989 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+<suppressed ~444 debug messages>
+Removed a total of 148 cells.
+
+8.22.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.22.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 712 unused cells and 1045 unused wires.
+<suppressed ~713 debug messages>
+
+8.22.5. Finished fast OPT passes.
+
+8.23. Executing ABC pass (technology mapping using ABC).
+
+8.23.1. Extracting gate netlist of module `\tt_um_polite_vneg1' to `<abc-temp-dir>/input.blif'..
+Replacing 12 occurrences of constant undef bits with constant zero bits
+
+8.23.1.1. Executed ABC.
+Extracted 2004 gates and 2286 wires to a netlist network with 279 inputs and 278 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: ======== ABC command line "source <abc-temp-dir>/abc.script"
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library /tmp/yosys-abc-xyvjAK/stdcells.genlib 
+ABC: + strash 
+ABC: + dretime 
+ABC: + map 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+8.23.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:       85
+ABC RESULTS:            ANDNOT cells:      790
+ABC RESULTS:               MUX cells:      357
+ABC RESULTS:              NAND cells:      129
+ABC RESULTS:               NOR cells:       89
+ABC RESULTS:               NOT cells:      273
+ABC RESULTS:                OR cells:       68
+ABC RESULTS:             ORNOT cells:       79
+ABC RESULTS:              XNOR cells:      106
+ABC RESULTS:               XOR cells:      240
+ABC RESULTS:        internal signals:     1729
+ABC RESULTS:           input signals:      279
+ABC RESULTS:          output signals:      278
+Removing temp directory.
+Removing global temp directory.
+
+8.24. Executing OPT pass (performing simple optimizations).
+
+8.24.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tt_um_polite_vneg1.
+<suppressed ~190 debug messages>
+
+8.24.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tt_um_polite_vneg1'.
+Computing hashes of 2489 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+Computing hashes of 2485 cells of `\tt_um_polite_vneg1'.
+Finding duplicate cells in `\tt_um_polite_vneg1'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+8.24.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.24.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tt_um_polite_vneg1..
+Removed 4 unused cells and 977 unused wires.
+<suppressed ~61 debug messages>
+
+8.24.5. Finished fast OPT passes.
+
+8.25. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `tt_um_polite_vneg1'. Setting top module to tt_um_polite_vneg1.
+
+8.25.1. Analyzing design hierarchy..
+Top module:  \tt_um_polite_vneg1
+
+8.25.2. Analyzing design hierarchy..
+Top module:  \tt_um_polite_vneg1
+Removed 0 unused modules.
+
+8.26. Printing statistics.
+
+=== tt_um_polite_vneg1 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2300 wires
+     2980 wire bits
+      115 public wires
+      795 public wire bits
+        8 ports
+       43 port bits
+     2481 cells
+      790   $_ANDNOT_
+       85   $_AND_
+      262   $_DFFE_PN0P_
+      357   $_MUX_
+      128   $_NAND_
+       88   $_NOR_
+      269   $_NOT_
+       77   $_ORNOT_
+       68   $_OR_
+      106   $_XNOR_
+      240   $_XOR_
+       11   $scopeinfo
+
+8.27. Executing CHECK pass (checking for obvious problems).
+Checking module tt_um_polite_vneg1...
+Found and reported 0 problems.
+
+9. Printing statistics.
+
+=== tt_um_polite_vneg1 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2300 wires
+     2980 wire bits
+      115 public wires
+      795 public wire bits
+        8 ports
+       43 port bits
+     2481 cells
+      790   $_ANDNOT_
+       85   $_AND_
+      262   $_DFFE_PN0P_
+      357   $_MUX_
+      128   $_NAND_
+       88   $_NOR_
+      269   $_NOT_
+       77   $_ORNOT_
+       68   $_OR_
+      106   $_XNOR_
+      240   $_XOR_
+       11   $scopeinfo
+
+End of script. Logfile hash: de14161485, CPU: user 0.25s system 0.02s, MEM: 45.39 MB peak
+Yosys 0.62 (git sha1 7326bb7d6641500ecb285c291a54a662cb1e76cf, clang++ 21.1.2 -fPIC -O3)
+Time spent: 19% 1x abc (0 sec), 15% 25x opt_clean (0 sec), ...

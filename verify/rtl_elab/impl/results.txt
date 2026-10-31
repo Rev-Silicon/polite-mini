@@ -1,0 +1,4 @@
+a0_outbuf_place0 iverilog=PASS verilator=PASS
+a1_outbuf_place1 iverilog=PASS verilator=PASS
+b0_no_outbuf_place0 iverilog=PASS verilator=PASS
+b1_no_outbuf_place1 iverilog=PASS verilator=PASS
