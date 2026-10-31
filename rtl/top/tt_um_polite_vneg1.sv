@@ -1,4 +1,5 @@
-// POLITE V(-1) Tiny Tapeout top. ui_in = data, uio_in = instr (all inputs). uo_out registered.
+// POLITE V(-1) Tiny Tapeout top. ui_in = data, uio_in = instr (all inputs).
+// Pad pipeline: ui_in/uio_in sampled into in_d_q/in_i_q (executed next edge); uo_out is a full 8b register (uo_q).
 module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
   input wire [7:0] ui_in, output wire [7:0] uo_out, input wire [7:0] uio_in, output wire [7:0] uio_out,
   output wire [7:0] uio_oe, input wire ena, clk, rst_n);
@@ -8,9 +9,14 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
   logic ovf, illegal, debug_busy, freeze_now, frozen_q, dbg_freeze, dbg_illegal;
   logic dump_busy_q; logic [3:0] dnib;
   logic [95:0] psums, pends; logic [31:0] muls; logic [3:0] povf;
+  logic [7:0] in_d_q, in_i_q, uo_q;
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin in_d_q <= '0; in_i_q <= '0; end      // reset = NOP
+    else if (ena) begin in_d_q <= ui_in; in_i_q <= uio_in; end
+  end
 
   polite_ctrl #(.HAS_OUTBUF(HAS_OUTBUF), .OP_PLACE(OP_PLACE)) u_ctrl (
-    .clk, .rst_n, .ena, .data(ui_in), .instr(uio_in), .dump_adv(dump_busy_q), .pend_ovf_any(|povf),
+    .clk, .rst_n, .ena, .data(in_d_q), .instr(in_i_q), .dump_adv(dump_busy_q), .pend_ovf_any(|povf),
     .had_freeze(frozen_q), .dbg_freeze, .dbg_illegal, .left, .top, .flags8, .run_phase2, .mul_en, .acc_en,
     .clr_pe, .clr_ob, .dump_load, .dump_abort, .dump_hold, .ovf, .illegal, .debug_busy, .freeze_now);
 
@@ -26,7 +32,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
   polite_outbuf #(.HAS_OUTBUF(HAS_OUTBUF)) u_ob (.clk, .rst_n, .ena, .load(dump_load), .abort(dump_abort),
     .clr(clr_ob), .hold(dump_hold), .load_data(run_phase2 ? pends : psums), .nib(dnib), .busy(dump_busy_q));
 
-  polite_dbg u_dbg (.op(uio_in[7:4]), .arg(uio_in[3:0]), .flags8, .left, .top, .data(ui_in), .psums, .pends,
+  polite_dbg u_dbg (.op(in_i_q[7:4]), .arg(in_i_q[3:0]), .flags8, .left, .top, .data(in_d_q), .psums, .pends,
     .muls, .run_phase2, .freeze(dbg_freeze), .illegal(dbg_illegal), .val(dbg_val));
 
   // uo_out is a pure function of post-edge state: frozen value, or live uo[7:4]={debug_busy,dump_busy,illegal,OVF} (uo[4]=OVF, Cast F7)
@@ -35,5 +41,10 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
     if (!rst_n) begin fval_q <= '0; dnib_q <= '0; frozen_q <= 1'b0; end
     else if (ena) begin frozen_q <= freeze_now; fval_q <= dbg_val; dnib_q <= dnib; end
   end
-  assign uo_out = frozen_q ? fval_q : {debug_busy, dump_busy_q, illegal, ovf, dnib_q};
+  // pad register: loaded every edge from the core's post-edge view, so nothing pad-facing is combinational
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) uo_q <= '0;
+    else if (ena) uo_q <= frozen_q ? fval_q : {debug_busy, dump_busy_q, illegal, ovf, dnib_q};
+  end
+  assign uo_out = uo_q;
 endmodule

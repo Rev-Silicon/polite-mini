@@ -9,7 +9,9 @@ typedef struct {
   int ovf, illegal, run_busy, dump_busy, debug_busy, dump_paused;
   int32_t outbuf[4]; int dump_idx; /* nibble index 0..23 */
   int frozen; uint8_t frozen_val;
+  uint8_t in_d_q, in_i_q, uo_q; /* pad pipeline regs (input flops + registered uo_out) */
 } chip_t;
 void chip_reset(chip_t *c, int has_outbuf, int op_place);
-uint8_t chip_step(chip_t *c, uint8_t ui_in, uint8_t uio_in); /* returns uo_out */
+uint8_t chip_step(chip_t *c, uint8_t ui_in, uint8_t uio_in); /* pin level: returns uo_out after this edge (2-edge latency) */
+uint8_t chip_core_step(chip_t *c, uint8_t d, uint8_t ins); /* core semantics, no pad regs (adversarial R1-R6 target) */
 #endif

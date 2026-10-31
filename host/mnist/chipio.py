@@ -10,7 +10,8 @@ class Chip(ctypes.Structure):
                 ("last_in", ctypes.c_uint8), ("last_instr", ctypes.c_uint8), ("psum", ctypes.c_int32 * 4), ("mul", ctypes.c_int16 * 4),
                 ("ovf", ctypes.c_int), ("illegal", ctypes.c_int), ("run_busy", ctypes.c_int), ("dump_busy", ctypes.c_int),
                 ("debug_busy", ctypes.c_int), ("dump_paused", ctypes.c_int), ("outbuf", ctypes.c_int32 * 4), ("dump_idx", ctypes.c_int),
-                ("frozen", ctypes.c_int), ("frozen_val", ctypes.c_uint8)]
+                ("frozen", ctypes.c_int), ("frozen_val", ctypes.c_uint8),
+                ("in_d_q", ctypes.c_uint8), ("in_i_q", ctypes.c_uint8), ("uo_q", ctypes.c_uint8)]
 
 def _lib():
     src = os.path.join(ROOT, "golden", "chip.c")
@@ -37,16 +38,22 @@ class Driver:
         L, T = pack(*a2), pack(*b2)
         first, second = (T, L) if self.P == 0 else (L, T)
         self.step(first, LOAD); self.step(second, LOAD); self.step(0, RUN); self.step(0, NOP)  # NOP = RUN cycle 2
-    def flags(self): return self.step(0, DBG_FLAGS)
+    LAT = 2  # pad pipeline: input flop + registered uo_out -> result of op n appears on step n+2
+    def flags(self): return self.query([(0, DBG_FLAGS)])[0]
+    def query(self, ops):
+        """Issue ops, then LAT NOPs; return the uo_out produced for each op (aligned for pad latency)."""
+        outs = [self.step(d, i) for d, i in ops] + [self.step(0, NOP) for _ in range(self.LAT)]
+        return outs[self.LAT:]
     def read_tile(self):
         """2x2 int32 tile [[(1,1),(1,2)],[(2,1),(2,2)]]. cfg A: DUMP_LOAD stream; cfg B: DBG_PSUM bytes."""
         raw = [0] * 4
         if self.A:
-            self.step(0, DUMP_LOAD)
-            for n in range(24): raw[n // 6] |= (self.step(0, NOP) & 0xF) << (4 * (n % 6))
+            o = self.query([(0, DUMP_LOAD)] + [(0, NOP)] * 24)[1:]
+            for n in range(24): raw[n // 6] |= (o[n] & 0xF) << (4 * (n % 6))
         else:
+            o = self.query([(0, DBG_PSUM | k | (b << 2)) for k in range(4) for b in range(3)])
             for k in range(4):
-                for b in range(3): raw[k] |= self.step(0, DBG_PSUM | k | (b << 2)) << (8 * b)
+                for b in range(3): raw[k] |= o[3 * k + b] << (8 * b)
         t = [[0, 0], [0, 0]]
         for k in range(4): t[PR[k] - 1][PC[k] - 1] = ((raw[k] & 0xFFFFFF) ^ 0x800000) - 0x800000
         return t

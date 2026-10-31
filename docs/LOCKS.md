@@ -16,3 +16,4 @@
 - [assumption] LOAD byte = two int4 lanes {hi=lane1, lo=lane0}. OP_PLACE=0: LOAD moves the old left value to top, and the new byte goes into left. OP_PLACE=1: the bus goes into top, and the old top moves to left.
 - [assumption] PE(i,j) += left[i]*top[j], i,j∈{1,2}.
 - [assumption] A DBG_* read freezes uo_out for 1 cycle (the next cycle) with debug_busy high.
+- [Forge, Alex GO 2026-10-31 timing rev] Pad pipeline: ui_in/uio_in are registered at the top (sampled on edge k, executed on edge k+1), and all 8 uo_out bits come from one register loaded every edge. Pin-level latency is 2 edges: an op applied before edge k shows its result on uo_out after edge k+2. Reset loads NOP into the input flops and 0 into uo_out. Core semantics (R1-R6) are unchanged; golden exposes them as `chip_core_step`, and `chip_step` is the pin-level model.
