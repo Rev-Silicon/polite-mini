@@ -41,7 +41,7 @@ uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
     if(a&8) memset(c->psum,0,sizeof c->psum);
     break; }
   case 0x6: if(a!=0){ c->illegal=1; break; } c->debug_busy=1; if(dump_adv) c->dump_paused=1;
-    { int db=c->dump_busy; c->dump_busy=dump_adv; freeze(c,flags8(c)); c->dump_busy=db; } break; /* busy-at-start for dump (R3-F13); run_busy=1 on phase 2 (R3-F14) */ /* bit3 reads 1 while frozen */
+    { int db=c->dump_busy, po=0; if(run_phase2) for(int k=0;k<4;k++) wrap24((int64_t)c->psum[k]+c->mul[k],&po); c->dump_busy=dump_adv; freeze(c,flags8(c)|(po?1:0)); c->dump_busy=db; } /* R4-F16: OR pending phase-2 OVF into bit0; commit still deferred */ break; /* busy-at-start for dump (R3-F13); run_busy=1 on phase 2 (R3-F14) */ /* bit3 reads 1 while frozen */
   case 0x7: freeze(c,(a&1)?c->top:c->left); break;
   case 0x8: if((a>>2)==3){ c->illegal=1; break; } freeze(c,(uint8_t)(c->psum[a&3]>>(8*(a>>2)))); break;
   case 0x9: freeze(c,(uint8_t)c->mul[a&3]); break;

@@ -23,3 +23,11 @@
 - [Forge fix, Cast R3-F13] DBG_FLAGS reports dump_busy as busy-at-start. On a freeze during an active dump, dump_paused=1, so the frozen bank0 pair is coherent (busy=1, paused=1) even on the final-nibble cycle.
 - [Forge lock, Cast R3-F14] DBG_FLAGS on the RUN phase-2 cycle reports run_busy=1 (in flight), which matches the CLEAR PE collision (F1).
 - [Forge lock, Cast R3-F15] The phase-2 accumulate is deferred until after the opcode switch, before the dump-pause rewind and return. The opcodes on that cycle see run_busy=1 and the pre-acc psum/mul. CLEAR flags clears prior OVF, and then the deferred acc may raise a new one, so R2-F11 still holds. The old F9 preview had been dead code.
+
+## R4 (F16/F17): phase-2 debug-read split
+On phase 2 (deferred acc commit), the debug reads behave like this:
+- DBG_PSUM and DBG_MUL return a snapshot taken before the commit, so you see the current registers.
+- DBG_ADD returns the pending wrap24(psum+mul).
+- DBG_FLAGS returns busy-at-start plus the pending OVF, which is the OR of wrap24 overflow across all 4 lanes. This is computed locally only. c->ovf still commits with the deferred acc (F11).
+
+How to apply: any freeze that reports "this cycle's" result must preview pending deferred effects. Raw register reads stay pre-commit.

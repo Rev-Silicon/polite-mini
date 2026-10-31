@@ -58,3 +58,10 @@ Suggested fix: F12/F13 should use `dump_adv` in case 0x3 and in flags8, or compu
 - R3-F14 LOCKED (GAP->CHECK): phase-2 DBG_FLAGS run_busy=1, consistent with CLEAR PE.
 - R3-F15 LOCKED (GAP->CHECK): phase-2 accumulate deferred after the switch. DBG_ADD on phase 2 = low(wrap24(pre_psum+mul)), with no OVF side effect. R2-F9b CHECK revised to assert the pending preview.
 - Result: R1 71/0/0, R2 24/0/0, R3 26/0/0, chip_test ALL PASS, MNIST smoke 8/8 on all 4 cfgs.
+
+## Round 4 (vs f80b7f0) — pass=13 fail=1 gap=1
+- **R4-F16 FAIL (HIGH)**: DBG_FLAGS on an overflowing phase-2 cycle freezes flags8 before the deferred accumulate, so bit0 OVF=0 while c->ovf=1 after the step. This contradicts F11 ("phase-2 OVF is real this cycle") and F14 (run_busy shown as in flight). Fix: compute the pending wrap OVF in case 0x6 (same idea as the DBG_ADD preview), or lock pre-commit freeze in LOCKS.md.
+- **R4-F17 GAP**: DBG_PSUM on phase 2 returns the pre-accumulate psum, but DBG_ADD returns the post-accumulate preview. Need a lock saying snapshot-before-commit is intended, or a change to match DBG_ADD.
+- PASS: F18 (CLEAR flags phase-2 non-wrapping, OVF stays 0), F19 (busy RUN ignored, mul kept), cfg B negative 24b byte reconstruct, DUMP_ABORT on final nibble, live uo[4] OVF, DBG_ADD preview == committed, CLEAR 0x5F collide during dump + acc, cfg A DUMP∥RUN DBG_ADD pause, illegal 0xC on phase 2, DBG_FLAGS run_busy=1 vs state 0.
+- Run: `verify/adversarial/run_r4.sh` → `last_run_r4.log`, exit 1.
+- **R4 resolution**: F16 fixed. Case 0x6 now ORs the pending phase-2 OVF, computed as wrap24(psum+mul) across all lanes, into bit0 of the frozen flags. The real c->ovf still commits with the deferred acc, so F11 holds. F17 is now locked as a CHECK. On phase 2, DBG_PSUM and DBG_MUL return the snapshot from before the commit, DBG_ADD returns the pending preview, and DBG_FLAGS returns busy-at-start plus pending OVF. Rerun: pass=15 fail=0 gap=0.
