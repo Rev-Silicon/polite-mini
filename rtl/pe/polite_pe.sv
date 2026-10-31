@@ -4,11 +4,16 @@ module polite_pe (input logic clk, rst_n, ena, mul_en, acc_en, clr,
   input logic signed [3:0] a, b,
   output logic signed [23:0] psum, pend, output logic signed [7:0] mul_q, output logic pend_ovf);
   logic signed [7:0] p;
-  logic signed [24:0] sum;
   polite_mac u_mac (.a(a), .b(b), .p(p));
-  assign sum      = {psum[23], psum} + {{17{mul_q[7]}}, mul_q};
-  assign pend     = sum[23:0];
-  assign pend_ovf = sum[24] ^ sum[23];
+  // wrap24(psum + sext(mul)) as 8b add + carry-select on the upper 16b. Avoids fanning the mul sign bit
+  // out across a 17b sign extension (B0 ss critical path, timing rev 2026-10-31). Upper delta = carry - sign.
+  logic [8:0] lo; logic c, s, up, dn; logic [15:0] hi;
+  assign lo = {1'b0, psum[7:0]} + {1'b0, mul_q[7:0]};
+  assign c = lo[8]; assign s = mul_q[7];
+  assign up = c & ~s; assign dn = ~c & s;
+  assign hi = psum[23:8];
+  assign pend     = {up ? hi + 16'd1 : dn ? hi - 16'd1 : hi, lo[7:0]};
+  assign pend_ovf = (up && hi == 16'h7FFF) || (dn && hi == 16'h8000);
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin psum <= '0; mul_q <= '0; end
     else if (ena) begin
