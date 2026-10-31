@@ -31,3 +31,6 @@ On phase 2 (deferred acc commit), the debug reads behave like this:
 - DBG_FLAGS returns busy-at-start plus the pending OVF, which is the OR of wrap24 overflow across all 4 lanes. This is computed locally only. c->ovf still commits with the deferred acc (F11).
 
 How to apply: any freeze that reports "this cycle's" result must preview pending deferred effects. Raw register reads stay pre-commit.
+
+## R5 (F22): DUMP_LOAD on phase 2 captures the committed result
+DUMP_LOAD on the RUN phase-2 cycle copies the pending wrap24(psum+mul) into outbuf, so the stream equals the committed psum. The OVF from that copy goes to a local scratch, and c->ovf still commits via the deferred acc. This extends the R4 rule: any snapshot that outlives the cycle (dump capture) must see pending deferred effects. Only raw same-cycle register reads (DBG_PSUM/DBG_MUL) stay pre-commit.

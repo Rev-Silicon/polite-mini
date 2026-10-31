@@ -30,7 +30,7 @@ uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
     for(int k=0;k<4;k++) c->mul[k]=lane(c->left,PR[k]-1)*lane(c->top,PC[k]-1);
     c->run_busy=1; break;
   case 0x3: if(!c->has_outbuf||dump_adv){ /* busy at cycle start, incl. final nibble (R3-F12) */ c->illegal=1; break; }
-    memcpy(c->outbuf,c->psum,sizeof c->psum); c->dump_idx=0; c->dump_busy=1; break;
+    if(run_phase2){ for(int k=0;k<4;k++){ int o2=0; c->outbuf[k]=wrap24((int64_t)c->psum[k]+c->mul[k],&o2); } } else memcpy(c->outbuf,c->psum,sizeof c->psum); /* R5-F22: phase-2 captures pending post-acc psum; OVF commits via deferred acc only */ c->dump_idx=0; c->dump_busy=1; break;
   case 0x4: if(!c->has_outbuf){ c->illegal=1; break; } c->dump_busy=0; c->dump_paused=0; break;
   case 0x5: {
     int coll=((a&8)&&(c->run_busy||run_phase2)) /* RUN still in flight on phase 2 */ || ((a&4)&&(dump_adv||!c->has_outbuf)) /* dump busy at cycle start, incl. final nibble */;
