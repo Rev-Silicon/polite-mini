@@ -7,5 +7,10 @@
 - TBD meaning of dump_paused (the model never sets it). How does ena/pause interact with dump?
 - TBD what DBG_ADD shows, plus the byte/PE arg encodings for DBG_PSUM/DBG_MUL.
 - TBD whether CLEAR outbuf in cfg B is a collision (the model treats it as illegal).
-- [assumption] DBG_FLAGS shows debug_busy=0 when it reads itself (snapshot taken before the freeze).
+- [revised 2026-10-31, Cast F5] DBG_FLAGS shows debug_busy=1 while frozen (bit3 reads 1). The old snapshot-before-freeze rule was wrong: the host could never see debug_busy.
 - TBD the live data nibble when no dump is active (0 in the model).
+- [assumption, Cast F1] On the RUN phase-2 cycle the RUN still counts as in flight: CLEAR PE collides (whole CLEAR ignored, illegal set). The phase-2 accumulate still completes.
+- [assumption, Cast F2/F4] A DBG_* that freezes during a dump pauses the stream for that cycle: dump_idx does not move, dump_paused=1, and the stream picks up on the next cycle. No nibbles are lost.
+- [assumption, Cast F3] DBG_PSUM arg[3:2]=3 is illegal (sticky) and does not freeze.
+- [assumption, Cast F6] DBG_ADD(arg[1:0]=PE) = low byte of the next-acc preview, wrap24(psum+mul). It never sets OVF.
+- [assumption, Cast F7] Live flags sit in uo[7:4]: uo[4]=OVF, uo[5]=illegal, uo[6]=dump_busy, uo[7]=debug_busy. This matches DBG_FLAGS bank0[3:0].

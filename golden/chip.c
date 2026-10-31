@@ -14,14 +14,14 @@ static uint8_t flags8(chip_t *c){ return c->ovf|c->illegal<<1|c->dump_busy<<2|c-
 static void freeze(chip_t *c,uint8_t v){ c->frozen=1; c->frozen_val=v; c->debug_busy=1; }
 uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
   int op=ins>>4, a=ins&0xF, had_freeze=c->frozen;
-  c->frozen=0; c->debug_busy=0;
+  c->frozen=0; c->debug_busy=0; c->dump_paused=0;
   c->last_in=d; c->last_instr=ins;
   /* RUN cycle 2: accumulate */
   int run_phase2=c->run_busy;
   if(op==0x2 && run_phase2){ c->illegal=1; op=0x0; } /* RUN while busy: ignore + sticky illegal */
   if(run_phase2){ for(int k=0;k<4;k++) c->psum[k]=wrap24((int64_t)c->psum[k]+c->mul[k],&c->ovf); c->run_busy=0; }
   /* dump stream advances one nibble per cycle */
-  uint8_t dnib=0;
+  uint8_t dnib=0; int dump_adv=c->dump_busy;
   if(c->dump_busy){ int pe=c->dump_idx/6, sh=(c->dump_idx%6)*4; dnib=(c->outbuf[pe]>>sh)&0xF; if(++c->dump_idx==24) c->dump_busy=0; }
   switch(op){
   case 0x0: break;
@@ -34,21 +34,23 @@ uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
     memcpy(c->outbuf,c->psum,sizeof c->psum); c->dump_idx=0; c->dump_busy=1; break;
   case 0x4: if(!c->has_outbuf){ c->illegal=1; break; } c->dump_busy=0; c->dump_paused=0; break;
   case 0x5: {
-    int coll=((a&8)&&c->run_busy) || ((a&4)&&(c->dump_busy||!c->has_outbuf));
+    int coll=((a&8)&&(c->run_busy||run_phase2)) /* RUN still in flight on phase 2 */ || ((a&4)&&(c->dump_busy||!c->has_outbuf));
     if(coll){ c->illegal=1; break; }
     if(a&1){ c->ovf=0; c->illegal=0; }
     if(a&2){ c->left=c->top=0; }
     if(a&4) memset(c->outbuf,0,sizeof c->outbuf);
     if(a&8) memset(c->psum,0,sizeof c->psum);
     break; }
-  case 0x6: if(a!=0){ c->illegal=1; break; } freeze(c,flags8(c)); break;
+  case 0x6: if(a!=0){ c->illegal=1; break; } c->debug_busy=1; if(dump_adv) c->dump_paused=1; freeze(c,flags8(c)); break; /* bit3 reads 1 while frozen */
   case 0x7: freeze(c,(a&1)?c->top:c->left); break;
-  case 0x8: freeze(c,(uint8_t)(c->psum[a&3]>>(8*((a>>2)%3)))); break;
+  case 0x8: if((a>>2)==3){ c->illegal=1; break; } freeze(c,(uint8_t)(c->psum[a&3]>>(8*(a>>2)))); break;
   case 0x9: freeze(c,(uint8_t)c->mul[a&3]); break;
-  case 0xA: freeze(c,0); break; /* TBD from RTL */
+  case 0xA: { int o2=0; freeze(c,(uint8_t)wrap24((int64_t)c->psum[a&3]+c->mul[a&3],&o2)); break; } /* next-acc preview, low byte; no OVF side effect */
   case 0xB: freeze(c,d); break;
   default: c->illegal=1;
   }
+  /* DBG during dump pauses the stream: undo this cycle's advance, resume next cycle */
+  if(c->frozen && dump_adv){ c->dump_idx--; c->dump_busy=1; c->dump_paused=1; }
   if(c->frozen) return c->frozen_val; /* the freeze is visible after this edge */
   uint8_t fl=c->ovf|c->illegal<<1|c->dump_busy<<2|c->debug_busy<<3;
   return (uint8_t)(fl<<4|(dnib&0xF));
@@ -66,9 +68,9 @@ static void test(int A,int P){
   chip_step(&c,0,0x00);
   int L= P? 0x21:0x3F, T= P? 0x3F:0x21;
   for(int k=0;k<4;k++){ int e=4*lane(L,PR[k]-1)*lane(T,PC[k]-1); CHECK(c.psum[k]==e); printf("PE(%d,%d)=%d\n",PR[k],PC[k],c.psum[k]); }
-  o=chip_step(&c,0,0x60); CHECK(o==(0x02|P<<6|A<<7));  printf("DBG_FLAGS=0x%02X\n",o);
+  o=chip_step(&c,0,0x60); CHECK(o==(0x0A|P<<6|A<<7));  printf("DBG_FLAGS=0x%02X\n",o);
   chip_step(&c,0,0x51); CHECK(!c.illegal);
-  o=chip_step(&c,0,0x60); CHECK(o==(P<<6|A<<7));
+  o=chip_step(&c,0,0x60); CHECK(o==(0x08|P<<6|A<<7));
   if(A){
     chip_step(&c,0,0x30); int32_t got[4]={0};
     for(int n=0;n<24;n++){ o=chip_step(&c,0,0x00); got[n/6]|=(o&0xF)<<(4*(n%6)); }
