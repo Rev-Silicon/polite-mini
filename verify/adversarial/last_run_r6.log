@@ -1,0 +1,10 @@
+pass [R6-F22a-outbuf-eq-psum]
+pass [R6-F22a-dbgadd-lowbyte-pe0]
+pass [R6-F22a-stream-24nib-eq-psum]
+pass [R6-F22b-precond-no-ovf]
+pass [R6-F22b-wrapped-outbuf-eq-psum-ovf]
+pass [R6-F22c-idle-memcpy]
+pass [R6-F22c-idle-no-phantom-mul]
+pass [R6-S1-p2-dumpload-legal-busy]
+pass [R6-S2-clear-outbuf-collides]
+R6 pass=9 fail=0
