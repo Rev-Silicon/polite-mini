@@ -19,9 +19,10 @@ uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
   /* RUN cycle 2: accumulate */
   int run_phase2=c->run_busy;
   if(op==0x2 && run_phase2){ c->illegal=1; op=0x0; } /* RUN while busy: ignore + sticky illegal */
-  if(run_phase2){ for(int k=0;k<4;k++) c->psum[k]=wrap24((int64_t)c->psum[k]+c->mul[k],&c->ovf); c->run_busy=0; }
+  int ovf_raised=0; /* OVF raised by this cycle's phase-2 accumulate (survives same-cycle CLEAR flags, R2-F11) */
+  if(run_phase2){ for(int k=0;k<4;k++){ c->psum[k]=wrap24((int64_t)c->psum[k]+c->mul[k],&ovf_raised); c->mul[k]=0; } if(ovf_raised) c->ovf=1; c->run_busy=0; } /* mul consumed (R2-F9) */
   /* dump stream advances one nibble per cycle */
-  uint8_t dnib=0; int dump_adv=c->dump_busy;
+  uint8_t dnib=0; int dump_adv=c->dump_busy; /* busy-at-start: true on final-nibble cycle (R2-F8) */
   if(c->dump_busy){ int pe=c->dump_idx/6, sh=(c->dump_idx%6)*4; dnib=(c->outbuf[pe]>>sh)&0xF; if(++c->dump_idx==24) c->dump_busy=0; }
   switch(op){
   case 0x0: break;
@@ -34,9 +35,9 @@ uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
     memcpy(c->outbuf,c->psum,sizeof c->psum); c->dump_idx=0; c->dump_busy=1; break;
   case 0x4: if(!c->has_outbuf){ c->illegal=1; break; } c->dump_busy=0; c->dump_paused=0; break;
   case 0x5: {
-    int coll=((a&8)&&(c->run_busy||run_phase2)) /* RUN still in flight on phase 2 */ || ((a&4)&&(c->dump_busy||!c->has_outbuf));
+    int coll=((a&8)&&(c->run_busy||run_phase2)) /* RUN still in flight on phase 2 */ || ((a&4)&&(dump_adv||!c->has_outbuf)) /* dump busy at cycle start, incl. final nibble */;
     if(coll){ c->illegal=1; break; }
-    if(a&1){ c->ovf=0; c->illegal=0; }
+    if(a&1){ c->ovf=ovf_raised; c->illegal=0; } /* clears prior OVF; keeps this cycle's phase-2 OVF */
     if(a&2){ c->left=c->top=0; }
     if(a&4) memset(c->outbuf,0,sizeof c->outbuf);
     if(a&8) memset(c->psum,0,sizeof c->psum);
@@ -45,7 +46,7 @@ uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
   case 0x7: freeze(c,(a&1)?c->top:c->left); break;
   case 0x8: if((a>>2)==3){ c->illegal=1; break; } freeze(c,(uint8_t)(c->psum[a&3]>>(8*(a>>2)))); break;
   case 0x9: freeze(c,(uint8_t)c->mul[a&3]); break;
-  case 0xA: { int o2=0; freeze(c,(uint8_t)wrap24((int64_t)c->psum[a&3]+c->mul[a&3],&o2)); break; } /* next-acc preview, low byte; no OVF side effect */
+  case 0xA: { int o2=0; int64_t v=c->psum[a&3]+(c->run_busy?c->mul[a&3]:0); freeze(c,(uint8_t)wrap24(v,&o2)); break; } /* preview psum+mul only while RUN in flight (phase-1 issue); else low(psum); no OVF side effect */
   case 0xB: freeze(c,d); break;
   default: c->illegal=1;
   }

@@ -14,3 +14,8 @@
 - [assumption, Cast F3] DBG_PSUM arg[3:2]=3 is illegal (sticky) and does not freeze.
 - [assumption, Cast F6] DBG_ADD(arg[1:0]=PE) = low byte of the next-acc preview, wrap24(psum+mul). It never sets OVF.
 - [assumption, Cast F7] Live flags sit in uo[7:4]: uo[4]=OVF, uo[5]=illegal, uo[6]=dump_busy, uo[7]=debug_busy. This matches DBG_FLAGS bank0[3:0].
+- [assumption, Cast R2-F8] CLEAR outbuf collides with a dump that was busy at the start of the cycle, including the final-nibble cycle (dump_idx 23->24). Whole CLEAR is ignored, illegal is set, outbuf is unchanged. Same pattern as F1 run_phase2.
+- [assumption, Cast R2-F9, revises F6] mul is consumed (zeroed) by the phase-2 accumulate. DBG_ADD previews wrap24(psum+mul) only while run_busy=1 at opcode time (the cycle after the RUN issue, before phase-2). Otherwise it returns low(psum). It never sets OVF.
+- [Forge lock, R2-F9b] On the phase-2 cycle, DBG_ADD returns low(psum) after the accumulate, which is the result that just completed. There is no separate pre-acc pending view on that cycle.
+- [Forge lock, R2-F10/F10b] Only a freezing DBG pauses the dump. An illegal non-freeze DBG (DBG_PSUM byte3, DBG_FLAGS bank!=0) does not pause: the live nibble still goes out, dump_idx advances, and the stream stays at 24 intact.
+- [Forge lock, R2-F11] An OVF raised by this cycle's phase-2 accumulate survives a same-cycle CLEAR flags. CLEAR flags still clears illegal and any prior OVF.
