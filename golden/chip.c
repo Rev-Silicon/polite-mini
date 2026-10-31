@@ -16,11 +16,9 @@ uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
   int op=ins>>4, a=ins&0xF, had_freeze=c->frozen;
   c->frozen=0; c->debug_busy=0; c->dump_paused=0;
   c->last_in=d; c->last_instr=ins;
-  /* RUN cycle 2: accumulate */
+  /* RUN cycle 2: accumulate is deferred until after the opcode switch (R3-F15) so phase-2 opcodes still see the RUN in flight */
   int run_phase2=c->run_busy;
   if(op==0x2 && run_phase2){ c->illegal=1; op=0x0; } /* RUN while busy: ignore + sticky illegal */
-  int ovf_raised=0; /* OVF raised by this cycle's phase-2 accumulate (survives same-cycle CLEAR flags, R2-F11) */
-  if(run_phase2){ for(int k=0;k<4;k++){ c->psum[k]=wrap24((int64_t)c->psum[k]+c->mul[k],&ovf_raised); c->mul[k]=0; } if(ovf_raised) c->ovf=1; c->run_busy=0; } /* mul consumed (R2-F9) */
   /* dump stream advances one nibble per cycle */
   uint8_t dnib=0; int dump_adv=c->dump_busy; /* busy-at-start: true on final-nibble cycle (R2-F8) */
   if(c->dump_busy){ int pe=c->dump_idx/6, sh=(c->dump_idx%6)*4; dnib=(c->outbuf[pe]>>sh)&0xF; if(++c->dump_idx==24) c->dump_busy=0; }
@@ -31,25 +29,28 @@ uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
     if(!c->has_outbuf && had_freeze){ c->illegal=1; break; } /* cfg B: no RUN during a debug read */
     for(int k=0;k<4;k++) c->mul[k]=lane(c->left,PR[k]-1)*lane(c->top,PC[k]-1);
     c->run_busy=1; break;
-  case 0x3: if(!c->has_outbuf||c->dump_busy){ c->illegal=1; break; }
+  case 0x3: if(!c->has_outbuf||dump_adv){ /* busy at cycle start, incl. final nibble (R3-F12) */ c->illegal=1; break; }
     memcpy(c->outbuf,c->psum,sizeof c->psum); c->dump_idx=0; c->dump_busy=1; break;
   case 0x4: if(!c->has_outbuf){ c->illegal=1; break; } c->dump_busy=0; c->dump_paused=0; break;
   case 0x5: {
     int coll=((a&8)&&(c->run_busy||run_phase2)) /* RUN still in flight on phase 2 */ || ((a&4)&&(dump_adv||!c->has_outbuf)) /* dump busy at cycle start, incl. final nibble */;
     if(coll){ c->illegal=1; break; }
-    if(a&1){ c->ovf=ovf_raised; c->illegal=0; } /* clears prior OVF; keeps this cycle's phase-2 OVF */
+    if(a&1){ c->ovf=0; c->illegal=0; } /* clears prior OVF; deferred phase-2 acc below may raise a new one (R2-F11) */
     if(a&2){ c->left=c->top=0; }
     if(a&4) memset(c->outbuf,0,sizeof c->outbuf);
     if(a&8) memset(c->psum,0,sizeof c->psum);
     break; }
-  case 0x6: if(a!=0){ c->illegal=1; break; } c->debug_busy=1; if(dump_adv) c->dump_paused=1; freeze(c,flags8(c)); break; /* bit3 reads 1 while frozen */
+  case 0x6: if(a!=0){ c->illegal=1; break; } c->debug_busy=1; if(dump_adv) c->dump_paused=1;
+    { int db=c->dump_busy; c->dump_busy=dump_adv; freeze(c,flags8(c)); c->dump_busy=db; } break; /* busy-at-start for dump (R3-F13); run_busy=1 on phase 2 (R3-F14) */ /* bit3 reads 1 while frozen */
   case 0x7: freeze(c,(a&1)?c->top:c->left); break;
   case 0x8: if((a>>2)==3){ c->illegal=1; break; } freeze(c,(uint8_t)(c->psum[a&3]>>(8*(a>>2)))); break;
   case 0x9: freeze(c,(uint8_t)c->mul[a&3]); break;
-  case 0xA: { int o2=0; int64_t v=c->psum[a&3]+(c->run_busy?c->mul[a&3]:0); freeze(c,(uint8_t)wrap24(v,&o2)); break; } /* preview psum+mul only while RUN in flight (phase-1 issue); else low(psum); no OVF side effect */
+  case 0xA: { int o2=0; int64_t v=c->psum[a&3]+(c->run_busy?c->mul[a&3]:0); freeze(c,(uint8_t)wrap24(v,&o2)); break; } /* phase 2: pending next-acc wrap24(psum+mul) before commit (R3-F15); else low(psum); no OVF side effect */
   case 0xB: freeze(c,d); break;
   default: c->illegal=1;
   }
+  /* deferred RUN phase-2 accumulate; mul consumed (R2-F9) */
+  if(run_phase2){ int o=0; for(int k=0;k<4;k++){ c->psum[k]=wrap24((int64_t)c->psum[k]+c->mul[k],&o); c->mul[k]=0; } if(o) c->ovf=1; c->run_busy=0; }
   /* DBG during dump pauses the stream: undo this cycle's advance, resume next cycle */
   if(c->frozen && dump_adv){ c->dump_idx--; c->dump_busy=1; c->dump_paused=1; }
   if(c->frozen) return c->frozen_val; /* the freeze is visible after this edge */

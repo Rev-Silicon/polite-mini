@@ -38,3 +38,23 @@ Passing: consecutive DBG pauses keep all 24 nibbles intact; dump_paused is high 
 - R2-F10/F10b LOCKED: only freezing DBG pauses dump; illegal non-freeze DBG advances dump_idx. GAP converted to CHECK (no golden change).
 - R2-F11 LOCKED: phase-2 OVF survives same-cycle CLEAR flags; prior OVF cleared. GAP converted to CHECK.
 - Result: R1 71/0/0, R2 24/0/0, chip_test ALL PASS, MNIST smoke 8/8 on all 4 cfgs.
+
+## Round 3 (2026-10-31, against b51e376)
+Files: `test_break_r3.c`, `run_r3.sh`, `last_run_r3.log`. Result: pass=21, fail=3, gap=2, exit code 1. R1 is still 71/0/0 and R2 is still 24/0/0.
+
+| id | expected | observed | sev | status |
+|---|---|---|---|---|
+| R3-F12 | DUMP_LOAD on the final-nibble cycle is illegal, the same as CLEAR outbuf (F8) | case 0x3 checks `dump_busy` after :26 has cleared it. The DUMP_LOAD goes through: no illegal, and the dump restarts with dump_idx=0 while the old final nibble is still on the bus. | High | FAIL |
+| R3-F13 | On the final-nibble cycle, DBG_FLAGS bit2 (dump_busy) agrees with bit5 (dump_paused) | flags8 is captured after :26, so it reads dump_busy=0 and dump_paused=1. :54 then rewinds the dump to busy. | Med | FAIL |
+| R3-F14 | DBG_FLAGS on the phase-2 cycle shows run_busy=1 (in flight, like CLEAR PE's run_phase2 rule) | Shows run_busy=0 | Low | GAP |
+| R3-F15 | The DBG_ADD psum+mul preview can be reached on some cycle | `run_busy` is always 0 when the switch runs, because the RUN cycle runs op 2 and the next cycle's :23 clears it first. The preview branch at :49 is dead code. | Low | GAP |
+
+Passing: DBG_MUL reads 0 after phase 2. The ±2^23 boundaries behave: exact max/min don't set OVF, all 4 PEs wrap positive and negative, and a wrap on one PE alone sets OVF. CLEAR 0x55 during a dump collides and clears nothing, so OVF and outbuf survive. DUMP_LOAD on the cycle right after ABORT is OK. CLEAR PE mid-dump is allowed and the dump keeps going. In cfg A, RUN phase 2 + final nibble + CLEAR outbuf collides and the acc completes. Sticky illegal survives a DBG_FLAGS read. With OP_PLACE 0/1, one LOAD and then RUN gives 0. (-8)*(-8)=64 in both mul and psum. DBG_ADD near wrap doesn't set OVF, and a real phase-2 wrap does.
+Suggested fix: F12/F13 should use `dump_adv` in case 0x3 and in flags8, or compute the end-of-dump after the switch.
+
+## Round 3 resolution (Forge)
+- R3-F12 FIXED: DUMP_LOAD gated on dump_adv (busy at cycle start). Final-nibble DUMP_LOAD is illegal and does not restart.
+- R3-F13 FIXED: DBG_FLAGS uses busy-at-start dump_busy. Frozen bank0 is busy=1/paused=1 on the final nibble.
+- R3-F14 LOCKED (GAP->CHECK): phase-2 DBG_FLAGS run_busy=1, consistent with CLEAR PE.
+- R3-F15 LOCKED (GAP->CHECK): phase-2 accumulate deferred after the switch. DBG_ADD on phase 2 = low(wrap24(pre_psum+mul)), with no OVF side effect. R2-F9b CHECK revised to assert the pending preview.
+- Result: R1 71/0/0, R2 24/0/0, R3 26/0/0, chip_test ALL PASS, MNIST smoke 8/8 on all 4 cfgs.

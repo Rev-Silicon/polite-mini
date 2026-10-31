@@ -28,9 +28,9 @@ static void r2_f9(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
   uint8_t o=S(&c,0,0xA0); /* idle: run_busy=0 */
   CHECK("R2-F9-dbg-add-idle-no-phantom-acc", o==(uint8_t)c.psum[0]);
   chip_t d; chip_reset(&d,1,0); load2(&d); mac(&d); S(&d,0,0x20); /* phase1 done, mul pending */
-  /* DBG_ADD on phase2 cycle: accumulate already applied at :22 before the switch */
+  /* DBG_ADD on phase2 cycle: pending preview psum+mul before the deferred accumulate (R3-F15 revision) */
   int32_t pre=d.psum[0]; int16_t m=d.mul[0]; uint8_t o2=S(&d,0,0xA0);
-  (void)m; CHECK("R2-F9b-dbg-add-phase2-eq-completed-acc", o2==(uint8_t)d.psum[0] && d.psum[0]!=pre); /* Forge lock: phase-2 DBG_ADD == low(psum) post-acc */ }
+  CHECK("R2-F9b-dbg-add-phase2-pending-preview", o2==(uint8_t)(pre+m) && m!=0 && d.psum[0]==pre+m); /* Forge lock (revised R3-F15): phase-2 DBG_ADD == low(psum_before+mul) */ }
 static void r2_f10(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
   uint8_t ins[6]={0,0x8C,0,0x61,0,0}; int32_t got[4]; int n=dump_collect(&c,ins,6,got);
   CHECK("R2-F10-illegal-dbg-during-dump-24-nibbles", n==24);
