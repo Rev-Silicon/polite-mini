@@ -1,0 +1,18 @@
+# Locks  (tags: [Alex]=Alex decided, [Cast]=layout from Cast, [assumption]=ours, needs confirmation)
+- [Alex] Signed int4. Host does scale and zp. No on-chip ReLU, bias or scale.
+- [Alex] Single-edge clock. Target 66 MHz in and 33 MHz out on pads.
+- [Alex] ui_in+uio are all inputs: 8b data + 8b instr every cycle. uo_out = 4 data + 4 flags live. A debug freeze may take all 8 outputs.
+- [Alex] Instr [7:4] opcode, [3:0] args.
+- [Alex] RTL parameters HAS_OUTBUF and OP_PLACE (0: bus→left buffer→top; 1: swapped). These are real parameters, not ifdef only.
+- [Alex] Cfg A HAS_OUTBUF=1: outbuf, dump runs in parallel with RUN, DUMP_LOAD, DUMP_ABORT. Cfg B HAS_OUTBUF=0: no DUMP_*, sums are read with DBG_PSUM, and RUN is forbidden during a debug read.
+- [Alex] RUN = one full MAC step = 2 clocks. A second RUN while busy is ignored and sets sticky illegal (once).
+- [Alex] LOAD fills the 8b input buffer in 1 cycle.
+- [Alex] Dump order PE(2,2)(2,1)(1,2)(1,1). Host endian. 24b partials. Wrap + sticky OVF.
+- [Alex] CLEAR args [0]flags [1]inbuf [2]outbuf [3]PE sums. Any collision (PE during RUN, or outbuf during dump_busy) means the whole CLEAR is ignored and illegal is set.
+- [Alex] OVF and illegal stay sticky until CLEAR flags. dump_busy, debug_busy, run_busy and dump_paused are level signals. Reset gives known zeros.
+- [Alex] Pause = chip hold; the board keeps clocking. There is no plain DUMP opcode.
+- [Alex] Live flags nibble = {OVF, illegal, dump_busy, debug_busy} (preferred).
+- [assumption] Host endian = little: the low nibble of each 24b partial is streamed first, 6 nibbles per PE, 24 total.
+- [assumption] LOAD byte = two int4 lanes {hi=lane1, lo=lane0}. OP_PLACE=0: LOAD moves the old left value to top, and the new byte goes into left. OP_PLACE=1: the bus goes into top, and the old top moves to left.
+- [assumption] PE(i,j) += left[i]*top[j], i,j∈{1,2}.
+- [assumption] A DBG_* read freezes uo_out for 1 cycle (the next cycle) with debug_busy high.
