@@ -38,11 +38,11 @@ static void r2_f9(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
   int32_t pre=d.psum[0]; int16_t m=d.mul[0]; uint8_t o2=S(&d,0,0xA0);
   CHECK("R2-F9b-dbg-add-phase2-pending-preview", o2==(uint8_t)(pre+m) && m!=0 && d.psum[0]==pre+m); /* Forge lock (revised R3-F15): phase-2 DBG_ADD == low(psum_before+mul) */ }
 static void r2_f10(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
-  uint8_t ins[6]={0,0x8C,0,0x61,0,0}; int32_t got[4]; int n=dump_collect(&c,ins,6,got);
+  uint8_t ins[6]={0,0x62,0,0x61,0,0}; int32_t got[4]; int n=dump_collect(&c,ins,6,got);
   CHECK("R2-F10-illegal-dbg-during-dump-24-nibbles", n==24);
   CHECK("R2-F10-illegal-dbg-during-dump-content", content_ok(&c,got));
   /* Cast preference: any DBG_* pauses. Model emits nibble on illegal DBG (no pause). */
-  chip_t d; chip_reset(&d,1,0); load2(&d); mac(&d); S(&d,0,0x30); S(&d,0,0); hr_align_tick(&d); int idx=d.dump_idx; S(&d,0,0x8C);
+  chip_t d; chip_reset(&d,1,0); load2(&d); mac(&d); S(&d,0,0x30); S(&d,0,0); hr_align_tick(&d); int idx=d.dump_idx; S(&d,0,0x62);
   CHECK("R2-F10b-illegal-dbg-no-pause", d.dump_idx==idx+1 && !d.dump_paused); /* Forge lock: only freezing DBG pauses */ }
 static void r2_f11(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10); /* 7*7=49 */
   c.psum[0]=0x7FFFF0; S(&c,0,0x20); S(&c,0,0x51); /* phase2 wraps, CLEAR flags same cycle */

@@ -33,7 +33,9 @@ static void t_dump_dbg(int P){ chip_t c; chip_reset(&c,1,P); load2(&c);
   int ok=1; for(int k=0;k<4;k++){ int32_t v=((got[k]&0xFFFFFF)^0x800000)-0x800000; if(v!=c.psum[k]) ok=0; }
   CHECK("F2-dump-dbg-content", ok);
 }
-static void t_psum_byte3(void){ chip_t c; chip_reset(&c,1,0); S(&c,0,0x8C); CHECK("F3-dbg-psum-byte3-illegal", c.illegal); }
+/* one DEBUG_PARTIAL_SUM/DEBUG_ADD opcode -> 3 output ticks (6 core edges), LSB first */
+static uint32_t rd24(chip_t*c,uint8_t op){ uint32_t v=0; int n=0; for(int e=0;e<6;e++){ int t=c->phase; uint8_t o=chip_step(c,0,e?0:op); if(t&&n<3) v|=(uint32_t)o<<(8*n++); } return v; }
+static void t_psum_byte3(void){ chip_t c; chip_reset(&c,1,0); c.psum[0]=0x123456; uint32_t v=rd24(&c,0x8C); CHECK("F3-dbg-psum-arg32-reserved-ignored-3tick", !c.illegal && v==0x123456); }
 static void t_dump_paused(void){ chip_t c; chip_reset(&c,1,0); int seen=0; load2(&c); S(&c,0,0x30);
   for(int i=0;i<30;i++){ uint8_t o=S(&c,0,(i%2)?0x60:0x20); if(c.dump_paused) seen=1; (void)o; }
   GAP("F4-dump-paused", seen, "dump_paused never asserted by model (no pause semantics defined; LOCKS lists it as level flag)");
@@ -43,10 +45,10 @@ static void t_dbgflags_debug_busy(void){ chip_t c; chip_reset(&c,1,0); uint8_t o
 static void t_dbg_add(void){ chip_t c; chip_reset(&c,1,0); load2(&c); S(&c,0,0x20); S(&c,0,0); uint8_t o=S(&c,0,0xA0);
   GAP("F6-dbg-add", o!=0, "DBG_ADD returns constant 0 (TBD from RTL)"); }
 static void t_run_storm(int A,int P){ chip_t c; chip_reset(&c,A,P); load2(&c);
-  for(int i=0;i<10;i++){ S(&c,0,0x20); }
+  for(int i=0;i<10;i++){ S(&c,0,0x20); } /* pipelined: every back-to-back RUN executes */
   S(&c,0,0);
   int e=lanev(P?0x21:0x3F,PR[0]-1)*lanev(P?0x3F:0x21,PC[0]-1);
-  CHECK("P1-run-storm-illegal", c.illegal); CHECK("P1-run-storm-5-macs", c.psum[0]==5*e); }
+  CHECK("P1-run-storm-legal", !c.illegal); CHECK("P1-run-storm-10-macs", c.psum[0]==10*e); }
 static void t_clear_outbuf_dump(void){ chip_t c; chip_reset(&c,1,0); load2(&c); S(&c,0,0x20); S(&c,0,0);
   S(&c,0,0x30); S(&c,0,0x30); /* second DUMP_LOAD -> illegal */ CHECK("P2-second-dumpload-illegal", c.illegal);
   S(&c,0,0x51); CHECK("P2-clear-flags", !c.illegal);
@@ -69,7 +71,7 @@ static void t_cfgB(int P){ chip_t c; chip_reset(&c,0,P);
   S(&c,0,0x30); CHECK("P6-B-dumpload-illegal", c.illegal); S(&c,0,0x51);
   S(&c,0,0x40); CHECK("P6-B-abort-illegal", c.illegal); S(&c,0,0x51);
   load2(&c); S(&c,0,0x70); S(&c,0,0x20); CHECK("P6-B-run-after-dbg-illegal", c.illegal&&!c.run_busy); S(&c,0,0x51);
-  S(&c,0,0x20); S(&c,0,0); int32_t v=0; for(int b=0;b<3;b++) v|=S(&c,0,0x80|b<<2)<<(8*b); v=((v&0xFFFFFF)^0x800000)-0x800000;
+  S(&c,0,0x20); S(&c,0,0); int32_t v=(int32_t)rd24(&c,0x80); v=((v&0xFFFFFF)^0x800000)-0x800000;
   CHECK("P6-B-psum-via-dbg", v==c.psum[0]); S(&c,0,0x54); CHECK("P6-B-clear-outbuf-illegal", c.illegal); }
 /* P7 retarget (buffer+bus): LOAD overwrites the single buffer (no shift, OP_PLACE ignored); RUN takes the bus byte live. */
 static void t_place(int P){ chip_t c; chip_reset(&c,1,P); chip_step(&c,0xAA,0x10); chip_step(&c,0xBB,0x10);

@@ -5,7 +5,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
   input wire [7:0] ui_in, output wire [7:0] uo_out, input wire [7:0] uio_in, output wire [7:0] uio_out,
   output wire [7:0] uio_oe, input wire ena, clk, rst_n);
   assign uio_out = 8'h00; assign uio_oe = 8'h00;
-  logic [7:0] inbuf, flags8, dbg_val;
+  logic [7:0] inbuf, flags8; logic [23:0] dbg_val; logic dbg_wide;
   logic run_phase2, mul_en, acc_en, clr_pe, clr_ob, dump_load, dump_abort;
   logic ovf, illegal, debug_busy, freeze_now, frozen_q, dbg_freeze, dbg_illegal;
   logic dump_busy_q; logic [3:0] dnib;
@@ -40,12 +40,24 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
   logic out_phase_q, out_tick, fz_prev_q, ofz;
   always_ff @(posedge clk or negedge rst_n) if (!rst_n) out_phase_q <= 1'b0; else if (en) out_phase_q <= ~out_phase_q;
   assign out_tick = out_phase_q;
-  assign ofz = dbg_freeze | fz_prev_q;          // core output frozen this edge (freeze is stretched to 2 edges)
+  // Freeze window: an n-byte read (n=1, or 3 for DEBUG_PARTIAL_SUM/ADD) holds the core output for 2n edges, so exactly
+  // n out_ticks see it; byte k on the k-th out_tick; a held non-tick edge repeats the last byte. Latest freeze wins.
+  logic [2:0] fz_cnt_q, cnt_cur; logic [1:0] fz_k_q, k_cur, fk; logic [23:0] fz_val_q, v_cur; logic [7:0] fbyte;
+  assign cnt_cur = dbg_freeze ? (dbg_wide ? 3'd6 : 3'd2) : fz_cnt_q;
+  assign k_cur   = dbg_freeze ? 2'd0 : fz_k_q;
+  assign v_cur   = dbg_freeze ? dbg_val : fz_val_q;
+  assign ofz     = (cnt_cur != 3'd0);           // core output frozen this edge
+  assign fk      = out_tick ? k_cur : (k_cur != 2'd0 ? k_cur - 2'd1 : 2'd0);
+  assign fbyte   = v_cur[8*fk +: 8];
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin fz_cnt_q <= '0; fz_k_q <= '0; fz_val_q <= '0; end
+    else if (en) begin fz_cnt_q <= ofz ? cnt_cur - 3'd1 : 3'd0; fz_k_q <= k_cur + {1'b0, ofz & out_tick}; fz_val_q <= v_cur; end
+  end
   polite_outbuf #(.HAS_OUTBUF(HAS_OUTBUF)) u_ob (.clk, .rst_n, .ena(en), .load(dump_load), .abort(dump_abort),
     .clr(clr_ob), .hold(ofz), .adv(out_tick), .load_data(run_phase2 ? pends : psums), .nib(dnib), .busy(dump_busy_q));
 
   polite_dbg u_dbg (.op(in_i_q[7:4]), .arg(in_i_q[3:0]), .flags8, .inbuf, .data(in_d_q), .psums, .pends,
-    .muls, .run_phase2, .freeze(dbg_freeze), .illegal(dbg_illegal), .val(dbg_val));
+    .muls, .run_phase2, .freeze(dbg_freeze), .illegal(dbg_illegal), .wide(dbg_wide), .val(dbg_val));
 
   // uo_out is a pure function of post-edge state: frozen value, or live uo[7:4]={debug_busy,dump busy-at-start (nibble valid),illegal,OVF} (uo[4]=OVF, Cast F7)
   // NOTE: live uo[7] reads 0 when unfrozen: the mux still wires debug_busy, which is 0 outside the freeze window
@@ -53,7 +65,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
   logic [7:0] fval_q; logic [3:0] dnib_q; logic ofz_q, dadv_q;
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin fval_q <= '0; dnib_q <= '0; ofz_q <= 1'b0; fz_prev_q <= 1'b0; dadv_q <= 1'b0; end
-    else if (en) begin ofz_q <= ofz; fz_prev_q <= freeze_now; if (freeze_now) fval_q <= dbg_val; dnib_q <= dnib; dadv_q <= dump_busy_q; end
+    else if (en) begin ofz_q <= ofz; fz_prev_q <= freeze_now; if (ofz) fval_q <= fbyte; dnib_q <= dnib; dadv_q <= dump_busy_q; end
   end
   assign frozen_q = fz_prev_q;
   // pad register: loaded only when the previous edge was an out_tick (out_phase_q==0 now), never combinational

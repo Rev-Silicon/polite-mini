@@ -45,7 +45,7 @@ static void latency(void){
   CHECK("R7-L2-LOCKS-no-'loaded every edge'", lk && !strstr(lk,"loaded every edge"));
   CHECK("R7-L3-SPEC-freeze-not-'1 cycle'", sp && !strstr(sp,"**1 cycle**"));
   CHECK("R7-L3-LOCKS-freeze-1-cycle-superseded", lk && (!strstr(lk,"for 1 cycle") || strstr(lk,"superseded 2026-11-01")));
-  CHECK("R7-L4-SPEC-defines-out_tick/beat", sp && (strstr(sp,"out_tick")||strstr(sp,"beat")));
+  CHECK("R7-L4-SPEC-defines-output-tick", sp && strstr(sp,"output tick")); /* "beat" dropped 15:03 lock */
   CHECK("R7-L5-SPEC-dbg-consecutive-edges-wording-gone", sp && !strstr(sp,"each one returns its byte one edge after the previous one"));
 }
 /* ---------- dump at pins ---------- */

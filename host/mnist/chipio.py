@@ -12,6 +12,7 @@ class Chip(ctypes.Structure):
                 ("debug_busy", ctypes.c_int), ("dump_paused", ctypes.c_int), ("outbuf", ctypes.c_int32 * 4), ("dump_idx", ctypes.c_int),
                 ("frozen", ctypes.c_int), ("frozen_val", ctypes.c_uint8),
                 ("phase", ctypes.c_int), ("fz_prev", ctypes.c_int), ("ofz", ctypes.c_int),
+                ("fz_n", ctypes.c_int), ("fz_left", ctypes.c_int), ("fz_k", ctypes.c_int), ("fz_val", ctypes.c_uint32),
                 ("in_d_q", ctypes.c_uint8), ("in_i_q", ctypes.c_uint8), ("uo_q", ctypes.c_uint8), ("uo_pad", ctypes.c_uint8),
                 ("otick_q", ctypes.c_int)]
 
@@ -37,7 +38,7 @@ class Driver:
     def clear(self): self.step(0, CLEAR | 0x9)  # psum + flags
     def mac(self, a2, b2):
         """psum[r][c] += a2[r]*b2[c]: a = input buffer (LOAD, rows), b = bus byte on ui_in with RUN (cols)."""
-        self.step(pack(*a2), LOAD); self.step(pack(*b2), RUN); self.step(0, NOP)  # NOP = RUN cycle 2
+        self.step(pack(*a2), LOAD); self.step(pack(*b2), RUN)  # RUN is pipelined: next LOAD overlaps phase 2 (affects later RUNs only)
     # 33 MHz pad-out: uo_out updates once per beat (2 core clocks). An op on pin step j executes on core edge j+1;
     # pin step n shows the core output of edge n-1 iff n-1 is odd (out_tick), counted from reset. A debug read is
     # stretched over 2 core edges, so it is always on the pads after step j+3. Debug reads are spaced one beat (op, NOP).
@@ -63,9 +64,10 @@ class Driver:
             assert all(v & 0x40 for v in o)
             for n in range(24): raw[n // 6] |= (o[n] & 0xF) << (4 * (n % 6))
         else:
-            o = self.query([(0, DBG_PSUM | k | (b << 2)) for k in range(4) for b in range(3)])
+            # one DEBUG_PARTIAL_SUM opcode per PE -> 3 output ticks, LSB first; read after j+3, j+5, j+7; next read >= j+6
             for k in range(4):
-                for b in range(3): raw[k] |= o[3 * k + b] << (8 * b)
+                o = [self.step(0, DBG_PSUM | k)] + [self.step(0, NOP) for _ in range(7)]
+                for b in range(3): raw[k] |= o[self.LAT + 2 * b] << (8 * b)
         t = [[0, 0], [0, 0]]
         for k in range(4): t[PR[k] - 1][PC[k] - 1] = ((raw[k] & 0xFFFFFF) ^ 0x800000) - 0x800000
         return t

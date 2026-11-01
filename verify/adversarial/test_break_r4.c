@@ -27,9 +27,11 @@ static void f17(void){ chip_t c; chip_reset(&c,1,0); l77(&c); mac(&c); int32_t p
 static void f18(void){ chip_t c; chip_reset(&c,1,0); l77(&c); c.ovf=1; S(&c,0,0x20); S(&c,0,0x51);
   CHECK("R4-F18-clear-flags-phase2-nonwrap-ovf0", !c.ovf && !c.illegal && c.psum[0]==49); }
 static void f19(void){ chip_t c; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); S(&c,0,0x20); S(&c,0,0);
-  CHECK("R4-F19-busy-run-ignored-acc-once", c.illegal && c.psum[0]==49 && c.psum[3]==49 && !c.run_busy); }
+  CHECK("R4-F19-back-to-back-run-pipelined-acc-twice", !c.illegal && c.psum[0]==98 && c.psum[3]==98 && !c.run_busy); }
+/* one DEBUG_PARTIAL_SUM/DEBUG_ADD opcode -> 3 output ticks (6 core edges), LSB first */
+static uint32_t rd24(chip_t*c,uint8_t op){ uint32_t v=0; int n=0; for(int e=0;e<6;e++){ int t=c->phase; uint8_t o=chip_step(c,0,e?0:op); if(t&&n<3) v|=(uint32_t)o<<(8*n++); } return v; }
 static void cfgB_neg(void){ chip_t c; chip_reset(&c,0,0); S(&c,0x88,0x10); S(&c,0x77,0x10); mac(&c); mac(&c);
-  int ok=1; for(int k=0;k<4;k++){ uint32_t v=S(&c,0,0x80|k)|S(&c,0,0x84|k)<<8|S(&c,0,0x88|k)<<16; int32_t s=((v&0xFFFFFF)^0x800000)-0x800000; ok&=s==-112&&s==c.psum[k]; }
+  int ok=1; for(int k=0;k<4;k++){ uint32_t v=rd24(&c,0x80|k); int32_t s=((v&0xFFFFFF)^0x800000)-0x800000; ok&=s==-112&&s==c.psum[k]; }
   CHECK("R4-X1-cfgB-psum-bytes-neg-reconstruct", ok && !c.illegal); }
 static void abort_final(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); to_final(&c); S(&c,0,0x40);
   CHECK("R4-X2-abort-final-nibble-legal", !c.illegal && !c.dump_busy && !c.dump_paused); }

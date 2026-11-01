@@ -32,15 +32,17 @@ static void f24(void){ chip_t c; uint8_t o;
   chip_reset(&c,1,0); l77(&c); c.ovf=1; c.psum[0]=0x7FFFF0; S(&c,0,0x51); CHECK("R5-F24c-precond-cleared", !c.ovf);
   S(&c,0,0x20); o=S(&c,0,0x60);
   CHECK("R5-F24c-clear-then-phase2-wrap", (o&1) && c.ovf); }
+/* one DEBUG_PARTIAL_SUM/DEBUG_ADD opcode -> 3 output ticks (6 core edges), LSB first */
+static uint32_t rd24(chip_t*c,uint8_t op){ uint32_t v=0; int n=0; for(int e=0;e<6;e++){ int t=c->phase; uint8_t o=chip_step(c,0,e?0:op); if(t&&n<3) v|=(uint32_t)o<<(8*n++); } return v; }
 static void f25(void){ chip_t c; chip_reset(&c,1,1); S(&c,0x9A,0x10); S(&c,0x3D,0x10); mac(&c); mac(&c); mac(&c);
-  uint8_t b[4][3]; for(int k=0;k<4;k++) for(int j=0;j<3;j++) b[k][j]=S(&c,0,0x80|j<<2|k);
+  uint8_t b[4][3]; for(int k=0;k<4;k++){ uint32_t v=rd24(&c,0x80|k); for(int j=0;j<3;j++) b[k][j]=v>>(8*j); }
   S(&c,0,0x30); uint8_t n[24]; hr_idle_nibs(&c,n,24);
   int ok=1; for(int k=0;k<4;k++) for(int j=0;j<3;j++) ok&= b[k][j]==(n[k*6+2*j]|n[k*6+2*j+1]<<4);
   CHECK("R5-F25-stream-nibbles-match-dbgpsum-bytes", ok && !c.dump_busy && !c.illegal); }
 static void x_load_p2(void){ chip_t c; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); S(&c,0x11,0x10);
   CHECK("R5-X1-load-phase2-no-effect-on-inflight", c.psum[0]==49 && c.buf==0x11 && g_bus==0x77); }
 static void x_mul_p2(void){ chip_t c; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); uint8_t o=S(&c,0,0x90);
-  CHECK("R5-X2-dbgmul-phase2-precommit-then-0", o==49 && c.mul[0]==0); }
+  CHECK("R5-X2-dbgmul-phase2-precommit-then-sticky", o==49 && c.mul[0]==49); } /* no zero after phase 2 */
 static void x_abort2(void){ chip_t c; chip_reset(&c,1,0); S(&c,0,0x30); S(&c,0,0x40); S(&c,0,0x40);
   CHECK("R5-X3-double-abort-legal", !c.illegal && !c.dump_busy); }
 static void x_cfgB_dump(void){ chip_t c; chip_reset(&c,0,0); l77(&c); mac(&c); S(&c,0,0x30);

@@ -34,7 +34,7 @@ static void f15(void){ /* DBG_ADD preview reachable? run_busy at switch time is 
   CHECK("R3-F15-precond-post-acc", c.psum[0]==pre+49);
   CHECK("R3-F15-dbg-add-phase2-pending-preview", o==(uint8_t)(pre+49) && !c.ovf); /* Forge lock: deferred acc, DBG_ADD sees psum+mul */ }
 static void dbgmul(void){ chip_t c; chip_reset(&c,1,0); load2(&c); S(&c,0,0x20); S(&c,0,0);
-  CHECK("R3-S1-dbg-mul-after-phase2-zero", S(&c,0,0x90)==0 && S(&c,0,0x93)==0); }
+  int16_t m0=c.mul[0], m3=c.mul[3]; CHECK("R3-S1-dbg-mul-after-phase2-sticky", m0!=0 && S(&c,0,0x90)==(uint8_t)m0 && S(&c,0,0x93)==(uint8_t)m3); } /* Alex lock: no zero after phase 2 */
 static void ovf_bounds(void){ /* +: 7*7=49 all PEs; push each to wrap */
   chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10);
   for(int k=0;k<4;k++) c.psum[k]=0x7FFFFF-49;

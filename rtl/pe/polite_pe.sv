@@ -1,4 +1,5 @@
-// One PE: RUN phase 1 latches mul = a*b; phase 2 commits psum = wrap24(psum+mul) and zeroes mul (R2-F9).
+// One PE: RUN phase 1 latches mul = a*b; phase 2 commits psum = wrap24(psum+mul). Products are sticky (no zeroing);
+// the next phase 1 overwrites them. Phase 1 of RUN N and phase 2 of RUN N-1 share an edge: acc reads old mul_q, mul_q <= p.
 // pend/pend_ovf expose the pending phase-2 result for DBG_ADD / DBG_FLAGS / DUMP_LOAD previews (R3-F15, R4-F16, R5-F22).
 module polite_pe (input logic clk, rst_n, ena, mul_en, acc_en, clr,
   input logic signed [3:0] a, b,
@@ -20,7 +21,6 @@ module polite_pe (input logic clk, rst_n, ena, mul_en, acc_en, clr,
       if (clr)         psum <= '0;    // ctrl guarantees clr never coincides with acc_en (F1 collision)
       else if (acc_en) psum <= pend;
       if (mul_en)      mul_q <= p;
-      else if (acc_en) mul_q <= '0;
     end
   end
 endmodule

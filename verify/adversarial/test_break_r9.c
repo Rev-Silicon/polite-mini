@@ -73,7 +73,7 @@ static void t_freeze(void){ char id[96];
   /* F4: random spaced DBG fuzz incl. phase-2 DUMP_LOAD (RUN just before) */
   { int bad=0,badil=0,badp2=0; srand(909); for(int ep=0;ep<20000;ep++){ H h; int al=rand()&1; hreset(&h,1,rand()&1,al); setrand(&h.c); int p2=rand()&1;
       if(p2){ st(&h,0x13,0x10); st(&h,0x13,0x10); st(&h,0,0x20); } int j=h.n; st(&h,0,0x30); int last=-10;
-      for(int s=1;s<90;s++){ int r=rand()%6; if(s-last>=2&&r<2){ uint8_t ops[]={0xB0,0x60,0x70,0x90,0xA0,0x80}; st(&h,rand()&0xFF,ops[rand()%6]); last=s; } else st(&h,0,0); }
+      for(int s=1;s<90;s++){ int r=rand()%6; if(s-last>=2&&r<2){ uint8_t ops[]={0xB0,0x60,0x70,0x90}; st(&h,rand()&0xFF,ops[rand()%4]); /* 1-tick reads only: 0x80/0xA0 now freeze 3 output ticks (spacing 6) */ last=s; } else st(&h,0,0); }
       idle(&h,120); uint8_t w[24],nb[24]; tonib(h.c.outbuf,w); if(!(dec_l(&h,j,nb,24)==24&&nbeq(nb,w))){ bad++; if(h.c.illegal) badil++; else if(p2) badp2++; } }
     printf("info F4 diag: wrong with illegal flagged=%d, legal+p2=%d\n",badil,badp2);
     printf("info F4 20000 random spaced-DBG episodes (half phase-2 DUMP_LOAD): wrong=%d\n",bad); CHECK("R9-F4-fuzz-spaced-DBG+p2-DUMP_LOAD-j+3", bad==0); }
@@ -116,7 +116,7 @@ static void t_abort(void){ char id[96];
     else { printf("info A3 par%d CLEAR outbuf on held freeze edge mid-dump: illegal=%d n=%d\n",al,h.c.illegal,n); sprintf(id,"R9-A3b-CLEAR-outbuf-mid-dump-held-edge-collides-par%d",al); CHECK(id, h.c.illegal); } }
   char*lk=slurp("docs/LOCKS.md"),*sp=slurp("docs/SPEC.md");
   CHECK("R9-A4-LOCKS-ABORT-wait>=1beat", lk && strstr(lk,"after DUMP_ABORT wait ≥1 beat"));
-  CHECK("R9-A4b-SPEC-ABORT-wait", sp && strstr(sp,"After DUMP_ABORT, wait at least 1 beat"));
+  CHECK("R9-A4b-SPEC-ABORT-wait", sp && strstr(sp,"After DUMP_ABORT, wait at least 1 output tick"));
 }
 static void t_live(void){ char id[96];
   long ones=0,beats=0; srand(77); for(int cfg=0;cfg<4;cfg++){ H h; hreset(&h,cfg&1,cfg>>1,cfg&1); for(int s=0;s<200000;s++){ int r=rand()%10; uint8_t i=0;
@@ -137,7 +137,7 @@ static void t_static(void){
   const char*bad[]={"frames on uo[6] only","uo[6] alone","no phase tracking"}; int hit=0; const char*docs[]={sp,ls,rd};
   for(int d=0;d<3;d++) for(int b=0;b<3;b++) if(docs[d]&&strstr(docs[d],bad[b])){ printf("info doc %d contains '%s'\n",d,bad[b]); hit++; }
   CHECK("R9-D4-no-unqualified-uo6-only-framing-claims", hit==0);
-  CHECK("R9-D5-SPEC-uo7-live-0", sp && strstr(sp,"bit 7 reads 0 when live"));
+  CHECK("R9-D5-SPEC-uo7-live-0", sp && strstr(sp,"live `uo_out[7]` is 0"));
   /* SPEC debug section: "with debug busy = 1" during freeze -- must not imply a live pin */
   if(sp && strstr(sp,"with debug busy = 1")) printf("info D6 SPEC §debug still says 'with debug busy = 1' (internal flag only; pin is the byte) -- Low wording\n");
   GAP("R9-G1","RTL lockstep not rerun (no iverilog/verilator on box); tb ties ena=1, ena hold of out_phase_q unverified in sim.");

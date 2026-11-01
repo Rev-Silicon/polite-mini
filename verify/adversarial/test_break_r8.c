@@ -84,8 +84,8 @@ static void u_framing(void){ char id[96];
     sprintf(id,"R8-U5-abort-reload-separator-phase-independent-par%d",al); CHECK(id, sep && run==24); (void)ja; }
   /* U6: illegal non-freeze DBG during dump (DBG_FLAGS bank1, DBG_PSUM byte3): no pause, uo5 rises, framing intact, both parities */
   for(int al=0;al<2;al++) for(int q=0;q<2;q++){ H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30);
-    idle(&h,9); h.ndbg=0; st(&h,0,q?0x8C:0x61); h.ndbg=0; idle(&h,60); uint8_t want[24]; tonib(h.c.outbuf,want); uint8_t nb[24]; int n=dec_u6(&h,j,nb);
-    sprintf(id,"R8-U6-illegal-DBG-mid-dump-u6-framing-op%02X-par%d",q?0x8C:0x61,al); CHECK(id, n==24 && nbeq(nb,want) && h.c.illegal); }
+    idle(&h,9); h.ndbg=0; st(&h,0,q?0x62:0x61); /* byte-3 illegal dropped (3-tick lock): use bank 2 */ h.ndbg=0; idle(&h,60); uint8_t want[24]; tonib(h.c.outbuf,want); uint8_t nb[24]; int n=dec_u6(&h,j,nb);
+    sprintf(id,"R8-U6-illegal-DBG-mid-dump-u6-framing-op%02X-par%d",q?0x62:0x61,al); CHECK(id, n==24 && nbeq(nb,want) && h.c.illegal); }
   /* U7: CLEAR outbuf right after the final nibble on both parities: legal, and no extra uo6=1 beat */
   for(int al=0;al<2;al++){ H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30); st(&h,0,0); int e=0; while(h.c.dump_busy && e<200){ st(&h,0,0); e++; }
     st(&h,0,0x54); st(&h,0,0); int ill=h.c.illegal, z=h.c.outbuf[0]==0; idle(&h,10); int cnt=0; for(int s=j;s<h.n;s+=1) cnt+=!!(h.pad[s]&0x40);
