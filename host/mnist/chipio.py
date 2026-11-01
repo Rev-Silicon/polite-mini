@@ -39,13 +39,13 @@ class Driver:
     def mac(self, a2, b2):
         """psum[r][c] += a2[r]*b2[c]: a = input buffer (LOAD, rows), b = bus byte on ui_in with RUN (cols)."""
         self.step(pack(*a2), LOAD); self.step(pack(*b2), RUN)  # RUN is pipelined: next LOAD overlaps phase 2 (affects later RUNs only)
-    # 33 MHz pad-out: uo_out updates once per beat (2 core clocks). An op on pin step j executes on core edge j+1;
+    # 33 MHz pad-out: uo_out updates once per output tick (2 core clocks). An op on pin step j executes on core edge j+1;
     # pin step n shows the core output of edge n-1 iff n-1 is odd (out_tick), counted from reset. A debug read is
-    # stretched over 2 core edges, so it is always on the pads after step j+3. Debug reads are spaced one beat (op, NOP).
+    # stretched over 2 core edges, so it is always on the pads after step j+3. Debug reads are spaced one output tick (op, NOP).
     LAT = 3
     def flags(self): return self.query([(0, DBG_FLAGS)])[0]
     def query(self, ops):
-        """Issue each op followed by a NOP (one beat per op); return the uo_out for each op read at step j+3."""
+        """Issue each op followed by a NOP (one output tick per op); return the uo_out for each op read at step j+3."""
         outs, idx = [], []
         for d, i in ops: idx.append(self.steps); outs.append(self.step(d, i)); outs.append(self.step(0, NOP))
         base = idx[0] if idx else self.steps
@@ -56,9 +56,9 @@ class Driver:
         raw = [0] * 4
         if self.A:
             self.step(0, DUMP_LOAD); edges = [self.step(0, NOP) for _ in range(60)]
-            # pins: one value per beat (2 edges); nibble beats have uo[6]=1. No DBG is issued inside this window, so no
-            # freeze tracking is needed (LOCKS R8-U3: with DBG, drop the beat at pin step j+3 per freezing DBG; uo[7] is
-            # not a freeze mark). Count exactly 24 nibbles (R8-U4); no separator beat is assumed after the last one.
+            # pins: one value per output tick (2 edges); nibble output ticks have uo[6]=1. No DBG is issued inside this window, so no
+            # freeze tracking is needed (LOCKS R8-U3: with DBG, drop the output tick at pin step j+3 per freezing DBG; uo[7] is
+            # not a freeze mark). Count exactly 24 nibbles (R8-U4); no separator output tick is assumed after the last one.
             s0 = next(i for i, v in enumerate(edges) if v & 0x40)
             o = [edges[s0 + 2 * n] for n in range(24)]
             assert all(v & 0x40 for v in o)

@@ -1,3 +1,5 @@
+> **SUPERSEDED (2026-11-01).** This is the historical opcode proposal and contradicts the locked design in several places (RUN-while-busy illegal, DBG_BUFFER left/top, DBG_PSUM/DBG_ADD byte select, DEBUG_FLAGS bit 6). The canon is `docs/SPEC.md` (behavior) and `docs/LOCKS.md` (decisions). Do not review or implement from this file.
+
 # Opcode proposal (instr = uio[7:4] op, uio[3:0] args)
 TT product = cfg A (HAS_OUTBUF=1). Full semantics: docs/SPEC.md (source of truth).
 | op | name | notes |

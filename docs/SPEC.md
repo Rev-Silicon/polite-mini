@@ -76,7 +76,7 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 | 0x6 | DEBUG_FLAGS | Return the 8-bit flag byte (Section 5.6) | yes, 1 output tick |
 | 0x7 | DEBUG_BUFFER | Return the input buffer byte | yes, 1 output tick |
 | 0x8 | DEBUG_PARTIAL_SUM | Return the full 24-bit partial sum, one byte per output tick | yes, 3 output ticks (all 24 bits from one command) |
-| 0x9 | DEBUG_MULTIPLY | Return the last product, sign-extended to 8 bits | yes, 1 output tick (full product) |
+| 0x9 | DEBUG_MULTIPLY | Return the last product as an 8-bit signed value (an int4 × int4 product always fits in 8 bits, so nothing is truncated) | yes, 1 output tick (full product) |
 | 0xA | DEBUG_ADD | Return the full 24-bit wrapped adder output, one byte per output tick (Section 5.7) | yes, 3 output ticks (all 24 bits from one command) |
 | 0xB | DEBUG_INPUT | Return the sampled `ui_in` byte | yes, 1 output tick |
 | 0xC–0xF | — | Reserved; illegal on this chip: set the illegal flag | no |
@@ -87,7 +87,7 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 | CLEAR | [3] partial sums, [2] output buffer, [1] input buffer, [0] flags (overflow and illegal); any combination |
 | DEBUG_FLAGS | [3:0] bank select; only bank 0 is defined on this chip, other banks are reserved for future flag expansion (Section 4) |
 | DEBUG_PARTIAL_SUM | [3:2] reserved, drive 0 (ignored); [1:0] processing element |
-| DEBUG_MULTIPLY | [3:2] reserved, [1:0] processing element |
+| DEBUG_MULTIPLY | [3:2] reserved, drive 0 (ignored); [1:0] processing element |
 | DEBUG_ADD | [3:2] reserved, drive 0 (ignored); [1:0] processing element |
 
 Whenever a command takes a processing element index, the index sits in bits [1:0]. No command uses bits [3:2] as a byte select: DEBUG_PARTIAL_SUM and DEBUG_ADD send all three bytes of their 24-bit value from a single command, so there is nothing to select, and bits [3:2] are reserved for them. CLEAR uses all four bits as a mask, and DEBUG_FLAGS uses all four as a bank number. The processing element index is also the dump order: 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1). Using one numbering everywhere means a host can read a dumped sum and then inspect the same processing element with a debug read without translating indices.
@@ -204,7 +204,7 @@ Each debug opcode produces one freeze, and that freeze returns the whole value t
 | DEBUG_FLAGS | 8 bits | 1 | after edge k+2 or k+3; read after k+3 |
 | DEBUG_BUFFER | 8 bits (input buffer) | 1 | after edge k+2 or k+3; read after k+3 |
 | DEBUG_PARTIAL_SUM | 24 bits | 3 | bits [7:0] after k+2/k+3, bits [15:8] after k+4/k+5, bits [23:16] after k+6/k+7 depending on the output-tick phase; read after k+3, k+5, k+7 |
-| DEBUG_MULTIPLY | full 8-bit product (int4 × int4, sign-extended) | 1 | after edge k+2 or k+3; read after k+3 |
+| DEBUG_MULTIPLY | full 8-bit signed product (int4 × int4 always fits in 8 bits) | 1 | after edge k+2 or k+3; read after k+3 |
 | DEBUG_ADD | 24 bits of the wrapped sum | 3 | as DEBUG_PARTIAL_SUM: read after k+3, k+5, k+7 |
 | DEBUG_INPUT | 8 bits | 1 | after edge k+2 or k+3; read after k+3 |
 
@@ -258,6 +258,5 @@ Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, wh
 ## 8. References
 
 - `docs/LOCKS.md` — design decisions
-- `docs/OPCODE_PROPOSAL.md` — opcode table
 - `LESSONS.md` — edge-case findings
 - `golden/chip.c` — cycle-level reference model

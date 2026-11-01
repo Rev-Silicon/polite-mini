@@ -1,6 +1,6 @@
 // POLITE V(-1) Tiny Tapeout top. ui_in = data, uio_in = instr (all inputs).
 // Pad pipeline: ui_in/uio_in sampled into in_d_q/in_i_q (executed next edge). uo_out is an 8b register (uo_q) loaded
-// once per beat (2 clk, 33 MHz pad-out): only on the edge after an out_tick (out_phase_q==1). See docs/LOCKS.md.
+// once per output tick (2 clk, 33 MHz pad-out): only on the edge after an out_tick (out_phase_q==1). See docs/LOCKS.md.
 module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
   input wire [7:0] ui_in, output wire [7:0] uo_out, input wire [7:0] uio_in, output wire [7:0] uio_out,
   output wire [7:0] uio_oe, input wire ena, clk, rst_n);

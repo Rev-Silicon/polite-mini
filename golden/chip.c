@@ -1,6 +1,7 @@
-/* POLITE V(-1) golden model. Follows docs/OPCODE_PROPOSAL.md and docs/LOCKS.md.
- * One chip_step call = one rising edge. TBD from RTL: how RUN splits its work across the 2 internal cycles
- * (this model does multiply on cycle 1 and accumulate on cycle 2). */
+/* POLITE V(-1) golden model. Canon: docs/SPEC.md and docs/LOCKS.md (docs/OPCODE_PROPOSAL.md is superseded).
+ * One chip_core_step call = one core tick; one chip_step call = one rising edge at the pins (adds the pad pipeline).
+ * RUN is a 2-stage pipeline: phase 1 (multiply, latch products) on the RUN's core tick, phase 2 (accumulate) on the
+ * next core tick; phase 1 of RUN N overlaps phase 2 of RUN N-1. */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -51,7 +52,6 @@ uint8_t chip_core_step(chip_t *c,uint8_t d,uint8_t ins){
   case 0xB: freeze(c,d); break;
   default: c->illegal=1;
   }
-  /* deferred RUN phase-2 accumulate; mul consumed (R2-F9) */
   /* deferred RUN phase-2 accumulate. Products are sticky (no zeroing); the next phase 1 overwrites them. */
   if(run_phase2){ int o=0; for(int k=0;k<4;k++) c->psum[k]=wrap24((int64_t)c->psum[k]+c->mul[k],&o); if(o) c->ovf=1; }
   if(run_now) memcpy(c->mul,nm,sizeof nm);
@@ -67,12 +67,12 @@ uint8_t chip_core_step(chip_t *c,uint8_t d,uint8_t ins){
   c->phase ^= 1;
   if(c->ofz) return fzout; /* latest freeze; byte for this out tick */
   /* R7-D0/B4b: live uo[6] = dump busy at the start of this edge = "uo[3:0] is a real nibble". The DUMP_LOAD edge shows 0 and the final
-   * nibble shows 1, so pin framing does not depend on the beat phase: the nibbles are exactly the unfrozen beats with uo[6]=1. */
+   * nibble shows 1, so pin framing does not depend on the output-tick phase: the nibbles are exactly the unfrozen output ticks with uo[6]=1. */
   uint8_t fl=c->ovf|c->illegal<<1|dump_adv<<2|c->debug_busy<<3;
   return (uint8_t)(fl<<4|(dnib&0xF));
 }
 /* Pad pipeline: ui_in/uio_in are registered at the top (sampled on edge k, executed on edge k+1). The 8b uo_out
- * register loads the core's output once per beat (33 MHz pad-out): only on the edge after an out_tick.
+ * register loads the core's output once per output tick (33 MHz pad-out): only on the edge after an out_tick.
  * Pin-level latency: inputs applied before edge k -> core acts on edge k+1 -> on uo_out after edge k+2 (k+1 is an
  * out_tick) or k+3 (otherwise).
  * Reset: in_q = 0 (NOP), uo_q = 0. */
@@ -92,7 +92,7 @@ static void test_core(int A,int P){
   chip_t c; chip_reset(&c,A,P); uint8_t o;
   printf("== cfg %s place%d\n",A?"A":"B",P);
   CHECK(chip_core_step(&c,0,0x00)==0);
-  chip_core_step(&c,0x3F,0x10); chip_core_step(&c,0,0x00); /* NOP keeps beat phase; LOAD buffer {3,-1}; RUN bus byte 0x21 = {2,1} */
+  chip_core_step(&c,0x3F,0x10); chip_core_step(&c,0,0x00); /* NOP keeps output-tick phase; LOAD buffer {3,-1}; RUN bus byte 0x21 = {2,1} */
   for(int i=0;i<3;i++){ chip_core_step(&c,0x21,0x20); chip_core_step(&c,0,0x00); }
   o=chip_core_step(&c,0x21,0x20); o=chip_core_step(&c,0x21,0x20); CHECK(!(o&0x20)); /* back-to-back RUN legal (pipelined) */
   chip_core_step(&c,0,0x00);
@@ -112,7 +112,7 @@ static void test_core(int A,int P){
   chip_core_step(&c,0,A?0x5F:0x59); CHECK(c.psum[0]==0 && !c.illegal);
 }
 /* pin-level checks through chip_step (pad pipeline + 33 MHz pad-out). Read uo_out 3 edges after an op (always valid);
- * dump nibbles = unfrozen beats with uo[6]=1. */
+ * dump nibbles = unfrozen output ticks with uo[6]=1. */
 static uint8_t pin_op(chip_t *c,uint8_t d,uint8_t ins){ chip_step(c,d,ins); chip_step(c,0,0); chip_step(c,0,0); return chip_step(c,0,0); }
 static void test_pin(int A,int P){
   for(int al=0;al<2;al++){ chip_t c; chip_reset(&c,A,P); for(int i=0;i<al;i++) chip_step(&c,0,0);

@@ -6,7 +6,7 @@ from chipio import Driver
 from model import load, train, qparams_affine, qparams_symmetric, quantize
 
 def chip_gemm(drv, A, B):
-    """A[M,K] int4, B[N,K] int4 -> A@B.T via streaming 2x2 tiles: CLEAR, K x (LOAD,LOAD,RUN,NOP), DBG_FLAGS, dump."""
+    """A[M,K] int4, B[N,K] int4 -> A@B.T via streaming 2x2 tiles: CLEAR, K x (LOAD,RUN) pipelined, DBG_FLAGS, dump."""
     M, K = A.shape; N = B.shape[0]
     A = np.pad(A, ((0, M % 2), (0, 0))); B = np.pad(B, ((0, N % 2), (0, 0))); C = np.zeros((A.shape[0], B.shape[0]), np.int64)
     for i in range(0, A.shape[0], 2):
