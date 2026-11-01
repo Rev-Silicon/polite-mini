@@ -31,15 +31,15 @@ panel(50, "DEBUG_MULTIPLY, edge k+1 is an output tick: byte on uo_out after edge
 panel(250, "DEBUG_MULTIPLY, edge k+1 is not an output tick: byte after edge k+3, held 2 clocks", 1,
       [(-0.7, 0, "0x9p", "op"), (0, 8, "NOP", "live")],
       [(0, 1, "live", "live"), (1, 3, "product (2 edges)", "byte"), (3, 8, "live", "live")],
-      [(0, 1, "live", "live"), (1, 3, "previous beat", "live"), (3, 5, "product[7:0]", "byte"), (5, 8, "live", "live")])
-panel(450, "DEBUG_PARTIAL_SUM: 3 opcodes one beat apart, one byte per beat (no burst; edge k+1 is an output tick)", 0,
+      [(0, 1, "live", "live"), (1, 3, "previous output tick", "live"), (3, 5, "product[7:0]", "byte"), (5, 8, "live", "live")])
+panel(450, "DEBUG_PARTIAL_SUM: 3 opcodes one output tick apart, one byte per output tick (no burst; edge k+1 is an output tick)", 0,
       [(-0.7, 0, "byte 0", "op"), (0, 1, "NOP", "live"), (1, 2, "byte 1", "op"), (2, 3, "NOP", "live"), (3, 4, "byte 2", "op"), (4, 8, "NOP", "live")],
       [(0, 1, "live", "live"), (1, 3, "sum[7:0]", "byte"), (3, 5, "sum[15:8]", "byte"), (5, 7, "sum[23:16]", "byte"), (7, 8, "live", "live")],
       [(0, 2, "live", "live"), (2, 4, "sum[7:0]", "byte"), (4, 6, "sum[15:8]", "byte"), (6, 8, "sum[23:16]", "byte")])
 # uio_in lanes in panel 3 are applied before edges k, k+2, k+4: draw as pin-time segments ending at those edges
 t(60, 655, "Pins change at most once per 2 clocks (33 MHz). The opcode is sampled at edge k and executes at edge k+1. The core holds the frozen byte for 2 edges,", 10, "start")
-t(60, 671, "so exactly one output tick (green) loads it into uo_out. Reading uo_out after edge k+3 always returns the byte. Space debug reads one beat apart.", 10, "start")
+t(60, 671, "so exactly one output tick (green) loads it into uo_out. Reading uo_out after edge k+3 always returns the byte. Space debug reads one output tick apart.", 10, "start")
 H = 690
 svg = f'<svg xmlns="http://www.w3.org/2000/svg" width="900" height="{H}" viewBox="0 0 900 {H}"><rect width="900" height="{H}" fill="#fff"/>'
-t(60, 24, "A debug opcode returns one byte, held on the pins for one beat (2 clocks)", 13, "start", True)
+t(60, 24, "A debug opcode returns one byte, held on the pins for one output tick (2 core ticks)", 13, "start", True)
 open(__file__.replace("gen_debug_timing.py", "debug_timing.svg"), "w").write(svg + "".join(out) + "</svg>")
