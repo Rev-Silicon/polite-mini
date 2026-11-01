@@ -34,7 +34,13 @@ Terms used below:
 | `uo_out[3:0]` | output | Data nibble (dump stream; 0 when idle) |
 | `uo_out[7:4]` | output | Live flags: bit 4 overflow, bit 5 illegal, bit 6 dump busy, bit 7 debug busy |
 
-All 16 input bits are inputs every cycle. A debug read replaces all 8 output bits for one cycle (Section 6.6).
+The `uio` pads are bidirectional in the Tiny Tapeout package, but this design drives `uio_oe = 0` on all 8 bits and ties `uio_out` to 0, so they are used as inputs only. All 16 input bits (`ui_in` and `uio_in`) are sampled on every rising edge.
+
+![Pins between the host and the chip](figures/pins.svg)
+
+<p align="center">Figure 1: pins between the host and the chip</p>
+
+A debug read replaces all 8 output bits for one cycle (Section 6.6).
 
 **Clock.** Single rising edge. The target is 66 MHz on the inputs and 33 MHz on the outputs. Place-and-route uses a 15.15 ns clock (66 MHz).
 
@@ -46,29 +52,38 @@ The behavior in the rest of this document is described one edge at a time inside
 
 The chip has one layout setting, load placement, fixed at build time. It decides which input buffer a LOAD writes first (Section 7.1). The host can read it from debug flags bit 6.
 
-## 4. Opcodes
+## 4. Commands
 
-Instruction byte = `uio[7:4]` opcode, `uio[3:0]` arguments.
+A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode, bits [3:0] the arguments. A new command can be given on every rising edge.
 
-| Op | Name | Arguments | Effect | Freezes output? |
-|---|---|---|---|---|
-| 0 | NOP | – | none | no |
-| 1 | LOAD | – | `ui_in` → input buffer, 1 cycle | no |
-| 2 | RUN | – | one multiply-accumulate step, 2 clocks | no |
-| 3 | DUMP_LOAD | – | copy partial sums → output buffer, start 24-nibble stream | no |
-| 4 | DUMP_ABORT | – | stop the stream, dump busy = 0 | no |
-| 5 | CLEAR | bit mask: bit 0 flags, bit 1 input buffer, bit 2 output buffer, bit 3 partial sums | clear the selected state; any conflict → whole CLEAR ignored and illegal set | no |
-| 6 | DEBUG_FLAGS | bank; only bank 0 is defined | 8-bit flag byte (Section 6.6) | yes |
-| 7 | DEBUG_BUFFER | bit 0: 0 = left, 1 = top | input buffer byte | yes |
-| 8 | DEBUG_PARTIAL_SUM | bits 1:0 processing element (dump order), bits 3:2 byte 0..2 | one byte of a 24-bit partial sum | yes |
-| 9 | DEBUG_MULTIPLY | bits 1:0 processing element | last product, sign-extended to 8 bits | yes |
-| A | DEBUG_ADD | bits 1:0 processing element | adder output, low byte (Section 6.7) | yes |
-| B | DEBUG_INPUT | – | echo of the registered `ui_in` | yes |
-| C–F | illegal | – | set the illegal flag | no |
+| Op | Name | What it does | Freezes output? |
+|---|---|---|---|
+| 0x0 | NOP | Nothing; the dump stream and flags keep flowing | no |
+| 0x1 | LOAD | Shift `ui_in` into the input buffer (1 edge) | no |
+| 0x2 | RUN | One multiply-accumulate step (2 edges) | no |
+| 0x3 | DUMP_LOAD | Copy the partial sums to the output buffer and start the 24-nibble stream | no |
+| 0x4 | DUMP_ABORT | Stop the stream; dump busy = 0 | no |
+| 0x5 | CLEAR | Zero the selected state; any conflict ignores the whole CLEAR and sets illegal | no |
+| 0x6 | DEBUG_FLAGS | Return the 8-bit flag byte (Section 6.6) | yes, 1 byte |
+| 0x7 | DEBUG_BUFFER | Return the left or top input buffer byte | yes, 1 byte |
+| 0x8 | DEBUG_PARTIAL_SUM | Return one byte of a 24-bit partial sum | yes, 1 byte (3 commands for 24 bits) |
+| 0x9 | DEBUG_MULTIPLY | Return the last product, sign-extended to 8 bits | yes, 1 byte (full product) |
+| 0xA | DEBUG_ADD | Return the low byte of the adder output (Section 6.7) | yes, 1 byte (low byte only) |
+| 0xB | DEBUG_INPUT | Return the registered `ui_in` byte | yes, 1 byte |
+| 0xC–0xF | — | Illegal: set the illegal flag | no |
 
-These encodings set the illegal flag and do **not** freeze: opcodes C–F, DEBUG_FLAGS with bank ≠ 0, and DEBUG_PARTIAL_SUM with byte 3.
+| Command | Argument bits |
+|---|---|
+| NOP, LOAD, RUN, DUMP_LOAD, DUMP_ABORT, DEBUG_INPUT | [3:0] reserved, drive 0 |
+| CLEAR | [3] partial sums, [2] output buffer, [1] input buffer (left and top), [0] flags (overflow and illegal); any combination |
+| DEBUG_FLAGS | [3:0] bank, only 0 is defined |
+| DEBUG_BUFFER | [3:1] reserved, [0] buffer (0 = left, 1 = top) |
+| DEBUG_PARTIAL_SUM | [3:2] byte (0 = bits 7:0, 1 = bits 15:8, 2 = bits 23:16), [1:0] processing element |
+| DEBUG_MULTIPLY / DEBUG_ADD | [3:2] reserved, [1:0] processing element |
 
-Processing element index (for arguments and dump order): 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1).
+Shared fields always sit in the same place: [1:0] is the processing element index whenever a command takes one, and [3:2] is the byte select. Processing element index (also the dump order): 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1).
+
+These argument values set the illegal flag and do **not** freeze: DEBUG_FLAGS with bank ≠ 0, and DEBUG_PARTIAL_SUM with byte 3. Reserved bits are ignored.
 
 ## 5. Flags
 
@@ -135,6 +150,25 @@ DEBUG_FLAGS bank 0 bit layout:
 
 - Dump busy reports the state at the start of the cycle. A freeze during a dump also shows dump paused = 1, so the two bits agree even on the last-nibble cycle.
 - On the second clock of a RUN, run busy = 1, and bit 0 includes any overflow from the add that finishes on that cycle.
+
+### 6.6.1 Debug read latency and width
+
+One debug opcode produces one freeze, and one freeze returns one byte. There is no multi-byte burst. At the pins, an opcode sampled on rising edge k shows its byte on `uo_out` after edge k+2, for one clock period. Debug opcodes can be issued on consecutive edges; each one returns its byte one edge after the previous one.
+
+| Opcode | Width per freeze | Opcodes for the full value | Byte visible at pins (opcode sampled on edge k) |
+|---|---|---|---|
+| DEBUG_FLAGS | 8 bits | 1 | after edge k+2 |
+| DEBUG_BUFFER | 8 bits (left or top) | 1 | after edge k+2 |
+| DEBUG_PARTIAL_SUM | 8 of 24 bits (argument picks byte 0, 1 or 2) | 3 | after edges k+2, k+3, k+4 when issued on edges k, k+1, k+2 |
+| DEBUG_MULTIPLY | full 8-bit product (int4 × int4, sign-extended) | 1 | after edge k+2 |
+| DEBUG_ADD | low 8 bits of the 24-bit wrapped sum only | 1 (low byte only) | after edge k+2 |
+| DEBUG_INPUT | 8 bits | 1 | after edge k+2 |
+
+DEBUG_ADD never returns the upper 16 bits. To read the full 24-bit result of an add, let the RUN finish and then read the partial sum with three DEBUG_PARTIAL_SUM opcodes.
+
+![Debug read timing](figures/debug_timing.svg)
+
+<p align="center">Figure 2: debug reads, one byte per opcode, 2 rising edges after the pins present it</p>
 
 **Dump pause.** Only a debug read that freezes the output pauses the dump. On that cycle the stream does not advance, dump paused = 1, and the stream resumes on the next cycle. No nibbles are lost. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0, DEBUG_PARTIAL_SUM byte 3) does not pause: the nibble goes out and the stream stays complete.
 
