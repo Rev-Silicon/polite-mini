@@ -32,7 +32,7 @@ panel(250, "DEBUG_MULTIPLY, edge k+1 is not an output tick: byte after edge k+3,
       [(-0.7, 0, "0x9p", "op"), (0, 8, "NOP", "live")],
       [(0, 1, "live", "live"), (1, 3, "product (2 edges)", "byte"), (3, 8, "live", "live")],
       [(0, 1, "live", "live"), (1, 3, "previous beat", "live"), (3, 5, "product[7:0]", "byte"), (5, 8, "live", "live")])
-panel(450, "DEBUG_PARTIAL_SUM: 3 opcodes one beat apart, one byte per beat (no burst)", 0,
+panel(450, "DEBUG_PARTIAL_SUM: 3 opcodes one beat apart, one byte per beat (no burst; edge k+1 is an output tick)", 0,
       [(-0.7, 0, "byte 0", "op"), (0, 1, "NOP", "live"), (1, 2, "byte 1", "op"), (2, 3, "NOP", "live"), (3, 4, "byte 2", "op"), (4, 8, "NOP", "live")],
       [(0, 1, "live", "live"), (1, 3, "sum[7:0]", "byte"), (3, 5, "sum[15:8]", "byte"), (5, 7, "sum[23:16]", "byte"), (7, 8, "live", "live")],
       [(0, 2, "live", "live"), (2, 4, "sum[7:0]", "byte"), (4, 6, "sum[15:8]", "byte"), (6, 8, "sum[23:16]", "byte")])
