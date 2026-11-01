@@ -127,7 +127,7 @@ Because the adders are still busy on phase 2, a RUN that arrives on phase 2 of a
 
 The two operands of a RUN come from two different places: one is the byte held in the input buffer, the other is the byte on the `ui_in` bus in the same instruction as the RUN. There is no shift register between them; LOAD only replaces the buffer byte. In regular use the host LOADs the operand it wants to reuse, then issues RUNs with a new bus byte each time (`LOAD, RUN, NOP, RUN, NOP, …`), and LOADs again whenever the buffered operand must change (for example `LOAD, RUN, LOAD, RUN, …` when both operands change every step). Because the bus byte rides with the RUN itself, a RUN needs no LOAD of its own to receive a fresh bus operand.
 
-A LOAD that changes the buffer spends an issue slot. A single fused command that loaded operands and performed the multiply-accumulate, taking two cycles to process both, would remove the separate LOAD instruction and its issue slot. This chip is a test chip, however, and producing a design that works in the end has priority over that optimization. Keeping LOAD and RUN as separate, simple commands keeps each one easy to verify on its own and leaves the fused form as a candidate for a later revision.
+A LOAD that changes the buffer spends an issue slot. Because RUN already takes its second operand from the bus, a fused LOAD+RUN would save only the LOAD's issue slot on steps that change the buffered operand; steps that reuse the buffer gain nothing. This chip is a test chip, however, and producing a design that works in the end has priority over that optimization. Keeping LOAD and RUN as separate, simple commands keeps each one easy to verify on its own and leaves the fused form as a candidate for a later revision.
 
 On RUN phase 2 the RUN still counts as in progress. Other opcodes executed on that cycle see run busy = 1 and see the partial sums as they were *before* the add; the add takes effect at the end of the cycle. Section 5.7 lists exactly which reads see the pre-add and which see the post-add values on that cycle.
 
@@ -217,7 +217,7 @@ The rule behind these cases: reads that report the adder output or a value latch
 
 ## 6. Datapath
 
-### 6.1 LOAD packing
+### 6.1 Operand packing
 A data byte, whether written to the input buffer by LOAD or presented on `ui_in` with RUN, holds two signed int4 lanes: the high nibble is lane 1 and the low nibble is lane 0. The input buffer is a single byte; LOAD overwrites it in one edge and nothing else moves. CLEAR bit 1 zeroes it. Physically, the input buffer sits on the side of the floorplan furthest from the input pads, a placement chosen because layout showed no preference. A host can verify it with DEBUG_BUFFER before running.
 
 ![Load path into the array](figures/load_path.svg)
@@ -239,7 +239,9 @@ Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, wh
 
 Packaging: the design does not fit a Tiny Tapeout 1×1 tile, so it uses a 1×2 tile.
 
-Functional verification is current. Verified at commit `677ce98`: the hardware design matches the reference model (`golden/chip.c`) cycle for cycle on `uo_out` in random simulation; the reference model self-test `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test` reports ALL PASS; and the adversarial suite, including round R7, passes 70 / 0 / 0 (pass / fail / gap).
+Verification status at commit `71af5e2` (input buffer × live `ui_in` bus): the reference model self-test `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test` reports ALL PASS. The adversarial suite rounds R1–R7 pass with 0 failures and 0 gaps (R1 75, R2 24, R3 26, R4 15, R5 20, R6 9, R7 70 passing checks). Rounds R8 and R9 do not pass: R8 reports 70 pass / 8 fail / 1 gap, with its failures in checks of SPEC wording that the R8 locks later superseded; R9 reports 49 pass / 2 fail / 1 gap, including a check for the live `uo[7]` = 0 wording. The RTL elaborates under iverilog and verilator in all four configurations on the build server (`verify/rtl_elab/SUMMARY.md`).
+
+**Gap:** RTL↔reference-model lockstep simulation (`verify/rtl_sim/run_sim.sh`) has not been rerun since the buffer+bus retarget, because iverilog and verilator are not available on the verification box. Cycle-for-cycle agreement between the RTL and `golden/chip.c` at `71af5e2` is therefore unverified, as is `ena`-hold behavior in simulation.
 
 ## 8. Open items
 
