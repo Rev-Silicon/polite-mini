@@ -61,7 +61,7 @@ Run 2 (RUN_2026-11-01_22-13-05, log pnr/logs/a0_g6_server_2.log; config saved pr
 - max_cap: max_ss 2; nom_ss 0; min_ss 0; tt/ff 0
 - setup WS worst +3.940 ns (max_ss); WNS 0; hold WS +0.201
 
-STATUS (Run 2): NOT CLEAN — superseded by pass 3 below.
+STATUS: NOT CLEAN. G6 remaining punches: 44 max_slew + 2 max_cap at max_ss_100C_1v60 only. Not waived.
 
 ### G6 pass 3 — server — 2026-11-01 ~16:27 CT — **G6 CLEAN**
 Tip RTL/SDC 54f4beb (host=server). Run RUN_2026-11-01_22-26-48, log pnr/logs/a0_g6_server_3.log; prior knobs saved as pnr/a0/config.g6_run2.json.
@@ -69,3 +69,10 @@ Knobs: MAX_TRANSITION 0.6, DESIGN_REPAIR slew/cap 70/70, GRT_DESIGN_REPAIR 50/50
 Signoff STA (9 corners): max_slew 0, max_cap 0 at every corner (Run 2 had 44/2 at max_ss). Setup WS +3.927 ns (max_ss_100C_1v60), 0 viol. Hold WS +0.201 ns (min_ff_n40C_1v95), 0 viol.
 Route DRC 0, Magic DRC 0, KLayout DRC 0, LVS clean, antenna 0, util 49.5%. Info only: max_fanout_violation count 114 (fanout limit 8). That is not part of G6 slew/cap; nothing waived.
 Peak memory in logs: DRT 743 MB. OpenROAD RSS stayed well below 20 GiB.
+
+## A0 fanout closure (server, 2026-11-01 ~17:05 CT) — G6 CLEAN + fanout 0
+- host=server, RTL 54f4beb (HEAD unchanged), knobs base cc79d7d pass-3 (backup pnr/a0/config.g6_pass3.json)
+- Run: pnr/a0/runs/RUN_2026-11-01_22-51-47 (1 iteration); log pnr/logs/a0_fanout_iter1.log
+- Root cause of 114: RUN_HEURISTIC_DIODE_INSERTION added ~1 diode per sink after GRT (post-CTS fanout was 6 -> 114 at step 45), plus pnr SDC set_max_fanout 10 (signoff limit was 10, not 8).
+- Knobs added: MAX_FANOUT_CONSTRAINT 8 (unchanged); PNR/SIGNOFF_SDC_FILE -> pnr/a0/polite_vneg1_fo8.sdc (copy of polite_vneg1.sdc with set_max_fanout 8); RUN_HEURISTIC_DIODE_INSERTION false; RUN_ANTENNA_REPAIR true; DESIGN_REPAIR_BUFFER_INPUT/OUTPUT_PORTS true; DESIGN_REPAIR_REMOVE_BUFFERS false; SYNTH_BUFFERING true; CTS_SINK_CLUSTERING_SIZE 8. G6 knobs kept (MAX_TRANSITION 0.6, DR 70/70, GRT 50/50).
+- Signoff (9 corners): max_fanout 0 (was 114), max_slew 0, max_cap 0 -> G6 CLEAN. Setup WS min +4.061 ns, hold WS min +0.045 ns, 0 setup/hold vios. Antenna 0, Magic/KLayout DRC 0, LVS 0.
