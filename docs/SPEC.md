@@ -91,7 +91,7 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 |---|---|
 | NOP, LOAD, RUN, DUMP_LOAD, DUMP_ABORT, DEBUG_INPUT | [3:0] reserved, drive 0 |
 | CLEAR | [3] partial sums, [2] output buffer, [1] input buffer (left and top), [0] flags (overflow and illegal); any combination |
-| DEBUG_FLAGS | [3:0] bank, only 0 is defined |
+| DEBUG_FLAGS | [3:0] bank select; only bank 0 is defined on this chip, other banks are reserved for future flag expansion (Section 5) |
 | DEBUG_BUFFER | [3:1] reserved, [0] buffer (0 = left, 1 = top) |
 | DEBUG_PARTIAL_SUM | [3:2] byte (0 = bits 7:0, 1 = bits 15:8, 2 = bits 23:16), [1:0] processing element |
 | DEBUG_MULTIPLY | [3:2] reserved, [1:0] processing element |
@@ -119,6 +119,8 @@ The chip keeps six status flags. Four of them are live on the output pins on eve
 *Sticky* means the flag stays set until the host clears it with CLEAR bit 0, no matter how much time passes. This matters for a host that polls only occasionally: an overflow or a rejected command is never lost just because the host looked at the pins a few beats too late. *Level* flags, by contrast, simply report what the chip is doing right now.
 
 Reset clears every flag and all chip state. The live pins `uo[7:4]` carry the first four flags; run busy and dump paused are visible only through DEBUG_FLAGS. Note that on a frozen beat the upper pins carry bits of the debug byte, not the live flags, so a host watching `uo_out[7:4]` should skip the beats it froze itself.
+
+**Room to grow.** DEBUG_FLAGS is intended to allow expansion. If more status or diagnostic flags prove useful for testing, they will be added in a future build as additional *banks*: each bank is its own 8-bit flag byte, and the host selects which bank to read with the DEBUG_FLAGS argument bits [3:0]. Banks are a build-time expansion path, so a host driver written today keeps working unchanged — it simply keeps asking for bank 0. On this chip only bank 0 is defined (layout in Section 6.6). Any other bank is undefined and illegal: it sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that beat. Bank 0 is a normal freezing read of exactly one beat.
 
 ## 6. Behavior for host software
 
@@ -243,7 +245,7 @@ Functional verification is current. Verified at commit `677ce98`: the hardware d
 
 ## 9. Open items
 
-- DEBUG_FLAGS banks other than 0 are undefined and illegal.
+- DEBUG_FLAGS banks other than 0 are undefined and illegal (reserved for future testing-flag expansion, Section 5).
 - The reference model does not model `ena`. Behavior at the pins: a hold takes effect one edge after `ena` goes low and ends one edge after it goes high; the edges in between are *hold edges*. Commands presented only during hold edges are **not** sampled; whatever is on the pads on the first enabled edge after the hold is what gets captured. All state, including the beat phase, freezes while held and resumes where it stopped, so a host tracking beat phase by counting clocks should not count hold edges.
 
 ## 10. References
