@@ -235,13 +235,13 @@ Flow: LibreLane 3.0.14, SkyWater 130 nm (sky130A) high-density cells, 15.15 ns c
 | Setup total negative slack (TNS) | 0 |
 | Hold WNS, all corners | +0.207 ns |
 | Routing design rule check (DRC) / Magic DRC / KLayout DRC / layout versus schematic (LVS) | 0 / 0 / 0 / 0 errors |
-| Max slew / max capacitance violations | 494 / 24 (slow corner only) |
+| Max slew / max capacitance violations | 494 / 24 (slow corner only; open, to be fixed by tightening, not waived; see Section 9) |
 
 The design does not fit a 1×1 tile, so it uses a 1×2 tile. Verified at commit `677ce98`: the register-transfer level (RTL) design matches the reference model (`golden/chip.c`) cycle for cycle on `uo_out` in random simulation; the reference model self-test `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test` reports ALL PASS; and the adversarial suite, including round R7, passes 70 / 0 / 0 (pass / fail / gap). The physical table above predates this commit (see above).
 
 ## 9. Open items
 
-- The remaining slow-corner slew and capacitance violations (494 / 24) are not yet fixed or waived.
+- Slow-corner slew and capacitance violations (494 / 24): open — Alex directed fix by tightening (not waive); pending Cast A0 re-PnR on tip 677ce98.
 - DEBUG_FLAGS banks other than 0 are undefined and illegal.
 - The reference model does not model `ena`. Holding `ena` low also holds the output phase register, so the beat phase picks up where it stopped.
 
