@@ -61,4 +61,11 @@ Run 2 (RUN_2026-11-01_22-13-05, log pnr/logs/a0_g6_server_2.log; config saved pr
 - max_cap: max_ss 2; nom_ss 0; min_ss 0; tt/ff 0
 - setup WS worst +3.940 ns (max_ss); WNS 0; hold WS +0.201
 
-STATUS: NOT CLEAN. G6 remaining punches: 44 max_slew + 2 max_cap at max_ss_100C_1v60 only. Not waived.
+STATUS (Run 2): NOT CLEAN — superseded by pass 3 below.
+
+### G6 pass 3 — server — 2026-11-01 ~16:27 CT — **G6 CLEAN**
+Tip RTL/SDC 54f4beb (host=server). Run RUN_2026-11-01_22-26-48, log pnr/logs/a0_g6_server_3.log; prior knobs saved as pnr/a0/config.g6_run2.json.
+Knobs: MAX_TRANSITION 0.6, DESIGN_REPAIR slew/cap 70/70, GRT_DESIGN_REPAIR 50/50, MAX_FANOUT 8, RUN_POST_GRT_DESIGN_REPAIR true, CLOCK_PERIOD 15.15, half-rate multicycle SDC.
+Signoff STA (9 corners): max_slew 0, max_cap 0 at every corner (Run 2 had 44/2 at max_ss). Setup WS +3.927 ns (max_ss_100C_1v60), 0 viol. Hold WS +0.201 ns (min_ff_n40C_1v95), 0 viol.
+Route DRC 0, Magic DRC 0, KLayout DRC 0, LVS clean, antenna 0, util 49.5%. Info only: max_fanout_violation count 114 (fanout limit 8). That is not part of G6 slew/cap; nothing waived.
+Peak memory in logs: DRT 743 MB. OpenROAD RSS stayed well below 20 GiB.

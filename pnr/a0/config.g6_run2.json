@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "version": 3,
+    "flow": "Classic"
+  },
+  "DESIGN_NAME": "tt_um_polite_vneg1_a0",
+  "VERILOG_FILES": [
+    "dir::../../rtl/ctrl/polite_ctrl.sv",
+    "dir::../../rtl/dbg/polite_dbg.sv",
+    "dir::../../rtl/mac/polite_mac.sv",
+    "dir::../../rtl/outbuf/polite_outbuf.sv",
+    "dir::../../rtl/pe/polite_pe.sv",
+    "dir::../../rtl/top/tt_um_polite_vneg1.sv",
+    "dir::top.sv"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 15.15,
+  "FP_SIZING": "absolute",
+  "DIE_AREA": [
+    0,
+    0,
+    334.88,
+    225.76
+  ],
+  "PL_TARGET_DENSITY_PCT": 55,
+  "RT_MAX_LAYER": "met4",
+  "PDN_MULTILAYER": false,
+  "PDN_VWIDTH": 2.0,
+  "PDN_VPITCH": 50.0,
+  "PDN_VOFFSET": 20.0,
+  "RUN_POST_GPL_DESIGN_REPAIR": true,
+  "EXTRA_EXCLUDED_CELLS": [
+    "sky130_fd_sc_hd__clkdlybuf4s*"
+  ],
+  "RUN_HEURISTIC_DIODE_INSERTION": true,
+  "DRT_THREADS": 4,
+  "STA_THREADS": 4,
+  "KLAYOUT_DRC_THREADS": 4,
+  "KLAYOUT_XOR_THREADS": 4,
+  "PNR_SDC_FILE": "dir::../polite_vneg1.sdc",
+  "SIGNOFF_SDC_FILE": "dir::../polite_vneg1.sdc",
+  "MAX_FANOUT_CONSTRAINT": 8,
+  "MAX_TRANSITION_CONSTRAINT": 0.75,
+  "CLOCK_UNCERTAINTY_CONSTRAINT": 0.3,
+  "RUN_POST_GRT_DESIGN_REPAIR": true,
+  "DESIGN_REPAIR_MAX_SLEW_PCT": 50,
+  "DESIGN_REPAIR_MAX_CAP_PCT": 50,
+  "GRT_DESIGN_REPAIR_MAX_SLEW_PCT": 40,
+  "GRT_DESIGN_REPAIR_MAX_CAP_PCT": 40
+}
