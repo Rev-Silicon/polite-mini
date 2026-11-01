@@ -156,7 +156,7 @@ CLEAR zeroes chosen parts of the chip state. Its arguments are a bit mask, and a
 Some clears would destroy work that is still in progress. If any selected bit conflicts, the **whole** CLEAR is ignored — including its non-conflicting bits — and the illegal flag is set:
 
 - Bit 3 (partial sums) while run busy is 1 at the start of the core tick, i.e. on the core tick right after any RUN, when that RUN's phase 2 is in flight. Because a RUN and a CLEAR cannot execute on the same core tick, this covers every pipeline stage that could touch the partial sums: a CLEAR on a core tick with no phase 2 in flight is safe even in the middle of a RUN stream with gaps. In a gap-free RUN stream there is no free core tick until one core tick after the last RUN.
-- Bit 2 (output buffer) while a dump was in progress at the start of the cycle, including the last-nibble cycle.
+- Bit 2 (output buffer) while a dump was in progress at the start of the core tick, including the last-nibble core tick.
 
 The all-or-nothing rule is intentional. If a CLEAR could partly succeed, the host would have to read back the state to find out which parts were actually cleared. With all-or-nothing, the host only has to check one thing — the illegal flag — and if it is clear, every bit it asked for took effect. One consequence is worth spelling out: a CLEAR that includes bit 0 and is rejected does not clear the flags, so the illegal flag it sets remains visible.
 
@@ -238,7 +238,7 @@ A data byte, whether written to the input buffer by LOAD or presented on `ui_in`
 <p align="center">Figure 3: operand paths (LOAD → input buffer; RUN → bus byte). High nibble [7:4] is lane 1 = index 2; low nibble [3:0] is lane 0 = index 1. All four processing elements feed the output buffer, which DUMP_LOAD fills in one edge and streams out on `uo_out[3:0]`.</p>
 
 ### 6.2 Accumulate
-Each RUN performs `PE(i,j) += buf[i] × bus[j]`, where `buf` is the input buffer byte and `bus` is the `ui_in` byte sampled with the RUN, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. The product of two int4 values always fits in 8-bit signed. Partial sums are 24-bit two's complement and wrap around on overflow rather than saturating; any wrap sets the sticky overflow flag. A host that sees overflow set knows that at least one add wrapped since the flags were last cleared, so the sums may not equal the true mathematical result (the flag is sticky: a later opposite wrap may have restored a sum, or the flag may be left over from an earlier tile) and can decide whether to discard or rescale the tile.
+Each RUN performs `PE(i,j) += buf[i] × bus[j]`, where `buf` is the input buffer byte and `bus` is the `ui_in` byte sampled with the RUN, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. The product of two int4 values always fits in an 8-bit signed value. Partial sums are 24-bit two's complement and wrap around on overflow rather than saturating; any wrap sets the sticky overflow flag. A host that sees overflow set knows that at least one add wrapped since the flags were last cleared, so the sums may not equal the true mathematical result (the flag is sticky: a later opposite wrap may have restored a sum, or the flag may be left over from an earlier tile) and can decide whether to discard or rescale the tile.
 
 ### 6.3 Dump stream order
 A dump is 24 nibbles = 4 processing elements × 6 nibbles each:
