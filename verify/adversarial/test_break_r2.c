@@ -6,6 +6,7 @@ static int fails=0, passes=0, gaps=0;
 #define CHECK(id,x) do{ if(!(x)){printf("FAIL [%s] %s:%d %s\n",id,__FILE__,__LINE__,#x);fails++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 #define GAP(id,x,msg) do{ if(!(x)){printf("GAP  [%s] %s\n",id,msg);gaps++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ return chip_step(c,d,i); }
+#include "halfrate.h"
 static void load2(chip_t*c){ S(c,0x21,0x10); S(c,0x3F,0x10); }
 static void mac(chip_t*c){ S(c,0,0x20); S(c,0,0x00); }
 static int32_t sx(int32_t g){ return ((g&0xFFFFFF)^0x800000)-0x800000; }
@@ -13,12 +14,12 @@ static int32_t sx(int32_t g){ return ((g&0xFFFFFF)^0x800000)-0x800000; }
 static int dump_collect(chip_t*c,const uint8_t*ins,int nins,int32_t got[4]){
   int n=0,cyc=0; memset(got,0,16); S(c,0,0x30);
   while(c->dump_busy && cyc<200){ uint8_t i=cyc<nins?ins[cyc]:0; uint8_t o=S(c,0,i); cyc++;
-    if(!c->frozen){ if(n<24) got[n/6]|=(o&0xF)<<(4*(n%6)); n++; } }
+    if(c->phase==0 && !c->ofz){ if(n<24) got[n/6]|=(o&0xF)<<(4*(n%6)); n++; } }
   return n; }
 static int content_ok(chip_t*c,int32_t got[4]){ for(int k=0;k<4;k++) if(sx(got[k])!=c->psum[k]) return 0; return 1; }
 
 static void r2_f8(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); S(&c,0,0x30);
-  for(int i=0;i<23;i++) S(&c,0,0); /* 23 nibbles out; dump_busy=1 at start of next cycle */
+  hr_to_final(&c); /* 23 nibbles out; next edge is the final-nibble out_tick */
   int busy_at_start=c.dump_busy; int32_t ob=c.outbuf[0];
   S(&c,0,0x54); /* CLEAR outbuf on final-nibble cycle */
   CHECK("R2-F8-precond-busy-at-start", busy_at_start);
@@ -36,7 +37,7 @@ static void r2_f10(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
   CHECK("R2-F10-illegal-dbg-during-dump-24-nibbles", n==24);
   CHECK("R2-F10-illegal-dbg-during-dump-content", content_ok(&c,got));
   /* Cast preference: any DBG_* pauses. Model emits nibble on illegal DBG (no pause). */
-  chip_t d; chip_reset(&d,1,0); load2(&d); mac(&d); S(&d,0,0x30); S(&d,0,0); int idx=d.dump_idx; S(&d,0,0x8C);
+  chip_t d; chip_reset(&d,1,0); load2(&d); mac(&d); S(&d,0,0x30); S(&d,0,0); hr_align_tick(&d); int idx=d.dump_idx; S(&d,0,0x8C);
   CHECK("R2-F10b-illegal-dbg-no-pause", d.dump_idx==idx+1 && !d.dump_paused); /* Forge lock: only freezing DBG pauses */ }
 static void r2_f11(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10); /* 7*7=49 */
   c.psum[0]=0x7FFFF0; S(&c,0,0x20); S(&c,0,0x51); /* phase2 wraps, CLEAR flags same cycle */
@@ -46,7 +47,7 @@ static void dbg_pauses(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
   int n=dump_collect(&c,ins,12,got);
   CHECK("R2-A1-consec-dbg-pauses-24", n==24); CHECK("R2-A1-consec-dbg-pauses-content", content_ok(&c,got));
   chip_t d; chip_reset(&d,1,0); load2(&d); mac(&d); S(&d,0,0x30); S(&d,0,0x70);
-  int p1=d.dump_paused; S(&d,0,0); CHECK("R2-A1-dump_paused-only-on-freeze", p1 && !d.dump_paused);
+  int p1=d.dump_paused; S(&d,0,0); S(&d,0,0); CHECK("R2-A1-dump_paused-only-on-freeze", p1 && !d.dump_paused);
   chip_t e; chip_reset(&e,1,0); load2(&e); mac(&e); S(&e,0,0x30); S(&e,0,0); uint8_t o=S(&e,0,0x60);
   CHECK("R2-A2-dbgflags-during-dump-paused-bit5", o&0x20); CHECK("R2-A2-dbgflags-during-dump-busy-bit2", o&0x04);
   chip_t f; chip_reset(&f,1,0); load2(&f); mac(&f); S(&f,0,0x30); S(&f,0,0); S(&f,0,0x70); S(&f,0,0x40);

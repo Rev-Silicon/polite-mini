@@ -11,7 +11,9 @@ class Chip(ctypes.Structure):
                 ("ovf", ctypes.c_int), ("illegal", ctypes.c_int), ("run_busy", ctypes.c_int), ("dump_busy", ctypes.c_int),
                 ("debug_busy", ctypes.c_int), ("dump_paused", ctypes.c_int), ("outbuf", ctypes.c_int32 * 4), ("dump_idx", ctypes.c_int),
                 ("frozen", ctypes.c_int), ("frozen_val", ctypes.c_uint8),
-                ("in_d_q", ctypes.c_uint8), ("in_i_q", ctypes.c_uint8), ("uo_q", ctypes.c_uint8)]
+                ("phase", ctypes.c_int), ("fz_prev", ctypes.c_int), ("ofz", ctypes.c_int),
+                ("in_d_q", ctypes.c_uint8), ("in_i_q", ctypes.c_uint8), ("uo_q", ctypes.c_uint8), ("uo_pad", ctypes.c_uint8),
+                ("otick_q", ctypes.c_int)]
 
 def _lib():
     src = os.path.join(ROOT, "golden", "chip.c")
@@ -38,17 +40,28 @@ class Driver:
         L, T = pack(*a2), pack(*b2)
         first, second = (T, L) if self.P == 0 else (L, T)
         self.step(first, LOAD); self.step(second, LOAD); self.step(0, RUN); self.step(0, NOP)  # NOP = RUN cycle 2
-    LAT = 2  # pad pipeline: input flop + registered uo_out -> result of op n appears on step n+2
+    # 33 MHz pad-out: uo_out updates once per beat (2 core clocks). An op on pin step j executes on core edge j+1;
+    # pin step n shows the core output of edge n-1 iff n-1 is odd (out_tick), counted from reset. A debug read is
+    # stretched over 2 core edges, so it is always on the pads after step j+3. Debug reads are spaced one beat (op, NOP).
+    LAT = 3
     def flags(self): return self.query([(0, DBG_FLAGS)])[0]
     def query(self, ops):
-        """Issue ops, then LAT NOPs; return the uo_out produced for each op (aligned for pad latency)."""
-        outs = [self.step(d, i) for d, i in ops] + [self.step(0, NOP) for _ in range(self.LAT)]
-        return outs[self.LAT:]
+        """Issue each op followed by a NOP (one beat per op); return the uo_out for each op read at step j+3."""
+        outs, idx = [], []
+        for d, i in ops: idx.append(self.steps); outs.append(self.step(d, i)); outs.append(self.step(0, NOP))
+        base = idx[0] if idx else self.steps
+        outs += [self.step(0, NOP) for _ in range(self.LAT)]
+        return [outs[j - base + self.LAT] for j in idx]
     def read_tile(self):
         """2x2 int32 tile [[(1,1),(1,2)],[(2,1),(2,2)]]. cfg A: DUMP_LOAD stream; cfg B: DBG_PSUM bytes."""
         raw = [0] * 4
         if self.A:
-            o = self.query([(0, DUMP_LOAD)] + [(0, NOP)] * 24)[1:]
+            self.step(0, DUMP_LOAD); edges = [self.step(0, NOP) for _ in range(60)]
+            # pins: one value per beat (2 edges); nibble beats have uo[6]=1. Sample every 2nd edge starting at the first
+            # uo[6]=1 edge, so no phase tracking is needed.
+            s0 = next(i for i, v in enumerate(edges) if v & 0x40)
+            o = [edges[s0 + 2 * n] for n in range(24)]
+            assert all(v & 0x40 for v in o) and not edges[s0 + 48] & 0x40
             for n in range(24): raw[n // 6] |= (o[n] & 0xF) << (4 * (n % 6))
         else:
             o = self.query([(0, DBG_PSUM | k | (b << 2)) for k in range(4) for b in range(3)])

@@ -6,10 +6,11 @@ static int fails=0, passes=0, gaps=0;
 #define CHECK(id,x) do{ if(!(x)){printf("FAIL [%s] %s:%d %s\n",id,__FILE__,__LINE__,#x);fails++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 #define GAP(id,x,msg) do{ if(!(x)){printf("GAP  [%s] %s\n",id,msg);gaps++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ return chip_step(c,d,i); }
+#include "halfrate.h"
 static void load2(chip_t*c){ S(c,0x21,0x10); S(c,0x3F,0x10); }
 static void mac(chip_t*c){ S(c,0,0x20); S(c,0,0x00); }
 /* DUMP_LOAD then 23 idle cycles: next cycle is the final-nibble cycle (dump_idx==23) */
-static void to_final(chip_t*c){ S(c,0,0x30); for(int i=0;i<23;i++) S(c,0,0); }
+static void to_final(chip_t*c){ S(c,0,0x30); hr_to_final(c); }
 
 static void f12(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); to_final(&c);
   CHECK("R3-F12-precond", c.dump_busy && c.dump_idx==23);
@@ -51,9 +52,9 @@ static void abort_reload(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c)
   CHECK("R3-S4-dump-load-after-abort", !c.illegal && c.dump_busy && c.dump_idx==0); }
 static void clear_pe_dump(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); S(&c,0,0x30); S(&c,0,0); int32_t ob=c.outbuf[0];
   S(&c,0,0x58);
-  CHECK("R3-S5-clear-pe-mid-dump-ok", !c.illegal && c.psum[0]==0 && c.outbuf[0]==ob && c.dump_busy && c.dump_idx==2); }
+  CHECK("R3-S5-clear-pe-mid-dump-ok", !c.illegal && c.psum[0]==0 && c.outbuf[0]==ob && c.dump_busy && c.dump_idx==1); } /* 3 edges after load = 1 out_tick advance (half-rate) */
 static void cfgA_combo(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); int32_t p=c.psum[0];
-  S(&c,0,0x30); for(int i=0;i<22;i++) S(&c,0,0); S(&c,0,0x20); /* RUN phase1 at nibble 22 */
+  S(&c,0,0x30); { int e=0; while(!(c.dump_idx==23 && c.phase==0) && e<400){ S(&c,0,0); e++; } } S(&c,0,0x20); /* RUN phase1 on the non-tick edge before the final out_tick */
   int32_t ob=c.outbuf[0]; S(&c,0,0x54); /* phase2 + final nibble + CLEAR outbuf */
   CHECK("R3-S6-cfgA-p2-final-clear-outbuf-collide", c.illegal && c.outbuf[0]==ob);
   CHECK("R3-S6-cfgA-p2-acc-done", c.psum[0]==2*p && !c.run_busy && !c.dump_busy); }

@@ -14,3 +14,10 @@ set_driving_cell -lib_cell sky130_fd_sc_hd__buf_2 -pin X $non_clk_inputs
 set_load 0.035 [all_outputs]
 set_max_fanout 10 [current_design]
 set_max_transition 1.5 [current_design]
+# 33 MHz pad-out (2026-11-01): uo_q loads only when out_phase_q==0 (enable from a /2 phase flop, still clocked by clk),
+# so uo_out changes at most once per 2 clk (30.30 ns). No generated clock exists: uo_q is not clocked by the phase flop,
+# so a create_generated_clock would not attach to any real clock pin. Use a 2-cycle multicycle to the uo_out ports instead.
+# uio_out/uio_oe are constant 0 and stay single-cycle.
+set uo_ports [get_ports {uo_out[*]}]
+set_multicycle_path -setup 2 -to $uo_ports
+set_multicycle_path -hold  1 -to $uo_ports

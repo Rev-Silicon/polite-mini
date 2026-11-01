@@ -6,6 +6,7 @@ static int fails=0, passes=0, gaps=0;
 #define CHECK(id,x) do{ if(!(x)){printf("FAIL [%s] %s:%d %s\n",id,__FILE__,__LINE__,#x);fails++;} else passes++; }while(0)
 #define GAP(id,x,msg) do{ if(!(x)){printf("GAP  [%s] %s\n",id,msg);gaps++;} else passes++; }while(0)
 static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ return chip_step(c,d,i); }
+#include "halfrate.h"
 static int s4(int v){ v&=0xF; return v&8?v-16:v; }
 static const int PR[4]={2,2,1,1}, PC[4]={2,1,2,1};
 static int lanev(uint8_t b,int i){ return s4(i? b>>4 : b); }
@@ -22,7 +23,7 @@ static void t_dump_dbg(int P){ chip_t c; chip_reset(&c,1,P); load2(&c);
   S(&c,0,0x20); S(&c,0,0); int32_t got[4]={0}; int n=0, cyc=0;
   S(&c,0,0x30);
   while(c.dump_busy && cyc<100){ uint8_t i = (cyc==3)?0x70:0x00; uint8_t o=S(&c,0,i); cyc++;
-    if(!c.frozen){ if(n<24) got[n/6]|=(o&0xF)<<(4*(n%6)); n++; } }
+    if(c.phase==0 && !c.ofz){ if(n<24) got[n/6]|=(o&0xF)<<(4*(n%6)); n++; } }
   CHECK("F2-dump-dbg-24-nibbles", n==24);
   int ok=1; for(int k=0;k<4;k++){ int32_t v=((got[k]&0xFFFFFF)^0x800000)-0x800000; if(v!=c.psum[k]) ok=0; }
   CHECK("F2-dump-dbg-content", ok);
@@ -52,10 +53,10 @@ static void t_clear_outbuf_dump(void){ chip_t c; chip_reset(&c,1,0); load2(&c); 
 }
 static void t_dump_run(int P){ chip_t c; chip_reset(&c,1,P); load2(&c); S(&c,0,0x20); S(&c,0,0);
   int32_t snap[4]; memcpy(snap,c.psum,sizeof snap); S(&c,0,0x30); int32_t got[4]={0};
-  for(int n=0;n<24;n++){ uint8_t o=S(&c,0,(n%2)?0x00:0x20); got[n/6]|=(o&0xF)<<(4*(n%6)); }
+  int runs=0; { int n=0,e=0; uint8_t o; while(n<24 && e<200){ if(!(e%2)) runs++; if(hr_vis(&c,0,(e%2)?0x00:0x20,&o)){ got[n/6]|=(o&0xF)<<(4*(n%6)); n++; } e++; } if(e%2) { S(&c,0,0); } } /* RUN every 2 edges, nibble every out_tick */
   int ok=1; for(int k=0;k<4;k++){ int32_t v=((got[k]&0xFFFFFF)^0x800000)-0x800000; if(v!=snap[k]) ok=0; }
   CHECK("P4-dump-par-run", ok && !c.illegal && !c.dump_busy);
-  CHECK("P4-run-advanced-psum", c.psum[0]==13*snap[0]);
+  CHECK("P4-run-advanced-psum", c.psum[0]==(1+runs)*snap[0] && runs==24); /* 48 edges of dump = 24 RUNs */
 }
 static void t_abort(void){ chip_t c; chip_reset(&c,1,0); load2(&c); S(&c,0,0x20); S(&c,0,0); S(&c,0,0x30); S(&c,0,0); S(&c,0,0x40);
   CHECK("P5-abort-clears-busy", !c.dump_busy); CHECK("P5-abort-keeps-outbuf", c.outbuf[0]==c.psum[0]&&c.outbuf[0]!=0); }
@@ -69,7 +70,7 @@ static void t_place(int P){ chip_t c; chip_reset(&c,1,P); S(&c,0xAA,0x10); S(&c,
   uint8_t l=S(&c,0,0x70), t=S(&c,0,0x71);
   CHECK("P7-place-left", l==(P?0xAA:0xBB)); CHECK("P7-place-top", t==(P?0xBB:0xAA)); }
 static void t_endian(void){ chip_t c; chip_reset(&c,1,0); c.psum[0]=0x654321; S(&c,0,0x30); int ok=1;
-  for(int n=0;n<6;n++){ uint8_t o=S(&c,0,0); if((o&0xF)!=n+1) ok=0; } CHECK("P8-nibble-LE", ok); }
+  uint8_t nb[6]; hr_idle_nibs(&c,nb,6); for(int n=0;n<6;n++){ if(nb[n]!=n+1) ok=0; } CHECK("P8-nibble-LE", ok); }
 static void t_sticky(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10); /* 7*7=49 */
   c.psum[3]=0x7FFFF0; S(&c,0,0x20); S(&c,0,0); CHECK("P9-ovf-set", c.ovf); for(int i=0;i<5;i++) S(&c,0,0);
   CHECK("P9-ovf-sticky", c.ovf); uint8_t o=S(&c,0,0); CHECK("P9-ovf-live-flag-bit4", o&0x10);

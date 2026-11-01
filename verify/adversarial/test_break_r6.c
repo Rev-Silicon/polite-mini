@@ -5,6 +5,7 @@
 static int fails=0, passes=0;
 #define CHECK(id,x) do{ if(!(x)){printf("FAIL [%s] %s:%d %s\n",id,__FILE__,__LINE__,#x);fails++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ return chip_step(c,d,i); }
+#include "halfrate.h"
 static void l77(chip_t*c){ S(c,0x77,0x10); S(c,0x77,0x10); }
 static int32_t sx(uint32_t v){ return ((v&0xFFFFFF)^0x800000)-0x800000; }
 static int outeq(chip_t*c){ int ok=1; for(int k=0;k<4;k++) ok&=c->outbuf[k]==c->psum[k]; return ok; }
@@ -14,7 +15,7 @@ static void f22a(void){ chip_t c,d; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); S
   S(&c,0,0x30);
   CHECK("R6-F22a-outbuf-eq-psum", outeq(&c) && c.psum[0]==98);
   CHECK("R6-F22a-dbgadd-lowbyte-pe0", prev==(uint8_t)c.outbuf[0]);
-  int32_t got[4]={0}; for(int n=0;n<24;n++){ uint8_t o=S(&c,0,0); got[n/6]|=(o&0xF)<<(4*(n%6)); }
+  int32_t got[4]={0}; uint8_t nb[24]; hr_idle_nibs(&c,nb,24); for(int n=0;n<24;n++) got[n/6]|=nb[n]<<(4*(n%6));
   int ok=1; for(int k=0;k<4;k++) ok&=sx(got[k])==c.psum[k];
   CHECK("R6-F22a-stream-24nib-eq-psum", ok); }
 static void f22b(void){ chip_t c; chip_reset(&c,1,0); l77(&c); c.psum[0]=0x7FFFF0; S(&c,0,0x20);

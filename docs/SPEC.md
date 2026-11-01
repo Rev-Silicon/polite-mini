@@ -22,7 +22,8 @@ Terms used below:
 | Multiply-accumulate (MAC) | Multiply two int4 values and add the product to a running sum |
 | Partial sum | The 24-bit signed running sum held in each processing element |
 | Output buffer | Copy of the four partial sums that the dump stream reads from |
-| Freeze | One cycle in which a debug read replaces all 8 output pins |
+| Beat | One output update period: 2 clocks (30.30 ns). `uo_out` changes at most once per beat |
+| Freeze | One beat in which a debug read replaces all 8 output pins |
 
 ## 2. Pins and clock
 
@@ -32,7 +33,7 @@ Terms used below:
 | `uio_in[7:4]` | input | Opcode |
 | `uio_in[3:0]` | input | Opcode arguments |
 | `uo_out[3:0]` | output | Data nibble (dump stream; 0 when idle) |
-| `uo_out[7:4]` | output | Live flags: bit 4 overflow, bit 5 illegal, bit 6 dump busy, bit 7 debug busy |
+| `uo_out[7:4]` | output | Live flags: bit 4 overflow, bit 5 illegal, bit 6 dump busy (1 exactly on the beats that carry a dump nibble), bit 7 debug busy |
 
 The `uio` pads are bidirectional in the Tiny Tapeout package, but this design drives `uio_oe = 0` on all 8 bits and ties `uio_out` to 0, so they are used as inputs only. All 16 input bits (`ui_in` and `uio_in`) are sampled on every rising edge.
 
@@ -40,17 +41,17 @@ The `uio` pads are bidirectional in the Tiny Tapeout package, but this design dr
 
 <p align="center">Figure 1: pins between the host and the chip</p>
 
-A debug read replaces all 8 output bits for one cycle (Section 6.6).
+A debug read replaces all 8 output bits for one beat, which is 2 clocks (Section 6.6).
 
-**Clock.** Single rising edge. The target is 66 MHz on the inputs and 33 MHz on the outputs. Place-and-route uses a 15.15 ns clock (66 MHz).
+**Clock.** Single rising edge. The core and inputs run at 66 MHz (15.15 ns clock). The outputs change at no more than 33 MHz. An output phase register resets to 0 and toggles on every edge. An edge where it is 1 is an *output tick*. `uo_out` is loaded only on the edge right after an output tick, so the pins hold each value for one beat (2 clocks). Place-and-route uses the 15.15 ns clock with a 2-cycle multicycle constraint on `uo_out`.
 
-**Pad pipeline.** `ui_in` and `uio_in` are registered at the top level: sampled on edge k, executed on edge k+1. All 8 `uo_out` bits come from one register loaded every edge. Pin-level latency is **2 edges**: an operation applied before edge k shows its result on `uo_out` after edge k+2. Reset loads NOP into the input registers and 0 into `uo_out`. The `ena` pin is registered once (resets to 1), so a hold driven by `ena` takes effect one edge after the pin changes.
+**Pad pipeline.** `ui_in` and `uio_in` are registered at the top level: sampled on edge k, executed on edge k+1. All 8 `uo_out` bits come from one register, loaded once per beat. An operation applied before edge k executes on edge k+1. Its result is on `uo_out` after edge k+2 when edge k+1 is an output tick, and after edge k+3 otherwise. The host knows the beat phase by counting clocks from reset. Reset loads NOP into the input registers and 0 into `uo_out`. The `ena` pin is registered once (resets to 1), so a hold driven by `ena` takes effect one edge after the pin changes.
 
-The behavior in the rest of this document is described one edge at a time inside the core. Add the 2-edge pad latency for pin timing.
+The behavior in the rest of this document is described one edge at a time inside the core. For pin timing, add the pad latency (2 or 3 edges) and the once-per-beat output update.
 
 ## 3. Load placement
 
-The chip has one layout setting, load placement, fixed at build time. It decides which input buffer a LOAD writes first (Section 7.1). The host can read it from debug flags bit 6.
+The chip has one layout setting, load placement, fixed at build time. It decides which input buffer a LOAD writes first (Section 7.1). The host can read it from debug flags bit 6. The product chip is built with load placement 0 (debug flags bit 6 reads 0).
 
 ## 4. Commands
 
@@ -110,11 +111,13 @@ On the second clock the RUN still counts as in progress. Other opcodes on that c
 RUN is allowed during a debug freeze.
 
 ### 6.2 DUMP_LOAD and DUMP_ABORT
-DUMP_LOAD copies the four partial sums into the output buffer and streams 24 nibbles, one per cycle, starting on the next cycle's output. RUNs can continue during the stream without affecting it.
+DUMP_LOAD copies the four partial sums into the output buffer and streams 24 nibbles, one per output tick (one per beat), starting at the first output tick after the DUMP_LOAD edge. A dump keeps dump busy high for 48 clocks (49 if DUMP_LOAD lands on an output tick). RUNs can continue during the stream without affecting it.
 
 - DUMP_LOAD is **illegal while a dump is in progress** at the start of the cycle, including the cycle that sends the last nibble. It does not restart; the current stream finishes normally.
 - DUMP_LOAD on the second clock of a RUN captures the result of that RUN. The overflow flag is still set only once, by the RUN itself.
-- DUMP_ABORT stops the stream; dump busy drops to 0.
+- DUMP_ABORT stops the stream; dump busy drops to 0. DUMP_ABORT with no dump running is a legal no-op (illegal is not set).
+
+**Reading the stream at the pins.** The dump nibbles are the beats with `uo_out[6]` = 1 that are not frozen by a debug read, in order. The DUMP_LOAD beat shows bit 6 = 0, the last-nibble beat shows bit 6 = 1, and the beat after it shows 0, on either beat phase. The host does not need to track the phase. Nibble 0 is on the pins 3 or 4 edges after DUMP_LOAD is applied.
 
 There is no separate plain DUMP opcode.
 
@@ -133,7 +136,7 @@ Overflow and illegal stay set until CLEAR bit 0. Repeated illegal events leave t
 When no dump is running and no debug freeze is showing, the data nibble `uo[3:0]` is 0 and the flags in `uo[7:4]` stay live.
 
 ### 6.6 Debug reads
-A freezing debug read replaces all 8 `uo_out` bits with its byte for **1 cycle** (the cycle after the opcode), with debug busy = 1. The next cycle returns to live output.
+A freezing debug read replaces all 8 `uo_out` bits with its byte for **1 beat (2 clocks)**, with debug busy = 1. Inside the core the frozen byte is held for 2 edges (the opcode's edge and the next one), so exactly one output tick carries it to the pins. The next beat returns to live output. Two freezing reads on consecutive edges are not supported: which bytes reach the pins depends on the beat phase. Space debug reads at least 2 clocks apart (opcode, NOP). Spaced reads always return one byte per beat, in order.
 
 DEBUG_FLAGS bank 0 bit layout:
 
@@ -153,24 +156,24 @@ DEBUG_FLAGS bank 0 bit layout:
 
 ### 6.6.1 Debug read latency and width
 
-One debug opcode produces one freeze, and one freeze returns one byte. There is no multi-byte burst. At the pins, an opcode sampled on rising edge k shows its byte on `uo_out` after edge k+2, for one clock period. Debug opcodes can be issued on consecutive edges; each one returns its byte one edge after the previous one.
+One debug opcode produces one freeze, and one freeze returns one byte. There is no multi-byte burst. At the pins, an opcode sampled on rising edge k shows its byte on `uo_out` after edge k+2 or k+3, depending on the beat phase, and holds it for one beat (2 clocks). Reading `uo_out` after edge k+3 always returns the byte. Issue debug opcodes one beat apart (opcode, NOP); each returns its byte one beat after the previous one.
 
 | Opcode | Width per freeze | Opcodes for the full value | Byte visible at pins (opcode sampled on edge k) |
 |---|---|---|---|
-| DEBUG_FLAGS | 8 bits | 1 | after edge k+2 |
-| DEBUG_BUFFER | 8 bits (left or top) | 1 | after edge k+2 |
-| DEBUG_PARTIAL_SUM | 8 of 24 bits (argument picks byte 0, 1 or 2) | 3 | after edges k+2, k+3, k+4 when issued on edges k, k+1, k+2 |
-| DEBUG_MULTIPLY | full 8-bit product (int4 × int4, sign-extended) | 1 | after edge k+2 |
-| DEBUG_ADD | low 8 bits of the 24-bit wrapped sum only | 1 (low byte only) | after edge k+2 |
-| DEBUG_INPUT | 8 bits | 1 | after edge k+2 |
+| DEBUG_FLAGS | 8 bits | 1 | after edge k+2 or k+3 |
+| DEBUG_BUFFER | 8 bits (left or top) | 1 | after edge k+2 or k+3 |
+| DEBUG_PARTIAL_SUM | 8 of 24 bits (argument picks byte 0, 1 or 2) | 3 | one byte per beat when issued on edges k, k+2, k+4 |
+| DEBUG_MULTIPLY | full 8-bit product (int4 × int4, sign-extended) | 1 | after edge k+2 or k+3 |
+| DEBUG_ADD | low 8 bits of the 24-bit wrapped sum only | 1 (low byte only) | after edge k+2 or k+3 |
+| DEBUG_INPUT | 8 bits | 1 | after edge k+2 or k+3 |
 
 DEBUG_ADD never returns the upper 16 bits. To read the full 24-bit result of an add, let the RUN finish and then read the partial sum with three DEBUG_PARTIAL_SUM opcodes.
 
 ![Debug read timing](figures/debug_timing.svg)
 
-<p align="center">Figure 2: debug reads, one byte per opcode, 2 rising edges after the pins present it</p>
+<p align="center">Figure 2: debug reads at the pins, one byte per opcode, held for one beat (2 clocks)</p>
 
-**Dump pause.** Only a debug read that freezes the output pauses the dump. On that cycle the stream does not advance, dump paused = 1, and the stream resumes on the next cycle. No nibbles are lost. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0, DEBUG_PARTIAL_SUM byte 3) does not pause: the nibble goes out and the stream stays complete.
+**Dump pause.** Only a debug read that freezes the output pauses the dump. The stream does not advance on any output tick covered by the freeze (dump paused = 1). It resumes on the next output tick that is not frozen. No nibbles are lost. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0, DEBUG_PARTIAL_SUM byte 3) does not pause: the nibble goes out and the stream stays complete.
 
 ### 6.7 Debug reads on the second clock of a RUN
 - DEBUG_PARTIAL_SUM and DEBUG_MULTIPLY return the registers as they are before the add.
@@ -229,7 +232,7 @@ The design does not fit a 1×1 tile, so it uses a 1×2 tile. The register-transf
 
 - The remaining slow-corner slew and capacitance violations (494 / 24) are not yet fixed or waived.
 - DEBUG_FLAGS banks other than 0 are undefined and illegal.
-- The reference model does not model `ena`.
+- The reference model does not model `ena`. Holding `ena` low also holds the output phase register, so the beat phase picks up where it stopped.
 
 ## 10. References
 

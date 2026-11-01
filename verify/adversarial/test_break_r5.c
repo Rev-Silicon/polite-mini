@@ -6,6 +6,7 @@ static int fails=0, passes=0, gaps=0;
 #define CHECK(id,x) do{ if(!(x)){printf("FAIL [%s] %s:%d %s\n",id,__FILE__,__LINE__,#x);fails++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 #define GAP(id,x,msg) do{ if(!(x)){printf("GAP  [%s] %s\n",id,msg);gaps++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ return chip_step(c,d,i); }
+#include "halfrate.h"
 static void l77(chip_t*c){ S(c,0x77,0x10); S(c,0x77,0x10); }
 static void mac(chip_t*c){ S(c,0,0x20); S(c,0,0x00); }
 static int32_t sx(uint32_t v){ return ((v&0xFFFFFF)^0x800000)-0x800000; }
@@ -14,7 +15,7 @@ static void f22(void){ chip_t c; chip_reset(&c,1,0); l77(&c); mac(&c); S(&c,0,0x
   int ok=1; for(int k=0;k<4;k++) ok&=c.outbuf[k]==c.psum[k];
   CHECK("R5-F22-precond-psum-committed", c.psum[0]==98 && !c.illegal && c.dump_busy);
   CHECK("R5-F22-dumpload-phase2-captures-committed-psum", ok);
-  int32_t got[4]={0}; for(int n=0;n<24;n++){ uint8_t o=S(&c,0,0); got[n/6]|=(o&0xF)<<(4*(n%6)); }
+  int32_t got[4]={0}; uint8_t nb[24]; hr_idle_nibs(&c,nb,24); for(int n=0;n<24;n++) got[n/6]|=nb[n]<<(4*(n%6));
   CHECK("R5-F22-stream-equals-psum", sx(got[0])==c.psum[0]); }
 static void f23(void){ chip_t c; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); S(&c,0,0x52);
   CHECK("R5-F23-clear-inbuf-phase2-mul-latched", c.psum[0]==49 && c.psum[3]==49 && !c.left && !c.top && !c.illegal); }
@@ -28,7 +29,7 @@ static void f24(void){ chip_t c; uint8_t o;
   CHECK("R5-F24c-clear-then-phase2-wrap", (o&1) && c.ovf); }
 static void f25(void){ chip_t c; chip_reset(&c,1,1); S(&c,0x9A,0x10); S(&c,0x3D,0x10); mac(&c); mac(&c); mac(&c);
   uint8_t b[4][3]; for(int k=0;k<4;k++) for(int j=0;j<3;j++) b[k][j]=S(&c,0,0x80|j<<2|k);
-  S(&c,0,0x30); uint8_t n[24]; for(int i=0;i<24;i++) n[i]=S(&c,0,0)&0xF;
+  S(&c,0,0x30); uint8_t n[24]; hr_idle_nibs(&c,n,24);
   int ok=1; for(int k=0;k<4;k++) for(int j=0;j<3;j++) ok&= b[k][j]==(n[k*6+2*j]|n[k*6+2*j+1]<<4);
   CHECK("R5-F25-stream-nibbles-match-dbgpsum-bytes", ok && !c.dump_busy && !c.illegal); }
 static void x_load_p2(void){ chip_t c; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); S(&c,0x11,0x10);

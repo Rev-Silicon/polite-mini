@@ -4,7 +4,7 @@ module polite_ctrl #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
   input logic dump_adv, pend_ovf_any, had_freeze,
   input logic dbg_freeze, dbg_illegal,
   output logic [7:0] left, top, flags8,
-  output logic run_phase2, mul_en, acc_en, clr_pe, clr_ob, dump_load, dump_abort, dump_hold,
+  output logic run_phase2, mul_en, acc_en, clr_pe, clr_ob, dump_load, dump_abort,
   output logic ovf, illegal, debug_busy, freeze_now);
   // dump_paused is only observable through DBG_FLAGS on the freezing cycle (= dump_adv there), so no register is kept.
   logic [3:0] op_raw, op, arg; logic run_busy;
@@ -27,7 +27,6 @@ module polite_ctrl #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
   assign other_ill = (op >= 4'hC);
   assign acc_en    = run_phase2;
   assign freeze_now= dbg_freeze;
-  assign dump_hold = dbg_freeze && dump_adv;
 
   // DBG_FLAGS bank0: busy-at-start dump, debug_busy=1, run_busy in flight, pending OVF (R3-F13/F14, R4-F16)
   assign flags8 = {HAS_OUTBUF, OP_PLACE, dump_adv, run_phase2, 1'b1, dump_adv, illegal, ovf | (run_phase2 & pend_ovf_any)};

@@ -76,3 +76,23 @@ Files: `test_break_r5.c`, `run_r5.sh`, `last_run_r5.log`, exit 1. R1–R4 are st
 Files: `test_break_r6.c`, `run_r6.sh`, `last_run_r6.log`, exit 0. Targeted at the R5-F22 fix only.
 - PASS: F22a (phase-2 DUMP_LOAD outbuf==committed psum, DBG_ADD PE0 low byte matches, 24-nibble stream reconstructs psum), F22b (phase-2 wrap: outbuf holds wrapped value == psum, ovf==1 post-step, ovf 0 before), F22c (idle DUMP_LOAD memcpy, stale mul not added), S1 (phase-2 DUMP_LOAD legal, dump_busy=1), S2 (CLEAR outbuf 0x54 next cycle collides → illegal).
 - **R6 clean — breaker recommends pause.**
+
+## Round 7 (vs 6b5fe8c + uncommitted 33 MHz half-rate WIP in golden/RTL/SDC/LOCKS/SPEC, 2026-11-01): pass=58 fail=9 gap=2
+Files: `test_break_r7.c`, `run_r7.sh`, `last_run_r7.log`, exit 1. Pin tests use `chip_step` (not redefined). Forge was landing RTL/SDC/SPEC/LOCKS edits while R7 ran; numbers are against the tree at run time.
+- **R7-F1 FAIL (High)**: LOCKS [Forge, 33 MHz] says two freezing DBG on consecutive edges -> only the later one reaches the pins. That holds only when the first DBG is on a non-tick edge. With DBG on a tick edge then DBG on the next edge, BOTH bytes reach the pins for a full beat each (2 beats). Behavior depends on the hidden phase.
+- **R7-D0 FAIL (Med)**: DUMP_LOAD on a tick edge emits an extra busy=1/nibble=0 junk beat before nibble 0 (nibble 0 on the pad +5 edges); on a non-tick edge there's no junk beat (+4 edges). The host can't tell a real nibble-0 of 0 from junk unless it tracks phase from reset.
+- **R7-L1 FAIL (Med)**: Pin latency is no longer 2 edges. DBG_ECHO shows up +3 edges (parity 0) or +4 (parity 1). LOCKS line 28 still says "loaded every edge" and "2 edges" (R7-L2 FAIL). SPEC now passes the doc checks.
+- **R7-F4 FAIL (Low)**: When DBG during a dump is followed by DUMP_ABORT on the held (fz_prev) edge, the state ends with dump_busy=0 and dump_paused=1. `if(dump_adv && ofz) dump_paused=1` runs after case 0x4 clears it.
+- **R7-R4 FAIL (Low)**: The RTL top header comment still says "uo_out is a full 8b register (uo_q)" with no half-rate note. The body is half-rate now (out_phase_q, uo_q gated on !out_phase_q, 2-edge ofz).
+- **R7-T1 FAIL (Med)**: Golden test() still uses `#define chip_step chip_core_step`, so its DUMP/flags checks never touch the pad register. Only test_pipe covers pins (it now asserts the odd-edge hold, R7-T2 pass).
+- **R7-T3 FAIL (Med)**: LESSONS still says "RTL matches golden 89dad4e cycle-exact". That's stale for the half-rate RTL until rtl_sim is rerun.
+- GAP R7-F2: with 4 DBG on consecutive edges, 3/4 bytes reach the pins, and which ones depends on phase. Needs a locked framing rule or a pin-visible phase.
+- GAP R7-B4b: on the final nibble beat the pins show dump_busy=0 while nibble 23 is on the pad. Lock this.
+- PASS: pads change on one edge parity only (4 cfgs x 200k random), reset pad 0, each nibble held 2 pin edges, core dump 47/48 edges, 24 nibbles with no loss or duplicate under a freeze at 8 positions with exactly 1 frozen beat, single DBG = exactly 1 beat on either parity, DBG_FLAGS busy+paused on both held edges, final-nibble DUMP_LOAD/CLEAR outbuf illegal on both edges, RUN + phase-2 DUMP_LOAD at final, ABORT mid-beat stops the stream, phase-2 DUMP_LOAD 24 nibbles == psum at pins (both alignments), RTL has out_tick / gated uo_q / 2-edge freeze, SDC has set_multicycle_path -setup 2/-hold 1 on uo_out and a 33 MHz header, SPEC free of "loaded every edge"/"1 cycle".
+- R1–R6 rerun on WIP: all exit 0 (R6 pass=9 fail=0).
+- **R7 resolution (Forge, 2026-11-01)**: rerun pass=70 fail=0 gap=0. R1–R6 still 71/24/26/15/20/9, all with 0 failures.
+  - F1/F2 locked as real behavior. Consecutive freezing DBG is outside the host contract: the result depends on the beat phase (tick-edge first → both bytes show; non-tick first → only the later one). Host rule: space reads ≥2 edges apart. The new CHECK F2-spaced covers 4/4 reads, one beat each, on both parities. LOCKS and SPEC were rewritten to match.
+  - D0/B4b fixed in golden and RTL. Live uo[6] is now dump busy at the start of the displayed edge (RTL `dadv_q`). No junk beat. The final-nibble beat shows uo[6]=1. Framing = unfrozen beats with uo[6]=1 on either phase. Latency is still 3 or 4 edges by parity, as locked. B6 now frames on uo[6].
+  - L1/L2: the CHECK is locked to +3/+4 (= after edge k+2/k+3). LOCKS line 28 was rewritten, with no "loaded every edge".
+  - F4 fixed: dump_paused is set only while dump_busy is still 1 after the edge.
+  - R4: the RTL header comment was rewritten. T1: golden test() was split into test_core (explicit chip_core_step, no #define) and a new test_pin through chip_step. T3: the LESSONS line was refreshed after the server rtl_sim rerun (4 cfgs × 3 × 200k, 0 mismatches).

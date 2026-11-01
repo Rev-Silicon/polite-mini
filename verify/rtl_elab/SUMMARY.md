@@ -15,3 +15,4 @@ Lockstep vs golden/chip.c @89dad4e (`verify/rtl_sim/run_sim.sh`, N=200000 random
 cycle-by-cycle uo_out compare): 12/12 PASS, 0 mismatches. See verify/rtl_sim/out/results.txt.
 
 Yosys generic synth (flatten, no liberty): cfg A 2481 cells / 262 DFF; cfg B 1822 cells / 156 DFF (logs in impl/yosys_A*.log).
+- 2026-11-01 33 MHz pad-out tree: server iverilog+verilator elab PASS x4 cfgs; rtl_sim 12/12 PASS (200k each), run from ~/scratch/forge-halfrate (bot@server).
