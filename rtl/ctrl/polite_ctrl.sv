@@ -1,9 +1,9 @@
 // Decode + flags, matches golden/chip.c half-rate (33 MHz pad-out) at tip 677ce98. ena=0 => hold.
-module polite_ctrl #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
+module polite_ctrl #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) ( // OP_PLACE obsolete (buffer+bus, 2026-11-01): ignored
   input logic clk, rst_n, ena, input logic [7:0] data, instr,
   input logic dump_adv, pend_ovf_any, had_freeze,
   input logic dbg_freeze, dbg_illegal,
-  output logic [7:0] left, top, flags8,
+  output logic [7:0] inbuf, flags8,
   output logic run_phase2, mul_en, acc_en, clr_pe, clr_ob, dump_load, dump_abort,
   output logic ovf, illegal, debug_busy, freeze_now);
   // dump_paused is only observable through DBG_FLAGS on the freezing cycle (= dump_adv there), so no register is kept.
@@ -29,17 +29,15 @@ module polite_ctrl #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
   assign freeze_now= dbg_freeze;
 
   // DBG_FLAGS bank0: busy-at-start dump, debug_busy=1, run_busy in flight, pending OVF (R3-F13/F14, R4-F16)
-  assign flags8 = {HAS_OUTBUF, OP_PLACE, dump_adv, run_phase2, 1'b1, dump_adv, illegal, ovf | (run_phase2 & pend_ovf_any)};
+  assign flags8 = {HAS_OUTBUF, 1'b0, dump_adv, run_phase2, 1'b1, dump_adv, illegal, ovf | (run_phase2 & pend_ovf_any)};
 
   logic ill_set; assign ill_set = run_while_busy | run_ill | dl_ill | da_ill | clr_coll | other_ill | dbg_illegal;
   always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin left <= '0; top <= '0; run_busy <= 1'b0; ovf <= 1'b0; illegal <= 1'b0;
+    if (!rst_n) begin inbuf <= '0; run_busy <= 1'b0; ovf <= 1'b0; illegal <= 1'b0;
       debug_busy <= 1'b0; end
     else if (ena) begin
-      if (op == 4'h1) begin
-        if (!OP_PLACE) begin top <= left; left <= data; end else begin left <= top; top <= data; end
-      end
-      if (clr_ok && arg[1]) begin left <= '0; top <= '0; end
+      if (op == 4'h1) inbuf <= data;            // LOAD writes the single input buffer (no shift)
+      if (clr_ok && arg[1]) inbuf <= '0;
       run_busy <= mul_en;                       // phase-2 always ends run (RUN while busy is converted to NOP)
       // sticky flags; CLEAR flags clears, then same-cycle phase-2 OVF re-raises (R2-F11)
       if (clr_ok && arg[0]) begin ovf <= 1'b0; illegal <= 1'b0; end

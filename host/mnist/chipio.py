@@ -6,7 +6,7 @@ NOP, LOAD, RUN, DUMP_LOAD, DUMP_STOP, CLEAR, DBG_FLAGS, DBG_PSUM = 0x00, 0x10, 0
 PR, PC = [2, 2, 1, 1], [2, 1, 2, 1]  # dump-order index -> (row,col), 1-based
 
 class Chip(ctypes.Structure):
-    _fields_ = [("has_outbuf", ctypes.c_int), ("op_place", ctypes.c_int), ("left", ctypes.c_uint8), ("top", ctypes.c_uint8),
+    _fields_ = [("has_outbuf", ctypes.c_int), ("op_place", ctypes.c_int), ("buf", ctypes.c_uint8),
                 ("last_in", ctypes.c_uint8), ("last_instr", ctypes.c_uint8), ("psum", ctypes.c_int32 * 4), ("mul", ctypes.c_int16 * 4),
                 ("ovf", ctypes.c_int), ("illegal", ctypes.c_int), ("run_busy", ctypes.c_int), ("dump_busy", ctypes.c_int),
                 ("debug_busy", ctypes.c_int), ("dump_paused", ctypes.c_int), ("outbuf", ctypes.c_int32 * 4), ("dump_idx", ctypes.c_int),
@@ -36,10 +36,8 @@ class Driver:
         return self.l.chip_step(ctypes.byref(self.c), d, ins)
     def clear(self): self.step(0, CLEAR | 0x9)  # psum + flags
     def mac(self, a2, b2):
-        """psum[r][c] += a2[r]*b2[c]  (a=left/rows, b=top/cols). LOAD order depends on op_place."""
-        L, T = pack(*a2), pack(*b2)
-        first, second = (T, L) if self.P == 0 else (L, T)
-        self.step(first, LOAD); self.step(second, LOAD); self.step(0, RUN); self.step(0, NOP)  # NOP = RUN cycle 2
+        """psum[r][c] += a2[r]*b2[c]: a = input buffer (LOAD, rows), b = bus byte on ui_in with RUN (cols)."""
+        self.step(pack(*a2), LOAD); self.step(pack(*b2), RUN); self.step(0, NOP)  # NOP = RUN cycle 2
     # 33 MHz pad-out: uo_out updates once per beat (2 core clocks). An op on pin step j executes on core edge j+1;
     # pin step n shows the core output of edge n-1 iff n-1 is odd (out_tick), counted from reset. A debug read is
     # stretched over 2 core edges, so it is always on the pads after step j+3. Debug reads are spaced one beat (op, NOP).

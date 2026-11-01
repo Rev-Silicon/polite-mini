@@ -85,8 +85,8 @@ static void dump_pins(void){
     printf("info D1c align%d core edges after DUMP_LOAD until !busy = %d\n",al,e);
     CHECK(id, e==47||e==48); }
   /* freeze mid-dump on tick vs non-tick, several positions: no nibble lost/dup, exactly one frozen beat */
-  for(int at=6;at<14;at++){ chip_t c; chip_reset(&c,1,0); setpat(&c); uint8_t b[256]; g_dbg_at=at; g_dbg_op=0xB0; /* echo d=0 -> 0x00? use 0x70 LEFT */
-    g_dbg_op=0x70; c.left=0x8A; /* frozen byte: bit7 set like debug_busy */
+  for(int at=6;at<14;at++){ chip_t c; chip_reset(&c,1,0); setpat(&c); uint8_t b[256]; g_dbg_at=at; g_dbg_op=0xB0; /* echo d=0 -> 0x00? use 0x70 BUFFER */
+    g_dbg_op=0x70; c.buf=0x8A; /* frozen byte (single input buffer): bit7 set like debug_busy */
     int nb=collect(&c,80,op_load_then,b); int nfz,d,no; int ok=dump_seq_ok(b,nb,&nfz,&d,&no);
     char id[80]; sprintf(id,"R7-D2-freeze-mid-dump-no-loss-dup-step%d",at); CHECK(id, ok);
     sprintf(id,"R7-D2b-freeze-exactly-1-beat-step%d",at); CHECK(id, nfz==1);

@@ -5,7 +5,12 @@
 static int fails=0, passes=0, gaps=0;
 #define CHECK(id,x) do{ if(!(x)){printf("FAIL [%s] %s:%d %s\n",id,__FILE__,__LINE__,#x);fails++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 #define GAP(id,x,msg) do{ if(!(x)){printf("GAP  [%s] %s\n",id,msg);gaps++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
-static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ return chip_step(c,d,i); }
+/* Buffer+bus retarget (Alex 2026-11-01): LOAD writes the one input buffer; RUN multiplies it by the live ui_in byte.
+ * Legacy vector adapter: these R1-R6 vectors were written for the old 2-LOAD shift (first byte = "top"). S() keeps that
+ * byte in g_bus and, for a RUN driven with d=0, presents it on the bus, so legacy expectations still hold. New
+ * buffer+bus semantics are tested directly in golden test_bufbus and test_break.c t_bufbus. */
+static uint8_t g_bus;
+static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ if((i>>4)==1) g_bus=c->buf; if((i>>4)==2 && d==0) d=g_bus; return chip_step(c,d,i); }
 #include "halfrate.h"
 static void l77(chip_t*c){ S(c,0x77,0x10); S(c,0x77,0x10); }
 static void mac(chip_t*c){ S(c,0,0x20); S(c,0,0x00); }
@@ -18,7 +23,7 @@ static void f22(void){ chip_t c; chip_reset(&c,1,0); l77(&c); mac(&c); S(&c,0,0x
   int32_t got[4]={0}; uint8_t nb[24]; hr_idle_nibs(&c,nb,24); for(int n=0;n<24;n++) got[n/6]|=nb[n]<<(4*(n%6));
   CHECK("R5-F22-stream-equals-psum", sx(got[0])==c.psum[0]); }
 static void f23(void){ chip_t c; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); S(&c,0,0x52);
-  CHECK("R5-F23-clear-inbuf-phase2-mul-latched", c.psum[0]==49 && c.psum[3]==49 && !c.left && !c.top && !c.illegal); }
+  CHECK("R5-F23-clear-inbuf-phase2-mul-latched", c.psum[0]==49 && c.psum[3]==49 && !c.buf && !c.illegal); }
 static void f24(void){ chip_t c; uint8_t o;
   chip_reset(&c,1,0); l77(&c); c.psum[2]=0x7FFFF0; S(&c,0,0x20); o=S(&c,0,0x60);
   CHECK("R5-F24a-one-lane-wrap-bit0", (o&1) && c.ovf);
@@ -33,7 +38,7 @@ static void f25(void){ chip_t c; chip_reset(&c,1,1); S(&c,0x9A,0x10); S(&c,0x3D,
   int ok=1; for(int k=0;k<4;k++) for(int j=0;j<3;j++) ok&= b[k][j]==(n[k*6+2*j]|n[k*6+2*j+1]<<4);
   CHECK("R5-F25-stream-nibbles-match-dbgpsum-bytes", ok && !c.dump_busy && !c.illegal); }
 static void x_load_p2(void){ chip_t c; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); S(&c,0x11,0x10);
-  CHECK("R5-X1-load-phase2-no-effect-on-inflight", c.psum[0]==49 && c.left==0x11 && c.top==0x77); }
+  CHECK("R5-X1-load-phase2-no-effect-on-inflight", c.psum[0]==49 && c.buf==0x11 && g_bus==0x77); }
 static void x_mul_p2(void){ chip_t c; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); uint8_t o=S(&c,0,0x90);
   CHECK("R5-X2-dbgmul-phase2-precommit-then-0", o==49 && c.mul[0]==0); }
 static void x_abort2(void){ chip_t c; chip_reset(&c,1,0); S(&c,0,0x30); S(&c,0,0x40); S(&c,0,0x40);
@@ -45,7 +50,7 @@ static void x_sticky(void){ chip_t c; chip_reset(&c,1,0); l77(&c); c.psum[0]=0x7
   CHECK("R5-X5-clear-no-bit0-keeps-both", c.ovf && c.illegal); S(&c,0,0x51);
   CHECK("R5-X5-clear-bit0-clears-both", !c.ovf && !c.illegal); }
 static void x_straps(void){ int ok=1; for(int a=0;a<2;a++) for(int p=0;p<2;p++){ chip_t c; chip_reset(&c,a,p);
-  uint8_t o=S(&c,0,0x60); ok&=((o>>6)&3)==(p|a<<1); S(&c,0,0x5F); S(&c,0,0x51); o=S(&c,0,0x60); ok&=((o>>6)&3)==(p|a<<1); }
+  uint8_t o=S(&c,0,0x60); ok&=((o>>6)&3)==(a<<1); S(&c,0,0x5F); S(&c,0,0x51); o=S(&c,0,0x60); ok&=((o>>6)&3)==(a<<1); }
   CHECK("R5-X6-straps-match-reset-survive-clear", ok); }
 static void x_dnib(void){ chip_t c; chip_reset(&c,1,0); l77(&c); mac(&c); int ok=1;
   for(int i=0;i<4;i++) ok&=(S(&c,0,0)&0xF)==0;

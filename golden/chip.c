@@ -11,7 +11,7 @@ static int32_t wrap24(int64_t v,int *ovf){ int64_t w=((v&0xFFFFFF)^0x800000)-0x8
 /* dump-order index -> (row,col) 1-based */
 static const int PR[4]={2,2,1,1}, PC[4]={2,1,2,1};
 void chip_reset(chip_t *c,int a,int p){ memset(c,0,sizeof *c); c->has_outbuf=a; c->op_place=p; }
-static uint8_t flags8(chip_t *c){ return c->ovf|c->illegal<<1|c->dump_busy<<2|c->debug_busy<<3|c->run_busy<<4|c->dump_paused<<5|c->op_place<<6|c->has_outbuf<<7; }
+static uint8_t flags8(chip_t *c){ return c->ovf|c->illegal<<1|c->dump_busy<<2|c->debug_busy<<3|c->run_busy<<4|c->dump_paused<<5|/* bit6 reserved=0 */c->has_outbuf<<7; }
 static void freeze(chip_t *c,uint8_t v){ c->frozen=1; c->frozen_val=v; c->debug_busy=1; }
 uint8_t chip_core_step(chip_t *c,uint8_t d,uint8_t ins){
   int op=ins>>4, a=ins&0xF, had_freeze=c->frozen, tick=c->phase, ld=0;
@@ -25,10 +25,10 @@ uint8_t chip_core_step(chip_t *c,uint8_t d,uint8_t ins){
   if(c->dump_busy){ int pe=c->dump_idx/6, sh=(c->dump_idx%6)*4; dnib=(c->outbuf[pe]>>sh)&0xF; }
   switch(op){
   case 0x0: break;
-  case 0x1: if(!c->op_place){ c->top=c->left; c->left=d; } else { c->left=c->top; c->top=d; } break;
+  case 0x1: c->buf=d; break; /* LOAD writes the one input buffer (no shift) */
   case 0x2:
     if(!c->has_outbuf && had_freeze){ c->illegal=1; break; } /* cfg B: no RUN during a debug read */
-    for(int k=0;k<4;k++) c->mul[k]=lane(c->left,PR[k]-1)*lane(c->top,PC[k]-1);
+    for(int k=0;k<4;k++) c->mul[k]=lane(c->buf,PR[k]-1)*lane(d,PC[k]-1); /* buf[i] x bus[j], bus = ui_in with RUN */
     c->run_busy=1; break;
   case 0x3: if(!c->has_outbuf||dump_adv){ /* busy at cycle start, incl. final nibble (R3-F12) */ c->illegal=1; break; }
     if(run_phase2){ for(int k=0;k<4;k++){ int o2=0; c->outbuf[k]=wrap24((int64_t)c->psum[k]+c->mul[k],&o2); } } else memcpy(c->outbuf,c->psum,sizeof c->psum); /* R5-F22: phase-2 captures pending post-acc psum; OVF commits via deferred acc only */ c->dump_idx=0; c->dump_busy=1; ld=1; break;
@@ -37,13 +37,13 @@ uint8_t chip_core_step(chip_t *c,uint8_t d,uint8_t ins){
     int coll=((a&8)&&(c->run_busy||run_phase2)) /* RUN still in flight on phase 2 */ || ((a&4)&&(dump_adv||!c->has_outbuf)) /* dump busy at cycle start, incl. final nibble */;
     if(coll){ c->illegal=1; break; }
     if(a&1){ c->ovf=0; c->illegal=0; } /* clears prior OVF; deferred phase-2 acc below may raise a new one (R2-F11) */
-    if(a&2){ c->left=c->top=0; }
+    if(a&2){ c->buf=0; }
     if(a&4) memset(c->outbuf,0,sizeof c->outbuf);
     if(a&8) memset(c->psum,0,sizeof c->psum);
     break; }
   case 0x6: if(a!=0){ c->illegal=1; break; } c->debug_busy=1; if(dump_adv) c->dump_paused=1;
     { int db=c->dump_busy, po=0; if(run_phase2) for(int k=0;k<4;k++) wrap24((int64_t)c->psum[k]+c->mul[k],&po); c->dump_busy=dump_adv; freeze(c,flags8(c)|(po?1:0)); c->dump_busy=db; } /* R4-F16: OR pending phase-2 OVF into bit0; commit still deferred */ break; /* busy-at-start for dump (R3-F13); run_busy=1 on phase 2 (R3-F14) */ /* bit3 reads 1 while frozen */
-  case 0x7: freeze(c,(a&1)?c->top:c->left); break;
+  case 0x7: freeze(c,c->buf); break;
   case 0x8: if((a>>2)==3){ c->illegal=1; break; } freeze(c,(uint8_t)(c->psum[a&3]>>(8*(a>>2)))); break;
   case 0x9: freeze(c,(uint8_t)c->mul[a&3]); break;
   case 0xA: { int o2=0; int64_t v=c->psum[a&3]+(c->run_busy?c->mul[a&3]:0); freeze(c,(uint8_t)wrap24(v,&o2)); break; } /* phase 2: pending next-acc wrap24(psum+mul) before commit (R3-F15); else low(psum); no OVF side effect */
@@ -85,15 +85,15 @@ static void test_core(int A,int P){
   chip_t c; chip_reset(&c,A,P); uint8_t o;
   printf("== cfg %s place%d\n",A?"A":"B",P);
   CHECK(chip_core_step(&c,0,0x00)==0);
-  chip_core_step(&c,0x21,0x10); chip_core_step(&c,0x3F,0x10); /* lanes: {2,1} then {3,-1} */
-  for(int i=0;i<3;i++){ chip_core_step(&c,0,0x20); chip_core_step(&c,0,0x00); }
-  o=chip_core_step(&c,0,0x20); o=chip_core_step(&c,0,0x20); CHECK(o&0x20); /* RUN while busy -> illegal */
+  chip_core_step(&c,0x3F,0x10); chip_core_step(&c,0,0x00); /* NOP keeps beat phase; LOAD buffer {3,-1}; RUN bus byte 0x21 = {2,1} */
+  for(int i=0;i<3;i++){ chip_core_step(&c,0x21,0x20); chip_core_step(&c,0,0x00); }
+  o=chip_core_step(&c,0x21,0x20); o=chip_core_step(&c,0x21,0x20); CHECK(o&0x20); /* RUN while busy -> illegal */
   chip_core_step(&c,0,0x00);
-  int L= P? 0x21:0x3F, T= P? 0x3F:0x21;
+  int L=0x3F, T=0x21;
   for(int k=0;k<4;k++){ int e=4*lane(L,PR[k]-1)*lane(T,PC[k]-1); CHECK(c.psum[k]==e); printf("PE(%d,%d)=%d\n",PR[k],PC[k],c.psum[k]); }
-  o=chip_core_step(&c,0,0x60); CHECK(o==(0x0A|P<<6|A<<7));  printf("DBG_FLAGS=0x%02X\n",o);
+  o=chip_core_step(&c,0,0x60); CHECK(o==(0x0A|A<<7));  printf("DBG_FLAGS=0x%02X\n",o);
   chip_core_step(&c,0,0x51); CHECK(!c.illegal);
-  o=chip_core_step(&c,0,0x60); CHECK(o==(0x08|P<<6|A<<7));
+  o=chip_core_step(&c,0,0x60); CHECK(o==(0x08|A<<7));
   if(A){
     chip_core_step(&c,0,0x30); int32_t got[4]={0};
     int n=0,e=0; while(c.dump_busy && e<100){ int t=c.phase; o=chip_core_step(&c,0,0x00); e++; if(t){ got[n/6]|=(o&0xF)<<(4*(n%6)); n++; } }
@@ -109,10 +109,10 @@ static void test_core(int A,int P){
 static uint8_t pin_op(chip_t *c,uint8_t d,uint8_t ins){ chip_step(c,d,ins); chip_step(c,0,0); chip_step(c,0,0); return chip_step(c,0,0); }
 static void test_pin(int A,int P){
   for(int al=0;al<2;al++){ chip_t c; chip_reset(&c,A,P); for(int i=0;i<al;i++) chip_step(&c,0,0);
-    chip_step(&c,0x21,0x10); chip_step(&c,0x3F,0x10);
-    for(int i=0;i<4;i++){ chip_step(&c,0,0x20); chip_step(&c,0,0x00); }
-    uint8_t f=pin_op(&c,0,0x60); CHECK(f==(0x08|P<<6|A<<7));
-    int L= P? 0x21:0x3F, T= P? 0x3F:0x21; int32_t want[4];
+    chip_step(&c,0x3F,0x10);
+    for(int i=0;i<4;i++){ chip_step(&c,0x21,0x20); chip_step(&c,0,0x00); }
+    uint8_t f=pin_op(&c,0,0x60); CHECK(f==(0x08|A<<7));
+    int L=0x3F, T=0x21; int32_t want[4];
     for(int k=0;k<4;k++) want[k]=4*lane(L,PR[k]-1)*lane(T,PC[k]-1);
     int32_t got[4]={0};
     if(A){ chip_step(&c,0,0x30); int n=0,st=0; uint8_t prev=0xFF; int lastload=0;
@@ -138,5 +138,14 @@ static void test_pipe(int A,int P){
     prev=o; outm=outn; outn=chip_core_step(&q,d,i); if(fails>5) return; }
   printf("PIPE cfg %s place%d ok\n",A?"A":"B",P);
 }
-int main(void){ for(int a=1;a>=0;a--) for(int p=0;p<2;p++) { test_core(a,p); test_pin(a,p); test_pipe(a,p); } printf(fails?"FAILED %d\n":"ALL PASS\n",fails); return fails!=0; }
+static void test_bufbus(void){ chip_t c; chip_reset(&c,1,0);
+  chip_core_step(&c,0x12,0x10); CHECK(c.buf==0x12); chip_core_step(&c,0x34,0x10); CHECK(c.buf==0x34); /* overwrite, no shift */
+  CHECK(chip_core_step(&c,0,0x70)==0x34); chip_core_step(&c,0,0);
+  chip_core_step(&c,0x21,0x20); chip_core_step(&c,0x77,0x00); /* bus only sampled on phase 1 */
+  for(int k=0;k<4;k++) CHECK(c.psum[k]==lane(0x34,PR[k]-1)*lane(0x21,PC[k]-1));
+  chip_core_step(&c,0x7F,0x20); chip_core_step(&c,0x55,0x10); /* LOAD on phase 2: in-flight uses old buf */
+  for(int k=0;k<4;k++) CHECK(c.psum[k]==lane(0x34,PR[k]-1)*(lane(0x21,PC[k]-1)+lane(0x7F,PC[k]-1)));
+  CHECK(c.buf==0x55); chip_core_step(&c,0,0x52); CHECK(c.buf==0 && !c.illegal);
+  printf("BUFBUS ok\n"); }
+int main(void){ test_bufbus(); for(int a=1;a>=0;a--) for(int p=0;p<2;p++) { test_core(a,p); test_pin(a,p); test_pipe(a,p); } printf(fails?"FAILED %d\n":"ALL PASS\n",fails); return fails!=0; }
 #endif

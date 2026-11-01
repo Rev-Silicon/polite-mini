@@ -5,7 +5,12 @@
 static int fails=0, passes=0, gaps=0;
 #define CHECK(id,x) do{ if(!(x)){printf("FAIL [%s] %s:%d %s\n",id,__FILE__,__LINE__,#x);fails++;} else passes++; }while(0)
 #define GAP(id,x,msg) do{ if(!(x)){printf("GAP  [%s] %s\n",id,msg);gaps++;} else passes++; }while(0)
-static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ return chip_step(c,d,i); }
+/* Buffer+bus retarget (Alex 2026-11-01): LOAD writes the one input buffer; RUN multiplies it by the live ui_in byte.
+ * Legacy vector adapter: these R1-R6 vectors were written for the old 2-LOAD shift (first byte = "top"). S() keeps that
+ * byte in g_bus and, for a RUN driven with d=0, presents it on the bus, so legacy expectations still hold. New
+ * buffer+bus semantics are tested directly in golden test_bufbus and test_break.c t_bufbus. */
+static uint8_t g_bus;
+static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ if((i>>4)==1) g_bus=c->buf; if((i>>4)==2 && d==0) d=g_bus; return chip_step(c,d,i); }
 #include "halfrate.h"
 static int s4(int v){ v&=0xF; return v&8?v-16:v; }
 static const int PR[4]={2,2,1,1}, PC[4]={2,1,2,1};
@@ -46,14 +51,14 @@ static void t_clear_outbuf_dump(void){ chip_t c; chip_reset(&c,1,0); load2(&c); 
   S(&c,0,0x30); S(&c,0,0x30); /* second DUMP_LOAD -> illegal */ CHECK("P2-second-dumpload-illegal", c.illegal);
   S(&c,0,0x51); CHECK("P2-clear-flags", !c.illegal);
   c.ovf=1; /* inject prior OVF */
-  uint8_t L=c.left,T=c.top; int32_t ps=c.psum[0], ob=c.outbuf[0];
+  uint8_t L=c.buf,T=g_bus; int32_t ps=c.psum[0], ob=c.outbuf[0];
   S(&c,0,0x5F); /* all bits incl outbuf during dump -> collide */
   CHECK("P3-clear-collide-illegal", c.illegal); CHECK("P3-ovf-kept", c.ovf);
-  CHECK("P3-no-partial", c.left==L&&c.top==T&&c.psum[0]==ps&&c.outbuf[0]==ob);
+  CHECK("P3-no-partial", c.buf==L&&g_bus==T&&c.psum[0]==ps&&c.outbuf[0]==ob);
 }
 static void t_dump_run(int P){ chip_t c; chip_reset(&c,1,P); load2(&c); S(&c,0,0x20); S(&c,0,0);
   int32_t snap[4]; memcpy(snap,c.psum,sizeof snap); S(&c,0,0x30); int32_t got[4]={0};
-  int runs=0; { int n=0,e=0; uint8_t o; while(n<24 && e<200){ if(!(e%2)) runs++; if(hr_vis(&c,0,(e%2)?0x00:0x20,&o)){ got[n/6]|=(o&0xF)<<(4*(n%6)); n++; } e++; } if(e%2) { S(&c,0,0); } } /* RUN every 2 edges, nibble every out_tick */
+  int runs=0; { int n=0,e=0; uint8_t o; while(n<24 && e<200){ if(!(e%2)) runs++; if(hr_vis(&c,(e%2)?0:g_bus,(e%2)?0x00:0x20,&o)){ got[n/6]|=(o&0xF)<<(4*(n%6)); n++; } e++; } if(e%2) { S(&c,0,0); } } /* RUN every 2 edges, nibble every out_tick */
   int ok=1; for(int k=0;k<4;k++){ int32_t v=((got[k]&0xFFFFFF)^0x800000)-0x800000; if(v!=snap[k]) ok=0; }
   CHECK("P4-dump-par-run", ok && !c.illegal && !c.dump_busy);
   CHECK("P4-run-advanced-psum", c.psum[0]==(1+runs)*snap[0] && runs==24); /* 48 edges of dump = 24 RUNs */
@@ -66,9 +71,12 @@ static void t_cfgB(int P){ chip_t c; chip_reset(&c,0,P);
   load2(&c); S(&c,0,0x70); S(&c,0,0x20); CHECK("P6-B-run-after-dbg-illegal", c.illegal&&!c.run_busy); S(&c,0,0x51);
   S(&c,0,0x20); S(&c,0,0); int32_t v=0; for(int b=0;b<3;b++) v|=S(&c,0,0x80|b<<2)<<(8*b); v=((v&0xFFFFFF)^0x800000)-0x800000;
   CHECK("P6-B-psum-via-dbg", v==c.psum[0]); S(&c,0,0x54); CHECK("P6-B-clear-outbuf-illegal", c.illegal); }
-static void t_place(int P){ chip_t c; chip_reset(&c,1,P); S(&c,0xAA,0x10); S(&c,0xBB,0x10);
-  uint8_t l=S(&c,0,0x70), t=S(&c,0,0x71);
-  CHECK("P7-place-left", l==(P?0xAA:0xBB)); CHECK("P7-place-top", t==(P?0xBB:0xAA)); }
+/* P7 retarget (buffer+bus): LOAD overwrites the single buffer (no shift, OP_PLACE ignored); RUN takes the bus byte live. */
+static void t_place(int P){ chip_t c; chip_reset(&c,1,P); chip_step(&c,0xAA,0x10); chip_step(&c,0xBB,0x10);
+  uint8_t b=chip_step(&c,0,0x70); CHECK("P7-load-overwrites-buffer", b==0xBB && c.buf==0xBB);
+  chip_step(&c,0,0); chip_step(&c,0x12,0x20); chip_step(&c,0x99,0x00); /* bus 0x12 sampled with RUN only */
+  CHECK("P7-run-buf-x-bus", c.psum[0]==-5*1 && c.psum[3]==-5*2 && c.psum[1]==-5*2 && c.psum[2]==-5*1);
+  chip_step(&c,0,0x52); CHECK("P7-clear-inbuf", c.buf==0 && !c.illegal); }
 static void t_endian(void){ chip_t c; chip_reset(&c,1,0); c.psum[0]=0x654321; S(&c,0,0x30); int ok=1;
   uint8_t nb[6]; hr_idle_nibs(&c,nb,6); for(int n=0;n<6;n++){ if(nb[n]!=n+1) ok=0; } CHECK("P8-nibble-LE", ok); }
 static void t_sticky(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10); /* 7*7=49 */
@@ -78,7 +86,7 @@ static void t_sticky(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,
   S(&c,0,0x51); CHECK("P9-ovf-cleared", !c.ovf);
   for(int op=0xC;op<=0xF;op++){ S(&c,0,0x51); S(&c,0,op<<4); S(&c,0,0); S(&c,0,0); CHECK("P9-illegal-CF-sticky", c.illegal); } }
 static void t_flags(int A,int P){ chip_t c; chip_reset(&c,A,P); uint8_t o=S(&c,0,0x60);
-  CHECK("P10-straps", (o&0xC0)==(P<<6|A<<7)); S(&c,0,0); S(&c,0,0x61); CHECK("P10-bank1-illegal", c.illegal); }
+  CHECK("P10-straps", (o&0xC0)==(A<<7) /* bit6 reserved=0 (OP_PLACE obsolete) */); S(&c,0,0); S(&c,0,0x61); CHECK("P10-bank1-illegal", c.illegal); }
 int main(void){
   for(int A=1;A>=0;A--) for(int P=0;P<2;P++){ t_clear_pe_phase2(A,P); t_run_storm(A,P); t_flags(A,P); t_place(P); }
   for(int P=0;P<2;P++){ t_dump_dbg(P); t_dump_run(P); t_cfgB(P); }

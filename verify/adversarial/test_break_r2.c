@@ -5,7 +5,12 @@
 static int fails=0, passes=0, gaps=0;
 #define CHECK(id,x) do{ if(!(x)){printf("FAIL [%s] %s:%d %s\n",id,__FILE__,__LINE__,#x);fails++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
 #define GAP(id,x,msg) do{ if(!(x)){printf("GAP  [%s] %s\n",id,msg);gaps++;} else {printf("pass [%s]\n",id);passes++;} }while(0)
-static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ return chip_step(c,d,i); }
+/* Buffer+bus retarget (Alex 2026-11-01): LOAD writes the one input buffer; RUN multiplies it by the live ui_in byte.
+ * Legacy vector adapter: these R1-R6 vectors were written for the old 2-LOAD shift (first byte = "top"). S() keeps that
+ * byte in g_bus and, for a RUN driven with d=0, presents it on the bus, so legacy expectations still hold. New
+ * buffer+bus semantics are tested directly in golden test_bufbus and test_break.c t_bufbus. */
+static uint8_t g_bus;
+static uint8_t S(chip_t*c,uint8_t d,uint8_t i){ if((i>>4)==1) g_bus=c->buf; if((i>>4)==2 && d==0) d=g_bus; return chip_step(c,d,i); }
 #include "halfrate.h"
 static void load2(chip_t*c){ S(c,0x21,0x10); S(c,0x3F,0x10); }
 static void mac(chip_t*c){ S(c,0,0x20); S(c,0,0x00); }

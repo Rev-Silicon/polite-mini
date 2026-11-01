@@ -5,7 +5,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
   input wire [7:0] ui_in, output wire [7:0] uo_out, input wire [7:0] uio_in, output wire [7:0] uio_out,
   output wire [7:0] uio_oe, input wire ena, clk, rst_n);
   assign uio_out = 8'h00; assign uio_oe = 8'h00;
-  logic [7:0] left, top, flags8, dbg_val;
+  logic [7:0] inbuf, flags8, dbg_val;
   logic run_phase2, mul_en, acc_en, clr_pe, clr_ob, dump_load, dump_abort;
   logic ovf, illegal, debug_busy, freeze_now, frozen_q, dbg_freeze, dbg_illegal;
   logic dump_busy_q; logic [3:0] dnib;
@@ -23,7 +23,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
 
   polite_ctrl #(.HAS_OUTBUF(HAS_OUTBUF), .OP_PLACE(OP_PLACE)) u_ctrl (
     .clk, .rst_n, .ena(en), .data(in_d_q), .instr(in_i_q), .dump_adv(dump_busy_q), .pend_ovf_any(|povf),
-    .had_freeze(frozen_q), .dbg_freeze, .dbg_illegal, .left, .top, .flags8, .run_phase2, .mul_en, .acc_en,
+    .had_freeze(frozen_q), .dbg_freeze, .dbg_illegal, .inbuf, .flags8, .run_phase2, .mul_en, .acc_en,
     .clr_pe, .clr_ob, .dump_load, .dump_abort, .ovf, .illegal, .debug_busy, .freeze_now);
 
   // dump-order k -> (row,col): 0=(2,2) 1=(2,1) 2=(1,2) 3=(1,1); lane1 = byte[7:4]
@@ -31,7 +31,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
     localparam int R = (k < 2) ? 1 : 0;
     localparam int C = (k % 2 == 0) ? 1 : 0;
     polite_pe u_pe (.clk, .rst_n, .ena(en), .mul_en, .acc_en, .clr(clr_pe),
-      .a(left[4*R +: 4]), .b(top[4*C +: 4]), .psum(psums[24*k +: 24]), .pend(pends[24*k +: 24]),
+      .a(inbuf[4*R +: 4]), .b(in_d_q[4*C +: 4]) /* buf[i] x bus[j]: bus = ui_in sampled with RUN */, .psum(psums[24*k +: 24]), .pend(pends[24*k +: 24]),
       .mul_q(muls[8*k +: 8]), .pend_ovf(povf[k]));
   end
 
@@ -44,7 +44,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
   polite_outbuf #(.HAS_OUTBUF(HAS_OUTBUF)) u_ob (.clk, .rst_n, .ena(en), .load(dump_load), .abort(dump_abort),
     .clr(clr_ob), .hold(ofz), .adv(out_tick), .load_data(run_phase2 ? pends : psums), .nib(dnib), .busy(dump_busy_q));
 
-  polite_dbg u_dbg (.op(in_i_q[7:4]), .arg(in_i_q[3:0]), .flags8, .left, .top, .data(in_d_q), .psums, .pends,
+  polite_dbg u_dbg (.op(in_i_q[7:4]), .arg(in_i_q[3:0]), .flags8, .inbuf, .data(in_d_q), .psums, .pends,
     .muls, .run_phase2, .freeze(dbg_freeze), .illegal(dbg_illegal), .val(dbg_val));
 
   // uo_out is a pure function of post-edge state: frozen value, or live uo[7:4]={debug_busy,dump busy-at-start (nibble valid),illegal,OVF} (uo[4]=OVF, Cast F7)

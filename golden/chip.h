@@ -2,8 +2,8 @@
 #define CHIP_H
 #include <stdint.h>
 typedef struct {
-  int has_outbuf, op_place;
-  uint8_t left, top, last_in, last_instr;
+  int has_outbuf, op_place; /* op_place obsolete (buffer+bus); kept for API compat, ignored */
+  uint8_t buf, last_in, last_instr; /* buf = single 8b input buffer (LOAD); RUN's other operand = live ui_in (bus) */
   int32_t psum[4];   /* 24b wrap, index in dump order: 0=(2,2) 1=(2,1) 2=(1,2) 3=(1,1) */
   int16_t mul[4];
   int ovf, illegal, run_busy, dump_busy, debug_busy, dump_paused;
