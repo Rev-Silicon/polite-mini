@@ -4,15 +4,17 @@
 |---|---|
 | Chip | POLITE V(−1), Tiny Tapeout demonstration chip |
 | Document | Architecture and instruction set architecture (ISA) specification |
-| Date | 2026-10-31 (US Central) |
+| Date | 2026-11-01 (US Central) |
 
 ## 1. Overview
 
-POLITE V(−1) is a 2×2 array of signed 4-bit integer (int4) multiply-accumulate units, called processing elements. Each processing element keeps a 24-bit signed partial sum. The host does everything else: scale, zero point, rectified linear unit (ReLU) and bias. There is no on-chip ReLU, bias or scale.
+POLITE V(−1) is a 2×2 array of signed 4-bit integer (int4) multiply-accumulate units, called processing elements. Each processing element multiplies one int4 value from a left input buffer by one int4 value from a top input buffer and adds the product into its own 24-bit signed partial sum. The four processing elements together compute a 2×2 outer product per step, so repeated steps build up a small matrix multiply.
 
-The chip has an output buffer, so a result dump streams out while new multiply-accumulate steps run in parallel.
+The chip deliberately does only the multiply-accumulate. Everything that turns a raw integer sum into a usable result — scale, zero point, rectified linear unit (ReLU) and bias — is the host's job. There is no on-chip ReLU, bias or scale. This keeps the silicon small and keeps the arithmetic exact: what comes out is the true wrapped 24-bit sum, and the host applies whatever post-processing its number format needs.
 
-The host drives one data byte and one instruction byte every clock, and reads back a 4-bit data nibble plus 4 live status flags, updated once per beat (2 clocks).
+The chip has an output buffer. When the host asks for results, the four partial sums are copied into that buffer and streamed out from there, so the processing elements are free to keep accumulating while the previous results are still leaving the chip. Computing and reading out can overlap instead of taking turns.
+
+From the host's point of view the interface is simple and synchronous. Every clock, the host drives one data byte and one instruction byte. In return it reads 8 output bits: a 4-bit data nibble plus 4 live status flags. The inputs are sampled on every clock, but the outputs update only once per *beat* (2 clocks), because the output pads are run at half the core rate (Section 2). Most of the timing rules in this document follow from that one fact.
 
 Terms used below:
 
@@ -44,27 +46,31 @@ Terms used below:
 | `uo_out[3:0]` | output | Data nibble (dump stream; 0 when idle) |
 | `uo_out[7:4]` | output | Live flags: bit 4 overflow, bit 5 illegal, bit 6 dump busy (1 exactly on the beats that carry a dump nibble), bit 7 debug busy |
 
-The `uio` pads are bidirectional in the Tiny Tapeout package, but this design drives `uio_oe = 0` on all 8 bits and ties `uio_out` to 0, so they are used as inputs only. All 16 input bits (`ui_in` and `uio_in`) are sampled on every rising edge.
+The `uio` pads are bidirectional in the Tiny Tapeout package, but this design drives `uio_oe = 0` on all 8 bits and ties `uio_out` to 0, so they are used as inputs only. All 16 input bits (`ui_in` and `uio_in`) are sampled on every rising edge, so the host must present a valid instruction on every clock; when it has nothing to do, it drives NOP (0x00).
 
 ![Pins between the host and the chip](figures/pins.svg)
 
 <p align="center">Figure 1: pins between the host and the chip</p>
 
-A debug read replaces all 8 output bits for one beat, which is 2 clocks (Section 6.6).
+Normally `uo_out` shows the data nibble and the live flags. A debug read temporarily replaces all 8 output bits with a single debug byte for one beat, which is 2 clocks (Section 6.6), and then the pins return to their normal meaning.
 
-**Clock.** Single rising edge. The core and inputs run at 66 MHz (15.15 ns clock). The outputs change at no more than 33 MHz. An output phase register resets to 0 and toggles on every edge. An edge where it is 1 is an *output tick*. `uo_out` is loaded only on the edge right after an output tick, so the pins hold each value for one beat (2 clocks). Place-and-route uses the 15.15 ns clock with a 2-cycle multicycle constraint on `uo_out`.
+**Clock.** The chip uses a single rising-edge clock. The core logic and the input registers run at 66 MHz (a 15.15 ns clock). The output pads are slower than the core, so the outputs are allowed to change at no more than 33 MHz. To arrange this, an output phase register resets to 0 and toggles on every edge. An edge on which it is 1 is called an *output tick*. The output register `uo_out` is loaded only on the edge right after an output tick, so each value it shows is held stable for one full beat (2 clocks). This gives the output pads and the host's input sampling twice as much time as a full-rate output would. Place-and-route reflects the same arrangement: it uses the 15.15 ns clock with a 2-cycle multicycle constraint on `uo_out`.
 
-**Pad pipeline.** `ui_in` and `uio_in` are registered at the top level: sampled on edge k, executed on edge k+1. All 8 `uo_out` bits come from one register, loaded once per beat. An operation applied before edge k executes on edge k+1. Its result is on `uo_out` after edge k+2 when edge k+1 is an output tick, and after edge k+3 otherwise. The host knows the beat phase by counting clocks from reset. Reset loads NOP into the input registers and 0 into `uo_out`. The `ena` pin is registered once (resets to 1), so a hold driven by `ena` takes effect one edge after the pin changes.
+Because outputs move once per beat, anything the chip produces — a dump nibble or a debug byte — occupies exactly one beat at the pins. The dump stream advances once per output tick for the same reason: one nibble per beat, never two nibbles fighting over the same beat.
 
-The behavior in the rest of this document is described one edge at a time inside the core. For pin timing, add the pad latency (2 or 3 edges) and the once-per-beat output update.
+**Pad pipeline.** Inputs and outputs are both registered at the top level, which adds a small, fixed latency between the host and the core. `ui_in` and `uio_in` are sampled on edge k and the command executes in the core on edge k+1. All 8 `uo_out` bits come from one register, loaded once per beat. So an operation applied before edge k executes on edge k+1, and its result appears on `uo_out` after edge k+2 when edge k+1 is an output tick, or after edge k+3 otherwise. The one-edge difference is simply whether the result has to wait for the next output register load.
+
+The host can know which case it is in by counting clocks from reset, since the output phase register starts at 0 and toggles every edge. A host that does not want to track the phase can always read after edge k+3, which is safe in both cases. Reset loads NOP into the input registers and 0 into `uo_out`, so the chip comes out of reset idle with all-zero outputs. The `ena` pin is registered once (it resets to 1), so a hold driven by `ena` takes effect one edge after the pin changes.
+
+The rest of this document describes behavior one edge at a time *inside the core*, because that is where the rules are simplest to state. To translate any of it to pin timing, add the pad latency (2 or 3 edges, as above) and remember that the outputs update only once per beat.
 
 ## 3. Load placement
 
-The chip has one layout setting, load placement, fixed at build time. It is the RTL parameter `OP_PLACE`. It decides which input buffer a LOAD writes first (Section 7.1). The host can read it from debug flags bit 6. The product chip is built with load placement 0 (debug flags bit 6 reads 0).
+The chip has one layout setting, load placement, which is fixed at build time and cannot be changed by the host. It is the RTL parameter `OP_PLACE`. It decides which input buffer a LOAD writes first (Section 7.1), and therefore the order in which the host must send its two operand bytes. Because a host driver written for the wrong placement would silently swap the left and top operands, the setting is reported to software: the host can read it from debug flags bit 6. The product chip is built with load placement 0 (debug flags bit 6 reads 0).
 
 ## 4. Commands
 
-A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode, bits [3:0] the arguments. A new command can be given on every rising edge.
+A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode and bits [3:0] are its arguments. A new command can be given on every rising edge; there is no handshake and no instruction queue. Commands that need more than one edge (RUN, the dump stream, a debug freeze) carry on by themselves, and the rules in Section 6 say which commands may overlap with them.
 
 | Op | Name | What it does | Freezes output? |
 |---|---|---|---|
@@ -91,11 +97,13 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode, 
 | DEBUG_PARTIAL_SUM | [3:2] byte (0 = bits 7:0, 1 = bits 15:8, 2 = bits 23:16), [1:0] processing element |
 | DEBUG_MULTIPLY / DEBUG_ADD | [3:2] reserved, [1:0] processing element |
 
-Whenever a command takes a processing element index, it sits in [1:0]. Only DEBUG_PARTIAL_SUM uses [3:2], as its byte select; CLEAR uses all four bits as a mask. Processing element index (also the dump order): 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1).
+Whenever a command takes a processing element index, the index sits in bits [1:0]. Only DEBUG_PARTIAL_SUM uses bits [3:2], as its byte select; CLEAR uses all four bits as a mask. The processing element index is also the dump order: 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1). Using one numbering everywhere means a host can read a dumped sum and then inspect the same processing element with a debug read without translating indices.
 
-These argument values set the illegal flag and do **not** freeze: DEBUG_FLAGS with bank ≠ 0, and DEBUG_PARTIAL_SUM with byte 3. Reserved bits are ignored.
+Two argument values are rejected rather than ignored: DEBUG_FLAGS with bank ≠ 0, and DEBUG_PARTIAL_SUM with byte 3. Each sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that beat instead of a meaningless byte. Reserved bits, by contrast, are simply ignored; drive them to 0 so that future revisions can give them a meaning without breaking existing host code.
 
 ## 5. Flags
+
+The chip keeps six status flags. Four of them are live on the output pins on every beat that is not frozen, so the host can watch for errors and dump progress without spending any commands. All six can be read at once with DEBUG_FLAGS (Section 6.6).
 
 | Flag | Kind | Set by | Cleared by |
 |---|---|---|---|
@@ -106,46 +114,54 @@ These argument values set the illegal flag and do **not** freeze: DEBUG_FLAGS wi
 | Run busy | level | RUN phase 1 | end of RUN phase 2 |
 | Dump paused | level | a freezing debug read during an active dump; the freeze covers any output tick in its 2-edge window, so the dump does not advance. Visible only in a DEBUG_FLAGS frozen byte (bit 5) | end of the freeze |
 
-Sticky means the flag stays set until CLEAR with bit 0. Reset sets every flag and register to zero, except the registered `ena`, which resets to 1. The live pins `uo[7:4]` carry the first four flags; run busy and dump paused are visible only through DEBUG_FLAGS.
+*Sticky* means the flag stays set until the host clears it with CLEAR bit 0, no matter how much time passes. This matters for a host that polls only occasionally: an overflow or a rejected command is never lost just because the host looked at the pins a few beats too late. *Level* flags, by contrast, simply report what the chip is doing right now.
+
+Reset sets every flag and register to zero, except the registered `ena`, which resets to 1. The live pins `uo[7:4]` carry the first four flags; run busy and dump paused are visible only through DEBUG_FLAGS. Note that on a frozen beat the upper pins carry bits of the debug byte, not the live flags, so a host watching `uo_out[7:4]` should skip the beats it froze itself.
 
 ## 6. Behavior for host software
 
 ### 6.1 RUN
-RUN is one full multiply-accumulate step over 2 clocks. On RUN phase 1 (first clock) the chip computes the four products. On RUN phase 2 (second clock) it adds them to the partial sums, wrapping at 24 bits, and clears the products to 0.
+RUN is one full multiply-accumulate step and takes 2 clocks. On RUN phase 1 (the first clock) the chip computes the four products from the current input buffers. On RUN phase 2 (the second clock) it adds them to the partial sums, wrapping at 24 bits, and clears the products to 0. Splitting the multiply and the add over two clocks keeps each clock's logic short enough to meet the 66 MHz target.
 
-A RUN on phase 2 of a previous RUN is ignored and sets the illegal flag. The maximum rate is one RUN every 2 clocks: `RUN, NOP, RUN, NOP, …` (any opcode other than RUN can fill the gap).
+Because the adders are still busy on phase 2, a RUN that arrives on phase 2 of a previous RUN is ignored and sets the illegal flag; it is not queued. The maximum rate is therefore one RUN every 2 clocks: `RUN, NOP, RUN, NOP, …`. Any opcode other than RUN can fill the gap, and a useful choice is a LOAD, so that the next operands are in place for the following RUN.
 
-On RUN phase 2 the RUN still counts as in progress. Other opcodes on that cycle see run busy = 1 and the partial sums before the add; the add takes effect at the end of the cycle.
+On RUN phase 2 the RUN still counts as in progress. Other opcodes executed on that cycle see run busy = 1 and see the partial sums as they were *before* the add; the add takes effect at the end of the cycle. Section 6.7 lists exactly which reads see the pre-add and which see the post-add values on that cycle.
 
-RUN is allowed during a debug freeze.
+RUN is allowed during a debug freeze. A freeze only affects what the output pins show; it does not stop the datapath.
 
 ### 6.2 DUMP_LOAD and DUMP_ABORT
-DUMP_LOAD copies the four partial sums into the output buffer and streams 24 nibbles, one per output tick (one per beat), starting at the first output tick after the DUMP_LOAD edge. A dump keeps dump busy high for 48 clocks (49 if DUMP_LOAD lands on an output tick). RUNs can continue during the stream without affecting it.
+DUMP_LOAD is how results leave the chip. It copies the four partial sums into the output buffer in one edge and then streams them out as 24 nibbles, one per output tick (one per beat), starting at the first output tick after the DUMP_LOAD edge. While the stream runs, dump busy is high; a complete dump keeps it high for 48 clocks (49 if DUMP_LOAD lands on an output tick, because the first nibble then waits for the next tick). Since the stream reads from the output buffer and not from the processing elements, RUNs can continue during the stream without affecting it. A typical schedule is: finish a tile of RUNs, DUMP_LOAD, clear the partial sums once the copy is taken, and start accumulating the next tile while the previous one streams out.
 
-- DUMP_LOAD is **illegal while a dump is in progress** at the start of the cycle, including the cycle that sends the last nibble. It does not restart; the current stream finishes normally.
-- DUMP_LOAD on RUN phase 2 captures the result of that RUN. The overflow flag is still set only once, by the RUN itself.
-- DUMP_ABORT stops the stream; dump busy drops to 0. DUMP_ABORT with no dump running is a legal no-op (illegal is not set).
+- DUMP_LOAD is **illegal while a dump is in progress** at the start of the cycle, including the cycle that sends the last nibble. It does not restart the stream; the current stream finishes normally, and the illegal flag records that the request was refused. This prevents a late DUMP_LOAD from silently overwriting results the host is still receiving.
+- DUMP_LOAD on RUN phase 2 captures the result of that RUN, so the host does not need an extra idle clock between the last RUN and the dump. The overflow flag is still set only once, by the RUN itself.
+- DUMP_ABORT stops the stream; dump busy drops to 0. DUMP_ABORT with no dump running is a legal no-op (illegal is not set), so a host can issue it unconditionally as part of a recovery sequence.
 
-**Reading the stream at the pins.** The dump nibbles are the beats with `uo_out[6]` = 1 that are not frozen by a debug read, in order. The DUMP_LOAD beat shows bit 6 = 0, the last-nibble beat shows bit 6 = 1, and the beat after it shows 0, on either beat phase. The host does not need to track the phase. Nibble 0 is on the pins 3 or 4 edges after DUMP_LOAD is applied.
+**Reading the stream at the pins.** The host does not need a separate "data valid" pin: `uo_out[6]` (dump busy) serves as the frame marker. The dump nibbles are, in order, the beats on which `uo_out[6]` = 1 and that are not frozen by a debug read. The DUMP_LOAD beat itself shows bit 6 = 0, the beat carrying the last nibble shows bit 6 = 1, and the beat after it shows 0, on either beat phase. A host can therefore simply collect `uo_out[3:0]` on every beat where bit 6 is set, skipping beats it froze with its own debug reads, and stop after 24 nibbles or when bit 6 falls. It does not need to track the beat phase. Nibble 0 is on the pins 3 or 4 edges after DUMP_LOAD is applied.
 
-There is no separate plain DUMP opcode.
+There is no separate plain DUMP opcode; every dump goes through the output buffer.
 
 ### 6.3 CLEAR
-The arguments are a bit mask: bit 0 flags (overflow and illegal), bit 1 input buffer (left and top), bit 2 output buffer, bit 3 partial sums. If any selected bit conflicts with work in progress, the **whole** CLEAR is ignored and the illegal flag is set:
+CLEAR zeroes chosen parts of the chip state. Its arguments are a bit mask, and any combination is allowed: bit 0 clears the flags (overflow and illegal), bit 1 the input buffer (left and top), bit 2 the output buffer, bit 3 the partial sums.
+
+Some clears would destroy work that is still in progress. If any selected bit conflicts, the **whole** CLEAR is ignored — including its non-conflicting bits — and the illegal flag is set:
 
 - Bit 3 (partial sums) while a RUN is in progress, including RUN phase 2.
 - Bit 2 (output buffer) while a dump was in progress at the start of the cycle, including the last-nibble cycle.
 
-If RUN phase 2 overflows on the same cycle as a CLEAR of the flags, the new overflow stays set. Earlier overflow and illegal are cleared.
+The all-or-nothing rule is intentional. If a CLEAR could partly succeed, the host would have to read back the state to find out which parts were actually cleared. With all-or-nothing, the host only has to check one thing — the illegal flag — and if it is clear, every bit it asked for took effect. One consequence is worth spelling out: a CLEAR that includes bit 0 and is rejected does not clear the flags, so the illegal flag it sets remains visible.
+
+If RUN phase 2 overflows on the same cycle as a CLEAR of the flags, the new overflow stays set while earlier overflow and illegal are cleared. The newest event wins, so an overflow is never erased by a clear that happened to land on the same edge.
 
 ### 6.4 Sticky flags
-Overflow and illegal stay set until CLEAR bit 0. Repeated illegal events leave the flag at 1.
+Overflow and illegal stay set until CLEAR bit 0. Repeated illegal events leave the flag at 1; the chip does not count events. A host that needs to know *which* command was rejected should check the flag after each risky command instead of at the end of a long sequence.
 
 ### 6.5 Idle output
-When no dump is running and no debug freeze is showing, the data nibble `uo[3:0]` is 0 and the flags in `uo[7:4]` stay live.
+When no dump is running and no debug freeze is showing, the data nibble `uo[3:0]` is 0 and the flags in `uo[7:4]` stay live. A host can therefore leave the chip idle and keep watching the flag pins with no extra commands.
 
 ### 6.6 Debug reads
-A freezing debug read replaces all 8 `uo_out` bits with its byte for **1 beat (2 clocks)**, with debug busy = 1. Inside the core the frozen byte is held for 2 edges (the opcode's edge and the next one), so exactly one output tick carries it to the pins. The next beat returns to live output. Two freezing reads on consecutive edges are not supported: which bytes reach the pins depends on the beat phase. Space debug reads at least one beat (2 clocks) apart: opcode, NOP. Spaced reads always return one byte per beat, in order.
+Debug reads let the host inspect internal state through the same 8 output pins that normally carry the dump stream and flags. A freezing debug read replaces all 8 `uo_out` bits with its byte for **1 beat (2 clocks)**, with debug busy = 1. Inside the core the frozen byte is held for 2 edges (the opcode's edge and the next one); whichever of those two edges is the output tick carries it to the pins, so exactly one beat shows it. The next beat returns to live output.
+
+Two freezing reads on consecutive edges are not supported. Both would fall into the same 2-edge window, but only one output tick is available, so which bytes reach the pins would depend on the beat phase. Space debug reads at least one beat (2 clocks) apart: opcode, NOP. Spaced reads always return one byte per beat, in order. The spacing rule is the cost of half-rate outputs: the pins can carry only one byte per beat, so the host cannot request bytes faster than that.
 
 DEBUG_FLAGS bank 0 bit layout:
 
@@ -163,9 +179,11 @@ DEBUG_FLAGS bank 0 bit layout:
 - Dump busy reports the state at the start of the cycle. A freeze during a dump also shows dump paused = 1, so the two bits agree even on the last-nibble cycle.
 - On RUN phase 2, run busy = 1, and bit 0 includes any overflow from the add that finishes on that cycle.
 
+Bits 6 and 7 are fixed for a given chip and act as a short identity check: a host driver can read DEBUG_FLAGS once after reset to confirm it is talking to a chip with the expected load placement and an output buffer.
+
 #### 6.6.1 Debug read latency and width
 
-One debug opcode produces one freeze, and one freeze returns one byte. There is no multi-byte burst. At the pins, an opcode sampled on rising edge k shows its byte on `uo_out` after edge k+2 or k+3, depending on the beat phase, and holds it for one beat (2 clocks). Reading `uo_out` after edge k+3 always returns the byte. Issue debug opcodes at least one beat (2 clocks) apart: opcode, NOP; each returns its byte one beat after the previous one.
+One debug opcode produces one freeze, and one freeze returns one byte. There is no multi-byte burst; values wider than 8 bits are read with several opcodes. At the pins, an opcode sampled on rising edge k shows its byte on `uo_out` after edge k+2 or k+3, depending on the beat phase, and holds it for one beat (2 clocks). This is the same pad pipeline as in Section 2. Reading `uo_out` after edge k+3 always returns the byte, so a host that does not track the phase can use that as its read point. Issue debug opcodes at least one beat (2 clocks) apart: opcode, NOP; each returns its byte one beat after the previous one.
 
 | Opcode | Width per freeze | Opcodes for the full value | Byte visible at pins (opcode sampled on edge k) |
 |---|---|---|---|
@@ -176,44 +194,46 @@ One debug opcode produces one freeze, and one freeze returns one byte. There is 
 | DEBUG_ADD | low 8 bits of the 24-bit wrapped sum only | 1 (low byte only) | after edge k+2 or k+3 |
 | DEBUG_INPUT | 8 bits | 1 | after edge k+2 or k+3 |
 
-DEBUG_ADD never returns the upper 16 bits. To read the full 24-bit result of an add, let the RUN finish and then read the partial sum with three DEBUG_PARTIAL_SUM opcodes.
+DEBUG_ADD never returns the upper 16 bits. To read the full 24-bit result of an add, let the RUN finish and then read the partial sum with three DEBUG_PARTIAL_SUM opcodes. If a RUN is allowed to complete between those three reads, the bytes come from different sums; hold off RUNs while reading a partial sum if the host needs a consistent 24-bit value.
 
 ![Debug read timing](figures/debug_timing.svg)
 
 <p align="center">Figure 2: debug reads at the pins, one byte per opcode, held for one beat (2 clocks)</p>
 
-**Dump pause.** Only a debug read that freezes the output pauses the dump. The stream does not advance on any output tick covered by the freeze (dump paused = 1). It resumes on the next output tick that is not frozen. No nibbles are lost. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0, DEBUG_PARTIAL_SUM byte 3) does not pause: the nibble goes out and the stream stays complete.
+**Dump pause.** A debug read and the dump stream share the same pins, so they cannot both use the same beat. Only a debug read that actually freezes the output pauses the dump. The stream does not advance on any output tick covered by the freeze (dump paused = 1), and it resumes on the next output tick that is not frozen. No nibbles are lost; the dump simply takes one beat longer for each freeze. This is why the framing rule in Section 6.2 says to skip frozen beats: the frozen beat carries the debug byte, and the nibble that would have gone out is sent on the following beat instead. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0, DEBUG_PARTIAL_SUM byte 3) does not pause: the nibble goes out on schedule and the stream stays complete.
 
 ### 6.7 Debug reads on RUN phase 2
+RUN phase 2 is the one cycle on which a value is changing inside the processing elements, so it is the one cycle where "which value does this read see?" needs a precise answer.
+
 - DEBUG_PARTIAL_SUM and DEBUG_MULTIPLY return the registers as they are before the add.
 - DEBUG_ADD returns a preview of the result: the low byte of the 24-bit wrapped sum of partial sum plus product. At other times it returns the low byte of the partial sum (the product is 0 after a finished RUN). It never sets overflow.
 - DEBUG_FLAGS returns the start-of-cycle busy flags plus any overflow from the add.
 
-In short: reads that report this cycle's result, or that keep a copy past this cycle (DEBUG_ADD, DEBUG_FLAGS overflow, DUMP_LOAD capture), see the add. Plain register reads see the values before it.
+The rule behind these cases: reads that report this cycle's result, or that keep a copy past this cycle (DEBUG_ADD, DEBUG_FLAGS overflow, DUMP_LOAD capture), see the add. Plain register reads see the values before it.
 
 ## 7. Datapath
 
 ### 7.1 LOAD packing
-A LOAD byte holds two signed int4 lanes: high nibble = lane 1, low nibble = lane 0. LOAD shifts the input buffers by one byte:
+A LOAD byte holds two signed int4 lanes: the high nibble is lane 1 and the low nibble is lane 0. Each input buffer is one such byte, giving the two values for one side of the 2×2 array. LOAD shifts the input buffers by one byte, so the host fills both buffers with two consecutive LOADs:
 
 | Load placement (debug flags bit 6) | Effect of LOAD |
 |---|---|
 | 0 | old left → top; new byte → left |
 | 1 | old top → left; new byte → top |
 
-Two LOADs fill both buffers. With setting 0, the first byte ends up in top and the second in left. With setting 1, the first byte ends up in left and the second in top.
+With setting 0 (the product chip), the first byte ends up in top and the second in left. With setting 1, the first byte ends up in left and the second in top. A host can verify the result with DEBUG_BUFFER before running.
 
 ![Load path into the array](figures/load_path.svg)
 
 <p align="center">Figure 3: LOAD path. High nibble [7:4] is lane 1 (index 2), low nibble [3:0] is lane 0 (index 1). The daisy-chain dump is removed; results leave through the output buffer (DUMP_LOAD).</p>
 
 ### 7.2 Accumulate
-`PE(i,j) += left[i] × top[j]`, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. Products fit in 8 signed bits. Partial sums are 24-bit two's complement and wrap around; any wrap sets the sticky overflow flag.
+Each RUN performs `PE(i,j) += left[i] × top[j]`, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. The product of two int4 values always fits in 8 signed bits. Partial sums are 24-bit two's complement and wrap around on overflow rather than saturating; any wrap sets the sticky overflow flag. A host that sees overflow set knows at least one sum is no longer the true mathematical result and can decide whether to discard or rescale the tile.
 
 ### 7.3 Dump stream order
-24 nibbles = 4 processing elements × 6 nibbles:
+A dump is 24 nibbles = 4 processing elements × 6 nibbles each:
 
-- Processing element order: (2,2), (2,1), (1,2), (1,1).
+- Processing element order: (2,2), (2,1), (1,2), (1,1) — the same as the processing element index in Section 4.
 - Within each 24-bit partial sum: **little-endian, low nibble first**.
 
 Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, where `n/6` is integer division (processing element order above) and `sum` starts at 0. Then sign-extend each sum from bit 23: `if (sum & 0x800000) sum -= 0x1000000` (equivalently `sum |= ~0xFFFFFF` in a 32-bit signed integer).
@@ -222,7 +242,7 @@ Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, wh
 
 Flow: LibreLane 3.0.14, SkyWater 130 nm (sky130A) high-density cells, 15.15 ns clock (66 MHz), with a 2-cycle multicycle constraint on `uo_out`.
 
-**The physical results below are pre-half-rate.** They come from the earlier place-and-route run of the product chip, before the output-tick RTL and the `uo_out` multicycle constraint. They are not results for commit `677ce98`; a new place-and-route run on that commit is pending.
+**The physical results below are pre-half-rate.** They come from the earlier place-and-route run of the product chip, before the output-tick RTL and the `uo_out` multicycle constraint. They are not results for commit `677ce98`; a new place-and-route run on that commit is pending. They are included to show the size and timing margin of the design, not as sign-off numbers for the current RTL.
 
 | Metric | Value |
 |---|---|
@@ -237,13 +257,15 @@ Flow: LibreLane 3.0.14, SkyWater 130 nm (sky130A) high-density cells, 15.15 ns c
 | Routing design rule check (DRC) / Magic DRC / KLayout DRC / layout versus schematic (LVS) | 0 / 0 / 0 / 0 errors |
 | Max slew / max capacitance violations | 494 / 24 (slow corner only; open, to be fixed by tightening, not waived; see Section 9) |
 
-The design does not fit a 1×1 tile, so it uses a 1×2 tile. Verified at commit `677ce98`: the register-transfer level (RTL) design matches the reference model (`golden/chip.c`) cycle for cycle on `uo_out` in random simulation; the reference model self-test `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test` reports ALL PASS; and the adversarial suite, including round R7, passes 70 / 0 / 0 (pass / fail / gap). The physical table above predates this commit (see above).
+The design does not fit a 1×1 tile, so it uses a 1×2 tile.
+
+Functional verification is current. Verified at commit `677ce98`: the register-transfer level (RTL) design matches the reference model (`golden/chip.c`) cycle for cycle on `uo_out` in random simulation; the reference model self-test `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test` reports ALL PASS; and the adversarial suite, including round R7, passes 70 / 0 / 0 (pass / fail / gap). The physical table above predates this commit (see above).
 
 ## 9. Open items
 
-- Slow-corner slew and capacitance violations (494 / 24): open — Alex directed fix by tightening (not waive); pending Cast A0 re-PnR on tip 677ce98.
-- DEBUG_FLAGS banks other than 0 are undefined and illegal.
-- The reference model does not model `ena`. Holding `ena` low also holds the output phase register, so the beat phase picks up where it stopped.
+- Slow-corner slew and capacitance violations (494 / 24): open. Alex directed that these be fixed by tightening, not waived; pending Cast A0 re-PnR on tip 677ce98.
+- DEBUG_FLAGS banks other than 0 are undefined and illegal. They are reserved so that later revisions can expose more status without changing bank 0.
+- The reference model does not model `ena`. Holding `ena` low also holds the output phase register, so the beat phase picks up where it stopped; a host that counts clocks to track the beat phase should not count clocks during which `ena` was low.
 
 ## 10. References
 
