@@ -43,7 +43,7 @@ Terms used below:
 | `uio_in[7:4]` | input | Opcode |
 | `uio_in[3:0]` | input | Opcode arguments |
 | `uo_out[3:0]` | output | Data nibble (dump stream; 0 when idle) |
-| `uo_out[7:4]` | output | Live flags: bit 4 overflow, bit 5 illegal, bit 6 dump busy at the start of the displayed edge; on unfrozen beats, 1 exactly when `uo[3:0]` is a dump nibble (frozen beats show debug byte bits), bit 7 reads 0 when live (not a debug-busy pin; debug busy is bit 3 of a frozen DEBUG_FLAGS byte) |
+| `uo_out[7:4]` | output | Live flags, one per bit:<br>• bit 4: overflow.<br>• bit 5: illegal.<br>• bit 6: dump busy at the start of the displayed edge; on unfrozen beats, 1 exactly when `uo[3:0]` is a dump nibble (frozen beats show debug byte bits).<br>• bit 7: reads 0 when live; not a debug-busy pin (debug busy is bit 3 of a frozen DEBUG_FLAGS byte). |
 
 The `uio` pads are bidirectional in the Tiny Tapeout package, but this design drives `uio_oe = 0` on all 8 bits and ties `uio_out` to 0, so they are used as inputs only. All 16 input bits (`ui_in` and `uio_in`) are sampled on every rising edge, so the host must present a valid instruction on every clock; when it has nothing to do, it drives NOP (0x00).
 
@@ -210,7 +210,7 @@ RUN phase 2 is the one cycle on which a value is changing inside the processing 
 - DEBUG_ADD returns a preview of the result: the low byte of the 24-bit wrapped sum of partial sum plus product. At other times it returns the low byte of the partial sum (the product is 0 after a finished RUN). It never sets overflow.
 - DEBUG_FLAGS returns the start-of-cycle busy flags plus any overflow from the add.
 
-The rule behind these cases: reads that report this cycle's result, or that keep a copy past this cycle (DEBUG_ADD, DEBUG_FLAGS overflow, DUMP_LOAD capture), see the add. Plain register reads see the values before it.
+The rule behind these cases: reads that report the adder output or a value latched on this edge (DEBUG_ADD, DEBUG_FLAGS overflow, DUMP_LOAD capture) see the add. Plain register reads see the values before it.
 
 ## 7. Datapath
 
