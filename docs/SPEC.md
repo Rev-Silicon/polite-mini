@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-POLITE V(−1) is a 2×2 array of signed 4-bit integer (int4) multiply-accumulate units, called processing elements. Each processing element multiplies one int4 value from a left input buffer by one int4 value from a top input buffer and adds the product into its own 24-bit signed partial sum. The four processing elements together compute a 2×2 outer product per step, so repeated steps build up a small matrix multiply.
+POLITE V(−1) is a 2×2 array of signed 4-bit integer (int4) multiply-accumulate units, called processing elements. Each processing element multiplies one int4 value from the input buffer by one int4 value taken live from the `ui_in` data bus on the RUN cycle and adds the product into its own 24-bit signed partial sum. The four processing elements together compute a 2×2 outer product per step, so repeated steps build up a small matrix multiply.
 
 The chip deliberately does only the multiply-accumulate. Everything that turns a raw integer sum into a usable result — scale, zero point, rectified linear unit (ReLU) and bias — is the host's job. There is no on-chip ReLU, bias or scale. This keeps the silicon small and keeps the arithmetic exact: what comes out is the true wrapped 24-bit sum, and the host applies whatever post-processing its number format needs.
 
@@ -38,7 +38,7 @@ Terms used below:
 | `clk` | input | Single rising-edge clock, 66 MHz target |
 | `rst_n` | input | Active-low reset: all state 0, inputs read as NOP, chip enabled |
 | `ena` | input | Enable; low holds the whole chip, taking effect one edge after the pin changes |
-| `ui_in[7:0]` | input | Data byte (used by LOAD, echoed by DEBUG_INPUT) |
+| `ui_in[7:0]` | input | Data byte: written to the input buffer by LOAD, used as the bus operand by RUN, echoed by DEBUG_INPUT |
 | `uio_in[7:4]` | input | Opcode |
 | `uio_in[3:0]` | input | Opcode arguments |
 | `uo_out[3:0]` | output | Data nibble (dump stream; 0 when idle) |
@@ -69,13 +69,13 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 | Op | Name | What it does | Freezes output? |
 |---|---|---|---|
 | 0x0 | NOP | Nothing; the dump stream and flags keep flowing | no |
-| 0x1 | LOAD | Shift `ui_in` into the input buffer (1 edge) | no |
-| 0x2 | RUN | One multiply-accumulate step (2 edges) | no |
+| 0x1 | LOAD | Write `ui_in` into the input buffer (1 edge) | no |
+| 0x2 | RUN | One multiply-accumulate step (2 edges): input buffer × `ui_in` | no |
 | 0x3 | DUMP_LOAD | Copy the partial sums to the output buffer and start the 24-nibble stream | no |
 | 0x4 | DUMP_ABORT | Stop the stream; dump busy = 0 | no |
 | 0x5 | CLEAR | Zero the selected state; any conflict ignores the whole CLEAR and sets illegal | no |
 | 0x6 | DEBUG_FLAGS | Return the 8-bit flag byte (Section 5.6) | yes, 1 beat |
-| 0x7 | DEBUG_BUFFER | Return the left or top input buffer byte | yes, 1 beat |
+| 0x7 | DEBUG_BUFFER | Return the input buffer byte | yes, 1 beat |
 | 0x8 | DEBUG_PARTIAL_SUM | Return one byte of a 24-bit partial sum | yes, 1 beat (3 commands for 24 bits) |
 | 0x9 | DEBUG_MULTIPLY | Return the last product, sign-extended to 8 bits | yes, 1 beat (full product) |
 | 0xA | DEBUG_ADD | Return one byte of the 24-bit wrapped adder output (Section 5.7) | yes, 1 beat (3 commands for 24 bits) |
@@ -84,10 +84,9 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 
 | Command | Argument bits |
 |---|---|
-| NOP, LOAD, RUN, DUMP_LOAD, DUMP_ABORT, DEBUG_INPUT | [3:0] reserved, drive 0 |
-| CLEAR | [3] partial sums, [2] output buffer, [1] input buffer (left and top), [0] flags (overflow and illegal); any combination |
+| NOP, LOAD, RUN, DUMP_LOAD, DUMP_ABORT, DEBUG_BUFFER, DEBUG_INPUT | [3:0] reserved, drive 0 |
+| CLEAR | [3] partial sums, [2] output buffer, [1] input buffer, [0] flags (overflow and illegal); any combination |
 | DEBUG_FLAGS | [3:0] bank select; only bank 0 is defined on this chip, other banks are reserved for future flag expansion (Section 4) |
-| DEBUG_BUFFER | [3:1] reserved, [0] buffer (0 = left, 1 = top) |
 | DEBUG_PARTIAL_SUM | [3:2] byte (0 = bits 7:0, 1 = bits 15:8, 2 = bits 23:16), [1:0] processing element |
 | DEBUG_MULTIPLY | [3:2] reserved, [1:0] processing element |
 | DEBUG_ADD | [3:2] byte (0 = bits 7:0, 1 = bits 15:8, 2 = bits 23:16), [1:0] processing element |
@@ -122,13 +121,13 @@ Reset clears every flag and all chip state. The live pins `uo[7:4]` carry the fi
 ## 5. Behavior for host software
 
 ### 5.1 RUN
-RUN is one full multiply-accumulate step and takes 2 clocks. On RUN phase 1 (the first clock) the chip computes the four products from the current input buffers. On RUN phase 2 (the second clock) it adds them to the partial sums, wrapping at 24 bits, and clears the products to 0.
+RUN is one full multiply-accumulate step and takes 2 clocks. On RUN phase 1 (the first clock) the chip computes the four products from the input buffer byte and the `ui_in` byte sampled with the RUN command (the bus operand). On RUN phase 2 (the second clock) it adds them to the partial sums, wrapping at 24 bits, and clears the products to 0.
 
-Because the adders are still busy on phase 2, a RUN that arrives on phase 2 of a previous RUN is ignored and sets the illegal flag; it is not queued. The maximum rate is therefore one RUN every 2 clocks: `RUN, NOP, RUN, NOP, …`. Any opcode other than RUN can fill the gap, including LOAD; a LOAD there does not affect the RUN in flight, because phase 2 only adds the products latched on phase 1. Note that one LOAD shifts both buffers (Section 6.1), so a single gap LOAD does not stage a fresh, independent left/top pair: loading a fresh pair takes two LOADs, which needs a gap of at least 2 edges and so drops the rate below one RUN every 2 clocks.
+Because the adders are still busy on phase 2, a RUN that arrives on phase 2 of a previous RUN is ignored and sets the illegal flag; it is not queued. The maximum rate is therefore one RUN every 2 clocks: `RUN, NOP, RUN, NOP, …`. Any opcode other than RUN can fill the gap, including LOAD; a LOAD there does not affect the RUN in flight, because phase 2 only adds the products latched on phase 1.
 
-In regular use, RUN is expected to be paired with LOAD in the rhythm `RUN, LOAD, RUN, LOAD, RUN, LOAD, …`. The LOAD occupies the gap that RUN phase 2 forces anyway and stages operands for the next RUN, so the array is kept at its maximum rate of one RUN every 2 clocks. Each gap LOAD advances the load shift by exactly one byte: the previous left byte moves to top and the new byte enters left (Section 6.1). Consecutive RUNs in this rhythm therefore see overlapping operand pairs, which suits a host that packs its stream so that each new byte is the next operand it wants. When the host needs a fresh, fully independent left/top pair, that pair takes two LOADs, i.e. two such gaps (or one wider gap), as stated above.
+The two operands of a RUN come from two different places: one is the byte held in the input buffer, the other is the byte on the `ui_in` bus in the same instruction as the RUN. There is no shift register between them; LOAD only replaces the buffer byte. In regular use the host LOADs the operand it wants to reuse, then issues RUNs with a new bus byte each time (`LOAD, RUN, NOP, RUN, NOP, …`), and LOADs again whenever the buffered operand must change (for example `LOAD, RUN, LOAD, RUN, …` when both operands change every step). Because the bus byte rides with the RUN itself, a RUN needs no LOAD of its own to receive a fresh bus operand.
 
-This pairing spends an issue slot on LOAD. A single fused command that loaded operands and performed the multiply-accumulate, taking two cycles to process both, would remove the separate LOAD instruction and its issue slot. This chip is a test chip, however, and producing a design that works in the end has priority over that optimization. Keeping LOAD and RUN as separate, simple commands keeps each one easy to verify on its own and leaves the fused form as a candidate for a later revision.
+A LOAD that changes the buffer spends an issue slot. A single fused command that loaded operands and performed the multiply-accumulate, taking two cycles to process both, would remove the separate LOAD instruction and its issue slot. This chip is a test chip, however, and producing a design that works in the end has priority over that optimization. Keeping LOAD and RUN as separate, simple commands keeps each one easy to verify on its own and leaves the fused form as a candidate for a later revision.
 
 On RUN phase 2 the RUN still counts as in progress. Other opcodes executed on that cycle see run busy = 1 and see the partial sums as they were *before* the add; the add takes effect at the end of the cycle. Section 5.7 lists exactly which reads see the pre-add and which see the post-add values on that cycle.
 
@@ -146,7 +145,7 @@ DUMP_LOAD is how results leave the chip. It copies the four partial sums into th
 There is no separate plain DUMP opcode; every dump goes through the output buffer.
 
 ### 5.3 CLEAR
-CLEAR zeroes chosen parts of the chip state. Its arguments are a bit mask, and any combination is allowed: bit 0 clears the flags (overflow and illegal), bit 1 the input buffer (left and top), bit 2 the output buffer, bit 3 the partial sums.
+CLEAR zeroes chosen parts of the chip state. Its arguments are a bit mask, and any combination is allowed: bit 0 clears the flags (overflow and illegal), bit 1 the input buffer, bit 2 the output buffer, bit 3 the partial sums.
 
 Some clears would destroy work that is still in progress. If any selected bit conflicts, the **whole** CLEAR is ignored — including its non-conflicting bits — and the illegal flag is set:
 
@@ -193,7 +192,7 @@ One debug opcode produces one freeze, and one freeze returns one byte. There is 
 | Opcode | Width per freeze | Opcodes for the full value | Byte visible at pins (opcode sampled on edge k) |
 |---|---|---|---|
 | DEBUG_FLAGS | 8 bits | 1 | after edge k+2 or k+3 |
-| DEBUG_BUFFER | 8 bits (left or top) | 1 | after edge k+2 or k+3 |
+| DEBUG_BUFFER | 8 bits (input buffer) | 1 | after edge k+2 or k+3 |
 | DEBUG_PARTIAL_SUM | 8 of 24 bits (argument picks byte 0, 1 or 2) | 3 | issued on edges k, k+2, k+4: one byte per beat, visible after edges k+2/k+3, k+4/k+5, k+6/k+7 depending on the beat phase; read after k+3, k+5, k+7 to be safe |
 | DEBUG_MULTIPLY | full 8-bit product (int4 × int4, sign-extended) | 1 | after edge k+2 or k+3 |
 | DEBUG_ADD | 8 of 24 bits of the wrapped sum (argument picks byte 0, 1 or 2) | 3 | as DEBUG_PARTIAL_SUM: issued on edges k, k+2, k+4, one byte per beat; read after k+3, k+5, k+7 to be safe |
@@ -219,16 +218,14 @@ The rule behind these cases: reads that report the adder output or a value latch
 ## 6. Datapath
 
 ### 6.1 LOAD packing
-A LOAD byte holds two signed int4 lanes: the high nibble is lane 1 and the low nibble is lane 0. Each input buffer is one such byte, giving the two values for one side of the 2×2 array. LOAD shifts the input buffers by one byte, so the host fills both buffers with two consecutive LOADs:
-
-Each LOAD moves the old left byte to top and writes the new byte into left. So the first byte of a pair ends up in top and the second in left. This order is fixed; the host cannot change it. Physically, the input buffer feeding the array sits on the side of the floorplan furthest from the input pads, a placement chosen because layout showed no preference between left and top. A host can verify the result with DEBUG_BUFFER before running.
+A data byte, whether written to the input buffer by LOAD or presented on `ui_in` with RUN, holds two signed int4 lanes: the high nibble is lane 1 and the low nibble is lane 0. The input buffer is a single byte; LOAD overwrites it in one edge and nothing else moves. CLEAR bit 1 zeroes it. Physically, the input buffer sits on the side of the floorplan furthest from the input pads, a placement chosen because layout showed no preference. A host can verify it with DEBUG_BUFFER before running.
 
 ![Load path into the array](figures/load_path.svg)
 
-<p align="center">Figure 3: LOAD path. High nibble [7:4] is lane 1 (index 2), low nibble [3:0] is lane 0 (index 1). Results leave through the output buffer (DUMP_LOAD).</p>
+<p align="center">Figure 3: operand paths (LOAD → input buffer; RUN → bus byte). High nibble [7:4] is lane 1 (index 2), low nibble [3:0] is lane 0 (index 1). Results leave through the output buffer (DUMP_LOAD).</p>
 
 ### 6.2 Accumulate
-Each RUN performs `PE(i,j) += left[i] × top[j]`, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. The product of two int4 values always fits in 8 signed bits. Partial sums are 24-bit two's complement and wrap around on overflow rather than saturating; any wrap sets the sticky overflow flag. A host that sees overflow set knows that at least one add wrapped since the flags were last cleared, so the sums may not equal the true mathematical result (the flag is sticky: a later opposite wrap may have restored a sum, or the flag may be left over from an earlier tile) and can decide whether to discard or rescale the tile.
+Each RUN performs `PE(i,j) += buf[i] × bus[j]`, where `buf` is the input buffer byte and `bus` is the `ui_in` byte sampled with the RUN, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. The product of two int4 values always fits in 8 signed bits. Partial sums are 24-bit two's complement and wrap around on overflow rather than saturating; any wrap sets the sticky overflow flag. A host that sees overflow set knows that at least one add wrapped since the flags were last cleared, so the sums may not equal the true mathematical result (the flag is sticky: a later opposite wrap may have restored a sum, or the flag may be left over from an earlier tile) and can decide whether to discard or rescale the tile.
 
 ### 6.3 Dump stream order
 A dump is 24 nibbles = 4 processing elements × 6 nibbles each:
