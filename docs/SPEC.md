@@ -83,7 +83,7 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 | 0x7 | DEBUG_BUFFER | Return the left or top input buffer byte | yes, 1 beat |
 | 0x8 | DEBUG_PARTIAL_SUM | Return one byte of a 24-bit partial sum | yes, 1 beat (3 commands for 24 bits) |
 | 0x9 | DEBUG_MULTIPLY | Return the last product, sign-extended to 8 bits | yes, 1 beat (full product) |
-| 0xA | DEBUG_ADD | Return the low byte of the adder output (Section 6.7) | yes, 1 beat (low byte only) |
+| 0xA | DEBUG_ADD | Return one byte of the 24-bit wrapped adder output (Section 6.7) | yes, 1 beat (3 commands for 24 bits) |
 | 0xB | DEBUG_INPUT | Return the sampled `ui_in` byte | yes, 1 beat |
 | 0xC–0xF | — | Illegal: set the illegal flag | no |
 
@@ -94,13 +94,14 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 | DEBUG_FLAGS | [3:0] bank, only 0 is defined |
 | DEBUG_BUFFER | [3:1] reserved, [0] buffer (0 = left, 1 = top) |
 | DEBUG_PARTIAL_SUM | [3:2] byte (0 = bits 7:0, 1 = bits 15:8, 2 = bits 23:16), [1:0] processing element |
-| DEBUG_MULTIPLY / DEBUG_ADD | [3:2] reserved, [1:0] processing element |
+| DEBUG_MULTIPLY | [3:2] reserved, [1:0] processing element |
+| DEBUG_ADD | [3:2] byte (0 = bits 7:0, 1 = bits 15:8, 2 = bits 23:16), [1:0] processing element |
 
-Whenever a command takes a processing element index, the index sits in bits [1:0]. Only DEBUG_PARTIAL_SUM uses bits [3:2], as its byte select; CLEAR uses all four bits as a mask. The processing element index is also the dump order: 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1). Using one numbering everywhere means a host can read a dumped sum and then inspect the same processing element with a debug read without translating indices.
+Whenever a command takes a processing element index, the index sits in bits [1:0]. Only DEBUG_PARTIAL_SUM and DEBUG_ADD use bits [3:2], as their byte select; CLEAR uses all four bits as a mask. The processing element index is also the dump order: 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1). Using one numbering everywhere means a host can read a dumped sum and then inspect the same processing element with a debug read without translating indices.
 
 Every freezing debug read owns the output pins for exactly one beat. DEBUG_ADD and DEBUG_BUFFER are no exception: each shows its byte on all 8 `uo_out` bits for one beat and then releases the pins to the live nibble and flags.
 
-Two argument values are rejected rather than ignored: DEBUG_FLAGS with bank ≠ 0, and DEBUG_PARTIAL_SUM with byte 3. Each sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that beat instead of a meaningless byte. Reserved bits, by contrast, are ignored by this revision; drive them to 0.
+Three argument values are rejected rather than ignored: DEBUG_FLAGS with bank ≠ 0, DEBUG_PARTIAL_SUM with byte 3, and DEBUG_ADD with byte 3. Each sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that beat instead of a meaningless byte. Reserved bits, by contrast, are ignored by this revision; drive them to 0.
 
 ## 5. Flags
 
@@ -109,7 +110,7 @@ The chip keeps six status flags. Four of them are live on the output pins on eve
 | Flag | Kind | Set by | Cleared by |
 |---|---|---|---|
 | Overflow | sticky | a 24-bit accumulate wrapping around | CLEAR bit 0 |
-| Illegal | sticky | an illegal opcode (0xC–0xF); RUN on RUN phase 2; DUMP_LOAD while a dump is in progress; a CLEAR conflict (Section 6.3); DEBUG_FLAGS bank ≠ 0; DEBUG_PARTIAL_SUM byte 3 | CLEAR bit 0 |
+| Illegal | sticky | an illegal opcode (0xC–0xF); RUN on RUN phase 2; DUMP_LOAD while a dump is in progress; a CLEAR conflict (Section 6.3); DEBUG_FLAGS bank ≠ 0; DEBUG_PARTIAL_SUM byte 3; DEBUG_ADD byte 3 | CLEAR bit 0 |
 | Dump busy | level | DUMP_LOAD | end of stream, DUMP_ABORT |
 | Debug busy | level | a freezing debug read; reads 1 as bit 3 of the frozen debug byte, which is on the pins for exactly one beat | the end of that beat |
 | Run busy | level | RUN phase 1 | end of RUN phase 2 |
@@ -192,22 +193,22 @@ One debug opcode produces one freeze, and one freeze returns one byte. There is 
 | DEBUG_BUFFER | 8 bits (left or top) | 1 | after edge k+2 or k+3 |
 | DEBUG_PARTIAL_SUM | 8 of 24 bits (argument picks byte 0, 1 or 2) | 3 | issued on edges k, k+2, k+4: one byte per beat, visible after edges k+2/k+3, k+4/k+5, k+6/k+7 depending on the beat phase; read after k+3, k+5, k+7 to be safe |
 | DEBUG_MULTIPLY | full 8-bit product (int4 × int4, sign-extended) | 1 | after edge k+2 or k+3 |
-| DEBUG_ADD | low 8 bits of the 24-bit wrapped sum only | 1 (low byte only) | after edge k+2 or k+3 |
+| DEBUG_ADD | 8 of 24 bits of the wrapped sum (argument picks byte 0, 1 or 2) | 3 | as DEBUG_PARTIAL_SUM: issued on edges k, k+2, k+4, one byte per beat; read after k+3, k+5, k+7 to be safe |
 | DEBUG_INPUT | 8 bits | 1 | after edge k+2 or k+3 |
 
-DEBUG_ADD never returns the upper 16 bits. To read the full 24-bit result of an add, let the RUN finish and then read the partial sum with three DEBUG_PARTIAL_SUM opcodes. If a RUN is allowed to complete between those three reads, the bytes come from different sums; hold off RUNs and partial-sum CLEARs while reading a partial sum if the host needs a consistent 24-bit value.
+DEBUG_PARTIAL_SUM and DEBUG_ADD each return a 24-bit value as three one-beat byte reads, with an opcode and a NOP per beat. If a RUN completes or a partial-sum CLEAR lands between those three reads, the bytes come from different values; hold off RUNs and partial-sum CLEARs if the host needs a consistent 24-bit value.
 
 ![Debug read timing](figures/debug_timing.svg)
 
 <p align="center">Figure 2: debug reads at the pins, one byte per opcode, held for one beat (2 clocks)</p>
 
-**Dump pause.** A debug read and the dump stream share the same pins, so they cannot both use the same beat. Only a debug read that actually freezes the output pauses the dump. The stream does not advance on any output tick covered by the freeze (dump paused = 1), and it resumes on the next output tick that is not frozen. No nibbles are lost; the dump simply takes one beat longer for each freeze. This is why the framing rule in Section 6.2 says to skip frozen beats: the frozen beat carries the debug byte, and the nibble that would have gone out is sent on the following beat instead. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0, DEBUG_PARTIAL_SUM byte 3) does not pause: the nibble goes out on schedule and the stream stays complete.
+**Dump pause.** A debug read and the dump stream share the same pins, so they cannot both use the same beat. Only a debug read that actually freezes the output pauses the dump. The stream does not advance on any output tick covered by the freeze (dump paused = 1), and it resumes on the next output tick that is not frozen. No nibbles are lost; the dump simply takes one beat longer for each freeze. This is why the framing rule in Section 6.2 says to skip frozen beats: the frozen beat carries the debug byte, and the nibble that would have gone out is sent on the following beat instead. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0, DEBUG_PARTIAL_SUM byte 3, DEBUG_ADD byte 3) does not pause: the nibble goes out on schedule and the stream stays complete.
 
 ### 6.7 Debug reads on RUN phase 2
 RUN phase 2 is the one cycle on which a value is changing inside the processing elements, so it is the one cycle where "which value does this read see?" needs a precise answer.
 
 - DEBUG_PARTIAL_SUM and DEBUG_MULTIPLY return the registers as they are before the add.
-- DEBUG_ADD returns a preview of the result: the low byte of the 24-bit wrapped sum of partial sum plus product. At other times it returns the low byte of the partial sum (the product is 0 after a finished RUN). It never sets overflow.
+- DEBUG_ADD returns a preview of the result: the selected byte of the 24-bit wrapped sum of partial sum plus product. At other times each byte is the corresponding byte of the current partial sum (the product is 0 after a finished RUN). It never sets overflow.
 - DEBUG_FLAGS returns the start-of-cycle busy flags plus any overflow from the add.
 
 The rule behind these cases: reads that report the adder output or a value latched on this edge (DEBUG_ADD, DEBUG_FLAGS overflow, DUMP_LOAD capture) see the add. Plain register reads see the values before it.

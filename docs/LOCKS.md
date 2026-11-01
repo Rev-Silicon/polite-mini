@@ -41,3 +41,4 @@
 - [Forge, Scribe pass-c] ena hold: hold edges = edges where registered ena_q=0 (one edge after the pin). in_d_q/in_i_q load only when en=1, so commands on the pads only during a hold are not sampled; the pads on the first enabled edge after the hold are captured. All state incl. out_phase_q freezes and resumes. Golden does not model ena.
 
 - G6 (internal PD open, not in external SPEC): slow-corner max slew / max capacitance violations remain open; fix by tightening, not waiving (Cast A0 re-PnR). See `pnr/results/QUOTES.md`.
+- [Alex lock, 2026-11-01] DEBUG_ADD returns the full 24-bit wrapped adder sum via 3 one-beat freezes, arg [3:2] byte (3 illegal, no freeze) + [1:0] PE. SPEC updated; golden chip.c/RTL/adversarial still low-byte-only pending Forge GO.
