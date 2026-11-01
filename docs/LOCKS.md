@@ -43,3 +43,4 @@
 - G6 (internal PD open, not in external SPEC): slow-corner max slew / max capacitance violations remain open; fix by tightening, not waiving (Cast A0 re-PnR). See `pnr/results/QUOTES.md`.
 - [Alex lock, 2026-11-01] DEBUG_ADD returns the full 24-bit wrapped adder sum via 3 one-beat freezes, arg [3:2] byte (3 illegal, no freeze) + [1:0] PE. SPEC updated; golden chip.c/RTL/adversarial still low-byte-only pending Forge GO.
 - [Alex lock, 2026-11-01] DEBUG_FLAGS is an expansion path: future testing flags go in additional banks selected by arg [3:0]; only bank 0 defined (one-beat freeze), bank ≠ 0 illegal, no freeze. SPEC Flags section updated.
+- [Alex lock, 2026-11-01] SPEC 6.1: RUN normally paired with LOAD (RUN, LOAD, RUN, LOAD, …; each gap LOAD shifts one byte, fresh pair = two LOADs); acknowledged wasteful vs a fused 2-cycle load+MAC command, accepted because test chip: working silicon over optimization.
