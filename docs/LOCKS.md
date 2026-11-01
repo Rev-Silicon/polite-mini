@@ -38,3 +38,4 @@
 - [Forge, R8-U5] Host contract (no RTL change at 677ce98): after DUMP_ABORT wait ≥1 beat (2 clk) before DUMP_LOAD. Whether the ABORT beat shows uo[6]=0 is phase-dependent as measured by Cast R8; do not rely on it as a separator.
 - [Forge, R8-S6] SDC multicycle (setup 2 / hold 1) is scoped `-from [get_clocks clk] -to uo_out[*]`, so async rst_n→uo_out keeps single-cycle constraints.
 - [Forge, R8-G1, GAP] RTL lockstep not re-run at this absorb: iverilog/verilator absent on box. tb drives ena=1 only; ena-hold of out_phase_q remains unverified in sim.
+- [Forge, Scribe pass-c] ena hold: hold edges = edges where registered ena_q=0 (one edge after the pin). in_d_q/in_i_q load only when en=1, so commands on the pads only during a hold are not sampled; the pads on the first enabled edge after the hold are captured. All state incl. out_phase_q freezes and resumes. Golden does not model ena.
