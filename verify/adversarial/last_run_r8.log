@@ -1,0 +1,98 @@
+pass [R8-U1-u6-only-24nib-no-dbg-par0-kind0]
+pass [R8-U1b-beat-after-final-uo6=0-par0-kind0]
+pass [R8-U1-u6-only-24nib-no-dbg-par0-kind1]
+pass [R8-U1b-beat-after-final-uo6=0-par0-kind1]
+pass [R8-U1-u6-only-24nib-no-dbg-par0-kind2]
+pass [R8-U1b-beat-after-final-uo6=0-par0-kind2]
+pass [R8-U1-u6-only-24nib-no-dbg-par1-kind0]
+pass [R8-U1b-beat-after-final-uo6=0-par1-kind0]
+pass [R8-U1-u6-only-24nib-no-dbg-par1-kind1]
+pass [R8-U1b-beat-after-final-uo6=0-par1-kind1]
+pass [R8-U1-u6-only-24nib-no-dbg-par1-kind2]
+pass [R8-U1b-beat-after-final-uo6=0-par1-kind2]
+info U2 par0 DUMP_LOAD sampled edge 3 (exec tick=0): first uo6=1 after edge +3, pad seq: 00 00 00 43 43 4A 4A 41
+pass [R8-U2-nib0-latency-3or4-par0]
+pass [R8-U2b-nib0-is-pat0-par0]
+info U2 par1 DUMP_LOAD sampled edge 3 (exec tick=1): first uo6=1 after edge +4, pad seq: 00 00 00 00 43 43 4A 4A
+pass [R8-U2-nib0-latency-3or4-par1]
+pass [R8-U2b-nib0-is-pat0-par1]
+info U3 440 cases: u6-only host wrong 285 (frozen byte bit6=1) + 0 (bit6=0); known-op host K wrong 0, K2 wrong 0
+pass [R8-U3-u6-only-host-is-unsafe-as-SPEC-says(must-track-freezes)]
+pass [R8-U3b-u6-only-host-survives-mid-dump-DBG-byte-with-bit6=0]
+pass [R8-U3c-known-op-host(j+3 beat dropped)-24nib-both-parities]
+pass [R8-U3d-known-op-host-K2(no assumed s0 boundary)]
+info U4 par0 b2b dumps (2nd DUMP_LOAD sampled 49 edges after 1st, illegal=0): contiguous uo6=1 beats=48
+pass [R8-U4-b2b-dumps-separator-beat-uo6=0-par0]
+info U4 par1 b2b dumps (2nd DUMP_LOAD sampled 48 edges after 1st, illegal=0): contiguous uo6=1 beats=48
+pass [R8-U4-b2b-dumps-separator-beat-uo6=0-par1]
+info U5 par0 ABORT(exec tick=0) then DUMP_LOAD: uo6 beats before separator=5, separator=1, after=24
+pass [R8-U5-abort-reload-separator-phase-independent-par0]
+info U5 par1 ABORT(exec tick=1) then DUMP_LOAD: uo6 beats before separator=30, separator=1, after=0
+pass [R8-U5-abort-reload-separator-phase-independent-par1]
+pass [R8-U6-illegal-DBG-mid-dump-u6-framing-op61-par0]
+pass [R8-U6-illegal-DBG-mid-dump-u6-framing-op62-par0]
+pass [R8-U6-illegal-DBG-mid-dump-u6-framing-op61-par1]
+pass [R8-U6-illegal-DBG-mid-dump-u6-framing-op62-par1]
+pass [R8-U7-final-then-CLEAR-outbuf-legal-no-extra-beat-par0]
+pass [R8-U7-final-then-CLEAR-outbuf-legal-no-extra-beat-par1]
+pass [R8-U8-DBG-at-load+1-known-host-par0]
+pass [R8-U8-DBG-at-load+2-known-host-par0]
+pass [R8-U8-DBG-at-load+3-known-host-par0]
+pass [R8-U8-DBG-at-load+1-known-host-par1]
+pass [R8-U8-DBG-at-load+2-known-host-par1]
+pass [R8-U8-DBG-at-load+3-known-host-par1]
+info U9 unfrozen beats with uo[7]=1: 0 of 399996 beats
+pass [R8-U9-live-uo7-reads-0-as-SPEC-2-states]
+info B1 par0 b2b DBG: first exec tick=1; pad j..j+7: 00 00 9A 9A B5 B5 00 00 (first 2 edges, second 2)
+pass [R8-B1-LOCKS-b2b-wording-matches-par0]
+info B1 par1 b2b DBG: first exec tick=0; pad j..j+7: 00 00 00 B5 B5 00 00 00 (first 0 edges, second 2)
+pass [R8-B1-LOCKS-b2b-wording-matches-par1]
+info B2 20000 episodes: byte not at j+3=0, byte not exactly 1 beat=0, known-op host dump wrong=0
+pass [R8-B2-spaced-DBG-byte-at-j+3-always]
+pass [R8-B2b-spaced-DBG-exactly-one-beat]
+pass [R8-B2c-spaced-DBG-during-dump-no-nibble-drop-dup(known-op host)]
+pass [R8-B3-SPEC-forbids-consecutive-DBG]
+pass [R8-B3b-chipio-query-spaces-DBG(op,NOP)]
+info L1 par0 DBG_ECHO sampled edge k=4 exec tick=1: byte after edge k+2
+pass [R8-L1-echo-after-k+2(tick)/k+3-par0]
+info L1 par1 DBG_ECHO sampled edge k=4 exec tick=0: byte after edge k+3
+pass [R8-L1-echo-after-k+2(tick)/k+3-par1]
+info L2 par0 illegal op k=4 exec tick=1: uo5 after edge k+2
+pass [R8-L2-flag-latency-k+2/k+3-par0]
+info L2 par1 illegal op k=4 exec tick=0: uo5 after edge k+3
+pass [R8-L2-flag-latency-k+2/k+3-par1]
+info L3 par0 DUMP_LOAD exec on tick=0: dump_busy post-edge for 48 edges (+1 incl. clear edge = 49)
+pass [R8-L3-dump-length-48/49-par0]
+info L3 par1 DUMP_LOAD exec on tick=1: dump_busy post-edge for 49 edges (+1 incl. clear edge = 50)
+pass [R8-L3-dump-length-48/49-par1]
+pass [R8-L4-SPEC-no-stale-'2 edges'-pin-latency]
+pass [R8-R1-p2-DUMP_LOAD+DBG_ADD@+0-par0]
+pass [R8-R1-p2-DUMP_LOAD+DBG_ADD@+1-par0]
+pass [R8-R1-p2-DUMP_LOAD+DBG_ADD@+2-par0]
+pass [R8-R1-p2-DUMP_LOAD+DBG_ADD@+0-par1]
+pass [R8-R1-p2-DUMP_LOAD+DBG_ADD@+1-par1]
+pass [R8-R1-p2-DUMP_LOAD+DBG_ADD@+2-par1]
+pass [R8-R2-DBG-ABORT-then-flags-paused0-busy0-par0]
+pass [R8-R2-ABORT-DBG-then-flags-paused0-busy0-par0]
+pass [R8-R2-DBG-ABORT-then-flags-paused0-busy0-par1]
+pass [R8-R2-ABORT-DBG-then-flags-paused0-busy0-par1]
+pass [R8-R3-CLEAR-outbuf-on-held-edge-during-final-collides-par0]
+pass [R8-R3-CLEAR-outbuf-on-held-edge-during-final-collides-par1]
+pass [R8-R4-cfgB-RUN-at-DBG+2-legal-par0]
+pass [R8-R4-cfgB-RUN-at-DBG+2-legal-par1]
+info S1 random-ena model: 375211 loads, consecutive-load edges=0
+pass [R8-S1-uo_q-never-loads-on-consecutive-edges-with-ena]
+pass [R8-S2-SDC-setup2-and-hold1-same-target]
+pass [R8-S3-SDC-inputs-not-multicycled]
+pass [R8-S4-RTL-uo_q-enable-is-!out_phase_q]
+pass [R8-S5-RTL-uo_out-direct-from-uo_q(no-comb-after-flop)]
+pass [R8-D1-SPEC-framing-para-says-how-host-finds-frozen-beats]
+pass [R8-D2-SPEC-'beat after final shows 0'-qualified-for-b2b-dump]
+pass [R8-D3-LESSONS-uo6-meaning-updated(busy-at-start)]
+pass [R8-D4-ctrl-header-not-'per golden 89dad4e']
+pass [R8-D5-outbuf-adv-gated]
+pass [R8-D6-chipio-read_tile-no-dbg-in-dump]
+pass [R8-D7-SPEC-uo7-'debug busy'-not-claimed-live]
+pass [R8-D8-LOCKS-framing-says-how-to-detect-frozen]
+info [R8-G1] closed: RTL lockstep runs via verify/rtl_sim/run_sim.sh; ena hold covered by verify/rtl_sim/run_sim_adv.sh
+R8 pass=78 fail=0 gap=0

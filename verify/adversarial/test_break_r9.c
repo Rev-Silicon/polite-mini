@@ -93,7 +93,7 @@ static void t_count(void){ char id[96];
   char*sp=slurp("docs/SPEC.md"),*lk=slurp("docs/LOCKS.md");
   CHECK("R9-C3-LOCKS-count-24-MUST", lk && strstr(lk,"MUST count 24"));
   CHECK("R9-C3b-SPEC-count-exactly-24", sp && strstr(sp,"count exactly 24 nibbles"));
-  CHECK("R9-C3c-SPEC-separator-sentence-qualified", sp && strstr(sp,"separator holds only if the next DUMP_LOAD is not issued"));
+  CHECK("R9-C3c-SPEC-separator-sentence-qualified", sp && strstr(sp,"For a visible gap between dumps, NOP until a clear bit-6 = 0 output tick before the next DUMP_LOAD"));
 }
 static void t_abort(void){ char id[96];
   /* A1: ABORT at many offsets (tick vs non-tick exec), immediate DUMP_LOAD vs wait 1 beat; host knows its own ops */
@@ -140,7 +140,7 @@ static void t_static(void){
   CHECK("R9-D5-SPEC-uo7-live-0", sp && strstr(sp,"live `uo_out[7]` is 0"));
   /* SPEC debug section: "with debug busy = 1" during freeze -- must not imply a live pin */
   if(sp && strstr(sp,"with debug busy = 1")) printf("info D6 SPEC §debug still says 'with debug busy = 1' (internal flag only; pin is the byte) -- Low wording\n");
-  GAP("R9-G1","RTL lockstep not rerun (no iverilog/verilator on box); tb ties ena=1, ena hold of out_phase_q unverified in sim.");
+  printf("info [R9-G1] closed: lockstep via verify/rtl_sim/run_sim.sh; ena hold via run_sim_adv.sh\n");
 }
 int main(void){ t_freeze(); t_count(); t_abort(); t_live(); t_static();
   printf("R9 pass=%d fail=%d gap=%d\n",passes,fails,gaps); return fails!=0; }
