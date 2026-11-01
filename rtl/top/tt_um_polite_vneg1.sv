@@ -48,6 +48,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
     .muls, .run_phase2, .freeze(dbg_freeze), .illegal(dbg_illegal), .val(dbg_val));
 
   // uo_out is a pure function of post-edge state: frozen value, or live uo[7:4]={debug_busy,dump busy-at-start (nibble valid),illegal,OVF} (uo[4]=OVF, Cast F7)
+  // NOTE: live uo[7] reads 0 when unfrozen: the mux still wires debug_busy, which is 0 outside the freeze window
   // frozen_q = core output frozen (stretched 2 edges, latest DBG value wins); had_freeze for cfg B uses fz_prev_q (core timing unchanged)
   logic [7:0] fval_q; logic [3:0] dnib_q; logic ofz_q, dadv_q;
   always_ff @(posedge clk or negedge rst_n) begin
