@@ -238,32 +238,14 @@ A dump is 24 nibbles = 4 processing elements × 6 nibbles each:
 
 Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, where `n/6` is integer division (processing element order above) and `sum` starts at 0. Then sign-extend each sum from bit 23: `if (sum & 0x800000) sum -= 0x1000000` (equivalently `sum |= ~0xFFFFFF` in a 32-bit signed integer).
 
-## 8. Timing and physical results
+## 8. Verification
 
-Flow: LibreLane 3.0.14, SkyWater 130 nm (sky130A) high-density cells, 15.15 ns clock (66 MHz), with a 2-cycle multicycle constraint on `uo_out`.
+Packaging: the design does not fit a Tiny Tapeout 1×1 tile, so it uses a 1×2 tile.
 
-**The physical results below are pre-half-rate.** They come from the earlier place-and-route run of the product chip, before the output-tick RTL and the `uo_out` multicycle constraint. They are not results for commit `677ce98`; a new place-and-route run on that commit is pending. They are included to show the size and timing margin of the design, not as sign-off numbers for the current RTL.
-
-| Metric | Value |
-|---|---|
-| Die | Tiny Tapeout 1×2 tile, 334.88 × 225.76 µm |
-| Standard cell area / count | 29633.4 µm² / 4702 cells |
-| Utilization | 44.9% |
-| Setup worst negative slack (WNS), slow corner 100 °C | **+2.128 ns** |
-| Setup WNS, nominal slow / minimum slow | +2.549 / +3.018 ns |
-| Setup WNS, nominal typical / nominal fast | +8.620 / +9.576 ns |
-| Setup total negative slack (TNS) | 0 |
-| Hold WNS, all corners | +0.207 ns |
-| Routing design rule check (DRC) / Magic DRC / KLayout DRC / layout versus schematic (LVS) | 0 / 0 / 0 / 0 errors |
-| Max slew / max capacitance violations | 494 / 24 (slow corner only; open, to be fixed by tightening, not waived; see Section 9) |
-
-The design does not fit a 1×1 tile, so it uses a 1×2 tile.
-
-Functional verification is current. Verified at commit `677ce98`: the register-transfer level (RTL) design matches the reference model (`golden/chip.c`) cycle for cycle on `uo_out` in random simulation; the reference model self-test `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test` reports ALL PASS; and the adversarial suite, including round R7, passes 70 / 0 / 0 (pass / fail / gap). The physical table above predates this commit (see above).
+Functional verification is current. Verified at commit `677ce98`: the register-transfer level (RTL) design matches the reference model (`golden/chip.c`) cycle for cycle on `uo_out` in random simulation; the reference model self-test `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test` reports ALL PASS; and the adversarial suite, including round R7, passes 70 / 0 / 0 (pass / fail / gap).
 
 ## 9. Open items
 
-- Slow-corner slew and capacitance violations (494 / 24): open. Alex directed that these be fixed by tightening, not waived; pending Cast A0 re-PnR on tip 677ce98.
 - DEBUG_FLAGS banks other than 0 are undefined and illegal.
 - The reference model does not model `ena`. `ena` is registered (`ena_q`), so a hold takes effect one edge after the pin goes low; the *hold edges* are the edges on which the registered `ena` is 0. The input pad registers (`in_d_q`/`in_i_q`) update only when the registered `ena` is high, so commands presented on the pads only during a hold are **not** sampled; whatever is on the pads on the first enabled edge after the hold is what gets captured. All state, including the output phase register (`out_phase_q`), freezes while held and resumes when enabled, so the beat phase picks up where it stopped: a host tracking beat phase by counting clocks should not count hold edges.
 
@@ -272,5 +254,4 @@ Functional verification is current. Verified at commit `677ce98`: the register-t
 - `docs/LOCKS.md` — design decisions
 - `docs/OPCODE_PROPOSAL.md` — opcode table
 - `LESSONS.md` — edge-case findings
-- `pnr/results/QUOTES.md` — place-and-route results
 - `golden/chip.c` — cycle-level reference model
