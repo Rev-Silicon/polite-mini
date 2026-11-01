@@ -1,4 +1,5 @@
 # Opcode proposal (instr = uio[7:4] op, uio[3:0] args)
+TT product = cfg A (HAS_OUTBUF=1). Full semantics: docs/SPEC.md (source of truth).
 | op | name | notes |
 |---|---|---|
 |0|NOP||
@@ -11,7 +12,7 @@
 |7|DBG_BUFFER|arg[0]: 0=left 1=top byte|
 |8|DBG_PSUM|arg[1:0]=PE index (dump order), arg[3:2]=byte 0..2|
 |9|DBG_MUL|arg[1:0]=PE, last product (sign-ext 8b)|
-|A|DBG_ADD|TBD from RTL: adder stage internal|
+|A|DBG_ADD|arg[1:0]=PE; low byte of wrap24(psum+mul) on RUN phase 2, else low(psum)|
 |B|DBG_INPUT|echo of the latched ui_in/uio|
 |C–F|illegal|set sticky illegal|
 In cfg B, ops 3 and 4 are illegal.

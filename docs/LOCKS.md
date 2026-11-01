@@ -12,9 +12,18 @@
 - [Alex] OVF and illegal stay sticky until CLEAR flags. dump_busy, debug_busy, run_busy and dump_paused are level signals. Reset gives known zeros.
 - [Alex] Pause = chip hold; the board keeps clocking. There is no plain DUMP opcode.
 - [Alex] Live flags nibble = {OVF, illegal, dump_busy, debug_busy} (preferred).
-- [assumption] Host endian = little: the low nibble of each 24b partial is streamed first, 6 nibbles per PE, 24 total.
-- [assumption] LOAD byte = two int4 lanes {hi=lane1, lo=lane0}. OP_PLACE=0: LOAD moves the old left value to top, and the new byte goes into left. OP_PLACE=1: the bus goes into top, and the old top moves to left.
+- [Alex, product A 2026-10-31] **TT product = Cfg A, HAS_OUTBUF=1** (RUN ∥ dump). Cfg B is an RTL param build for comparison quotes only. Spec: docs/SPEC.md.
+- [Alex, product A] Nibble endian = little: low nibble of each 24b partial first, 6 nibbles × 4 PEs, PE order (2,2)(2,1)(1,2)(1,1).
+- [Alex, product A] LOAD byte = two int4 lanes {hi=lane1, lo=lane0}. OP_PLACE=0: old left→top, new byte→left. OP_PLACE=1: old top→left, new byte→top.
+- [Alex, product A] Idle live data nibble = 0 when no dump; flags in uo[7:4] stay live.
+- [Alex, product A] RUN during a debug freeze is allowed in A. B still forbids it (ignored + illegal).
 - [assumption] PE(i,j) += left[i]*top[j], i,j∈{1,2}.
 - [assumption] A DBG_* read freezes uo_out for 1 cycle (the next cycle) with debug_busy high.
+## Golden-proven host rules (detail in LESSONS)
+- [Forge, F7] Live flag bits: uo[4]=OVF uo[5]=illegal uo[6]=dump_busy uo[7]=debug_busy (= DBG_FLAGS bank0[3:0]).
+- [Forge, R3-F12] DUMP_LOAD is illegal if the dump was busy at cycle start, incl. the final-nibble cycle; no restart.
+- [Forge, F1/R2-F8] CLEAR collisions use busy-at-start: PE vs RUN in flight incl. phase 2; outbuf vs dump busy incl. final nibble.
+- [Forge, R3-F15] DBG_ADD on RUN phase 2 = low(wrap24(psum+mul)) preview; else low(psum); never sets OVF.
+- [Forge, R2-F10] Only a freezing DBG pauses the dump (no nibble lost). Illegal non-freeze DBG does not pause.
 - [Forge, Alex GO 2026-10-31 timing rev] Pad pipeline: ui_in/uio_in are registered at the top (sampled on edge k, executed on edge k+1), and all 8 uo_out bits come from one register loaded every edge. Pin-level latency is 2 edges: an op applied before edge k shows its result on uo_out after edge k+2. Reset loads NOP into the input flops and 0 into uo_out. Core semantics (R1-R6) are unchanged; golden exposes them as `chip_core_step`, and `chip_step` is the pin-level model.
 - [Forge, timing rev] ena is registered once (resets to 1): an ena-driven hold takes effect one edge after the pad changes. Golden does not model ena.
