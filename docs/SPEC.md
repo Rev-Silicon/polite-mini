@@ -191,6 +191,10 @@ A LOAD byte holds two signed int4 lanes: high nibble = lane 1, low nibble = lane
 
 Two LOADs fill both buffers. With setting 0, the first byte ends up in top and the second in left.
 
+![Load path into the array](figures/load_path.svg)
+
+<p align="center">Figure 3: LOAD path. High nibble [7:4] is lane 1 (index 2), low nibble [3:0] is lane 0 (index 1). The daisy-chain dump is removed; results leave through the output buffer (DUMP_LOAD).</p>
+
 ### 7.2 Accumulate
 `PE(i,j) += left[i] × top[j]`, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. Products fit in 8 signed bits. Partial sums are 24-bit two's complement and wrap around; any wrap sets the sticky overflow flag.
 
