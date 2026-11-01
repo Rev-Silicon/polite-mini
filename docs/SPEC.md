@@ -120,7 +120,7 @@ The chip keeps six status flags. Four of them are live on the output pins on eve
 
 Reset clears every flag and all chip state. The live pins `uo[7:4]` carry the first four flags; run busy and dump paused are visible only through DEBUG_FLAGS. Note that on a frozen beat the upper pins carry bits of the debug byte, not the live flags, so a host watching `uo_out[7:4]` should skip the beats it froze itself.
 
-**Room to grow.** DEBUG_FLAGS is intended to allow expansion. If more status or diagnostic flags prove useful for testing, they will be added in a future build as additional *banks*: each bank is its own 8-bit flag byte, and the host selects which bank to read with the DEBUG_FLAGS argument bits [3:0]. Banks are a build-time expansion path, so a host driver written today keeps working unchanged — it simply keeps asking for bank 0. On this chip only bank 0 is defined (layout in Section 6.6). Any other bank is undefined and illegal: it sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that beat. Bank 0 is a normal freezing read of exactly one beat.
+**Room to grow.** DEBUG_FLAGS is intended to allow expansion. If more status or diagnostic flags prove useful for testing, they may be added in a future build as additional *banks*: each bank is its own 8-bit flag byte, and the host selects which bank to read with the DEBUG_FLAGS argument bits [3:0]. Banks are a build-time expansion path, so a host driver written today keeps working unchanged — it simply keeps asking for bank 0. On this chip only bank 0 is defined (layout in Section 6.6). Any other bank is undefined and illegal on this chip, and a host must not assume a given bank will ever become legal: it sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that beat. Bank 0 is a normal freezing read of exactly one beat.
 
 ## 6. Behavior for host software
 
@@ -202,7 +202,7 @@ One debug opcode produces one freeze, and one freeze returns one byte. There is 
 | DEBUG_ADD | 8 of 24 bits of the wrapped sum (argument picks byte 0, 1 or 2) | 3 | as DEBUG_PARTIAL_SUM: issued on edges k, k+2, k+4, one byte per beat; read after k+3, k+5, k+7 to be safe |
 | DEBUG_INPUT | 8 bits | 1 | after edge k+2 or k+3 |
 
-DEBUG_PARTIAL_SUM and DEBUG_ADD each return a 24-bit value as three one-beat byte reads, with an opcode and a NOP per beat. If a RUN completes or a partial-sum CLEAR lands between those three reads, the bytes come from different values; hold off RUNs and partial-sum CLEARs if the host needs a consistent 24-bit value.
+DEBUG_PARTIAL_SUM and DEBUG_ADD each return a 24-bit value as three one-beat byte reads, with an opcode and a NOP per beat. If a RUN completes or a partial-sum CLEAR lands between those three reads, the bytes come from different values; hold off RUNs and partial-sum CLEARs if the host needs a consistent 24-bit value. The three DEBUG_ADD freezes necessarily land on different cycles, so a host cannot capture a full 24-bit in-progress add preview in one moment: it gets only three spaced one-beat reads, and outside RUN phase 2 those bytes simply match the partial sum.
 
 ![Debug read timing](figures/debug_timing.svg)
 
