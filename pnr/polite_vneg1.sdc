@@ -19,5 +19,6 @@ set_max_transition 1.5 [current_design]
 # so a create_generated_clock would not attach to any real clock pin. Use a 2-cycle multicycle to the uo_out ports instead.
 # uio_out/uio_oe are constant 0 and stay single-cycle.
 set uo_ports [get_ports {uo_out[*]}]
-set_multicycle_path -setup 2 -to $uo_ports
-set_multicycle_path -hold  1 -to $uo_ports
+# R8-S6: -from clk so async rst_n -> uo_out is not relaxed.
+set_multicycle_path -setup 2 -from [get_clocks clk] -to $uo_ports
+set_multicycle_path -hold  1 -from [get_clocks clk] -to $uo_ports

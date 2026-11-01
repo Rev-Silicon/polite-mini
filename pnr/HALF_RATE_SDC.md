@@ -3,7 +3,7 @@
 - Core clock unchanged: `create_clock -period 15.15` (66 MHz) on `clk`, single rising edge.
 - New RTL: `out_phase_q` toggles every enabled edge; `uo_q[7:0]` is a `clk` flop with load enable `!out_phase_q`.
   `uo_out` therefore changes at most every 2 clk (30.30 ns).
-- SDC delta (`pnr/polite_vneg1.sdc`, appended): `set_multicycle_path -setup 2 / -hold 1 -to [get_ports {uo_out[*]}]`.
+- SDC delta (`pnr/polite_vneg1.sdc`, appended): `set_multicycle_path -setup 2 / -hold 1 -from [get_clocks clk] -to [get_ports {uo_out[*]}]` (R8-S6: `-from clk` keeps async `rst_n -> uo_out` unrelaxed).
   The output delay (0.25 × 15.15 ns) stays relative to `clk`, so `uo_q -> uo_out` gets a 30.30 ns setup budget. Inputs unchanged.
 - I did not use a generated clock. `uo_q` is clocked by `clk`, not by the phase flop, so a `create_generated_clock` on
   `out_phase_q/Q` would reach no register clock pin. Synthesis keeps an enable mux on `uo_q`. If Cast wants a real /2 clock,

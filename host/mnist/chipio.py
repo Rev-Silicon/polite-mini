@@ -57,11 +57,12 @@ class Driver:
         raw = [0] * 4
         if self.A:
             self.step(0, DUMP_LOAD); edges = [self.step(0, NOP) for _ in range(60)]
-            # pins: one value per beat (2 edges); nibble beats have uo[6]=1. Sample every 2nd edge starting at the first
-            # uo[6]=1 edge, so no phase tracking is needed.
+            # pins: one value per beat (2 edges); nibble beats have uo[6]=1. No DBG is issued inside this window, so no
+            # freeze tracking is needed (LOCKS R8-U3: with DBG, drop the beat at pin step j+3 per freezing DBG; uo[7] is
+            # not a freeze mark). Count exactly 24 nibbles (R8-U4); no separator beat is assumed after the last one.
             s0 = next(i for i, v in enumerate(edges) if v & 0x40)
             o = [edges[s0 + 2 * n] for n in range(24)]
-            assert all(v & 0x40 for v in o) and not edges[s0 + 48] & 0x40
+            assert all(v & 0x40 for v in o)
             for n in range(24): raw[n // 6] |= (o[n] & 0xF) << (4 * (n % 6))
         else:
             o = self.query([(0, DBG_PSUM | k | (b << 2)) for k in range(4) for b in range(3)])

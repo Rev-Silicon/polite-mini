@@ -1,4 +1,4 @@
-// Decode + flags, per golden/chip.c @89dad4e. ena=0 => hold.
+// Decode + flags, matches golden/chip.c half-rate (33 MHz pad-out) at tip 677ce98. ena=0 => hold.
 module polite_ctrl #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
   input logic clk, rst_n, ena, input logic [7:0] data, instr,
   input logic dump_adv, pend_ovf_any, had_freeze,

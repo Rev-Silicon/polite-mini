@@ -44,7 +44,7 @@ Terms used below:
 | `uio_in[7:4]` | input | Opcode |
 | `uio_in[3:0]` | input | Opcode arguments |
 | `uo_out[3:0]` | output | Data nibble (dump stream; 0 when idle) |
-| `uo_out[7:4]` | output | Live flags: bit 4 overflow, bit 5 illegal, bit 6 dump busy (1 exactly on the beats that carry a dump nibble), bit 7 debug busy |
+| `uo_out[7:4]` | output | Live flags: bit 4 overflow, bit 5 illegal, bit 6 dump busy at the start of the displayed edge (1 exactly on unfrozen beats that carry a dump nibble), bit 7 reads 0 when live (not a debug-busy pin; debug busy is bit 3 of a frozen DEBUG_FLAGS byte) |
 
 The `uio` pads are bidirectional in the Tiny Tapeout package, but this design drives `uio_oe = 0` on all 8 bits and ties `uio_out` to 0, so they are used as inputs only. All 16 input bits (`ui_in` and `uio_in`) are sampled on every rising edge, so the host must present a valid instruction on every clock; when it has nothing to do, it drives NOP (0x00).
 
@@ -136,7 +136,7 @@ DUMP_LOAD is how results leave the chip. It copies the four partial sums into th
 - DUMP_LOAD on RUN phase 2 captures the result of that RUN, so the host does not need an extra idle clock between the last RUN and the dump. The overflow flag is still set only once, by the RUN itself.
 - DUMP_ABORT stops the stream; dump busy drops to 0. DUMP_ABORT with no dump running is a legal no-op (illegal is not set), so a host can issue it unconditionally as part of a recovery sequence.
 
-**Reading the stream at the pins.** The host does not need a separate "data valid" pin: `uo_out[6]` (dump busy) serves as the frame marker. The dump nibbles are, in order, the beats on which `uo_out[6]` = 1 and that are not frozen by a debug read. The DUMP_LOAD beat itself shows bit 6 = 0, the beat carrying the last nibble shows bit 6 = 1, and the beat after it shows 0, on either beat phase. A host can therefore simply collect `uo_out[3:0]` on every beat where bit 6 is set, skipping beats it froze with its own debug reads, and stop after 24 nibbles or when bit 6 falls. It does not need to track the beat phase. Nibble 0 is on the pins 3 or 4 edges after DUMP_LOAD is applied.
+**Reading the stream at the pins.** The host does not need a separate "data valid" pin: `uo_out[6]` (dump busy) serves as the frame marker. The dump nibbles are, in order, the beats on which `uo_out[6]` = 1 and that are not frozen by a debug read. The DUMP_LOAD beat itself shows bit 6 = 0, the beat carrying the last nibble shows bit 6 = 1, and the beat after it shows 0, on either beat phase. No pin marks a frozen beat (live `uo_out[7]` is 0), so the host must track its own freezing debug reads: for each freezing DBG_* applied before pin step j, the beat containing pin step j+3 is frozen and is not a dump nibble even if bit 6 reads 1. Collect `uo_out[3:0]` on beats where bit 6 is set, minus those frozen beats, and **count exactly 24 nibbles**. The "beat after the last nibble shows 0" separator holds only if the next DUMP_LOAD is not issued on the first edge that would merge the streams; a host wanting a visible gap should NOP until a clear bit-6 = 0 beat before the next DUMP_LOAD. After DUMP_ABORT, wait at least 1 beat (2 clocks) before DUMP_LOAD; the ABORT beat's bit 6 is phase-dependent. Without debug reads the host does not need to track the beat phase. Nibble 0 is on the pins 3 or 4 edges after DUMP_LOAD is applied.
 
 There is no separate plain DUMP opcode; every dump goes through the output buffer.
 
