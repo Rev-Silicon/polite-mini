@@ -1,209 +1,202 @@
-# POLITE V(−1) — Tiny Tapeout product A specification
+# POLITE V(−1) — Architecture and Instruction Set Specification
 
 | | |
 |---|---|
-| Status | V(−1), Tiny Tapeout product **A** (`HAS_OUTBUF=1`), source of truth for host software and review |
-| Base tip | `d702ad5` (timing rev, A0 re-PnR) — see References for the commit that adds this file |
-| Date | 2026-10-31 (America/Chicago) |
-| Repo | Local working tree only. No public repo, no remote. |
-
-Tags: **[Alex]** decided by Alex, **[Forge]** Forge lock (golden-proven), **[Cast]** found by Cast adversarial review.
+| Chip | POLITE V(−1), Tiny Tapeout demonstration chip |
+| Document | Architecture and instruction set architecture (ISA) specification |
+| Date | 2026-10-31 (US Central) |
 
 ## 1. Overview
 
-POLITE V(−1) is a 2×2 array of signed int4 multiply-accumulate (MAC) processing elements (PEs) for a Tiny Tapeout demo. Each PE keeps a 24-bit signed partial sum. The host does everything else: scale, zero point, ReLU and bias [Alex]. There is no on-chip ReLU, bias or scale.
+POLITE V(−1) is a 2×2 array of signed 4-bit integer (int4) multiply-accumulate units, called processing elements. Each processing element keeps a 24-bit signed partial sum. The host does everything else: scale, zero point, rectified linear unit (ReLU) and bias. There is no on-chip ReLU, bias or scale.
 
-The host drives one data byte and one instruction byte every clock, and reads a 4-bit data nibble plus 4 live flags back.
+The chip has an output buffer, so a result dump streams out while new multiply-accumulate steps run in parallel.
 
-## 2. Product decision
+The host drives one data byte and one instruction byte every clock, and reads back a 4-bit data nibble plus 4 live status flags.
 
-- **The TT product is Cfg A only: `HAS_OUTBUF=1`** [Alex]. It has an output buffer, so a result dump streams out while new `RUN`s execute (RUN ∥ dump).
-- Cfg B (`HAS_OUTBUF=0`) remains an RTL parameter build. It exists only for comparison quotes (QUOTES.md, Appendix A). It is not the shipped TT chip.
-- Golden model and RTL support both; this spec describes A. Where B differs, it is noted.
+Terms used below:
 
-## 3. Pins and clock
+| Term | Meaning |
+|---|---|
+| Processing element (PE) | One of the four multiply-accumulate cells, named PE(row, column) |
+| Multiply-accumulate (MAC) | Multiply two int4 values and add the product to a running sum |
+| Partial sum | The 24-bit signed running sum held in each processing element |
+| Output buffer | Copy of the four partial sums that the dump stream reads from |
+| Freeze | One cycle in which a debug read replaces all 8 output pins |
 
-| Pin | Dir | Meaning |
+## 2. Pins and clock
+
+| Pin | Direction | Meaning |
 |---|---|---|
-| `ui_in[7:0]` | in | Data byte (used by `LOAD`, echoed by `DBG_INPUT`) |
-| `uio_in[7:4]` | in | Opcode |
-| `uio_in[3:0]` | in | Opcode arguments |
-| `uo_out[3:0]` | out | Data nibble (dump stream; 0 when idle) |
-| `uo_out[7:4]` | out | Live flags: `[4]`OVF `[5]`illegal `[6]`dump_busy `[7]`debug_busy |
+| `ui_in[7:0]` | input | Data byte (used by LOAD, echoed by DEBUG_INPUT) |
+| `uio_in[7:4]` | input | Opcode |
+| `uio_in[3:0]` | input | Opcode arguments |
+| `uo_out[3:0]` | output | Data nibble (dump stream; 0 when idle) |
+| `uo_out[7:4]` | output | Live flags: bit 4 overflow, bit 5 illegal, bit 6 dump busy, bit 7 debug busy |
 
-All 16 input bits are inputs every cycle [Alex]. A debug freeze replaces all 8 output bits for one cycle (Section 7.6).
+All 16 input bits are inputs every cycle. A debug read replaces all 8 output bits for one cycle (Section 6.6).
 
-**Clock.** Single rising edge [Alex]. Target 66 MHz in and 33 MHz out on pads. PnR uses a 15.15 ns clock (66 MHz).
+**Clock.** Single rising edge. The target is 66 MHz on the inputs and 33 MHz on the outputs. Place-and-route uses a 15.15 ns clock (66 MHz).
 
-**Pad pipeline** [Forge, Alex GO]. `ui_in`/`uio_in` are registered at the top: sampled on edge k, executed on edge k+1. All 8 `uo_out` bits come from one register loaded every edge. Pin-level latency is **2 edges**: an op applied before edge k shows its result on `uo_out` after edge k+2. Reset loads NOP into the input flops and 0 into `uo_out`. `ena` is registered once (resets to 1), so an ena hold takes effect one edge after the pad changes.
+**Pad pipeline.** `ui_in` and `uio_in` are registered at the top level: sampled on edge k, executed on edge k+1. All 8 `uo_out` bits come from one register loaded every edge. Pin-level latency is **2 edges**: an operation applied before edge k shows its result on `uo_out` after edge k+2. Reset loads NOP into the input registers and 0 into `uo_out`. The `ena` pin is registered once (resets to 1), so a hold driven by `ena` takes effect one edge after the pin changes.
 
-All semantics below are written at core level (one call to `chip_core_step` = one edge). Add the 2-edge pad latency for pin timing.
+The behavior in the rest of this document is described one edge at a time inside the core. Add the 2-edge pad latency for pin timing.
 
-## 4. Parameters
+## 3. Load placement
 
-| Parameter | Product A | Meaning |
-|---|---|---|
-| `HAS_OUTBUF` | **1** | 1: outbuf, `DUMP_LOAD`, `DUMP_ABORT`, RUN ∥ dump. 0 (Cfg B): no DUMP ops, sums read via `DBG_PSUM`. |
-| `OP_PLACE` | 0 or 1 | LOAD placement (Section 8.1). Readable as `DBG_FLAGS` bit 6. |
+The chip has one layout setting, load placement, fixed at build time. It decides which input buffer a LOAD writes first (Section 7.1). The host can read it from debug flags bit 6.
 
-Both are real RTL parameters, not ifdefs [Alex]. `DBG_FLAGS` bit 7 reports `HAS_OUTBUF` (reads 1 on product A).
+## 4. Opcodes
 
-## 5. Opcodes
+Instruction byte = `uio[7:4]` opcode, `uio[3:0]` arguments.
 
-Instruction = `uio[7:4]` op, `uio[3:0]` args [Alex].
-
-| Op | Name | Args | Effect | Freezes uo? |
+| Op | Name | Arguments | Effect | Freezes output? |
 |---|---|---|---|---|
 | 0 | NOP | – | none | no |
 | 1 | LOAD | – | `ui_in` → input buffer, 1 cycle | no |
-| 2 | RUN | – | one MAC step, 2 clocks | no |
-| 3 | DUMP_LOAD | – | snapshot PE sums → outbuf, start 24-nibble stream (A only) | no |
-| 4 | DUMP_ABORT | – | stop stream, dump_busy=0 (A only) | no |
-| 5 | CLEAR | bitmask `[0]`flags `[1]`inbuf `[2]`outbuf `[3]`PE sums | clear selected state; any collision → whole CLEAR ignored + illegal | no |
-| 6 | DBG_FLAGS | bank; only 0 defined | 8b flag bank (Section 7.6) | yes |
-| 7 | DBG_BUFFER | `[0]` 0=left 1=top | input buffer byte | yes |
-| 8 | DBG_PSUM | `[1:0]` PE (dump order), `[3:2]` byte 0..2 | one byte of a 24b sum | yes |
-| 9 | DBG_MUL | `[1:0]` PE | last product, sign-extended 8b | yes |
-| A | DBG_ADD | `[1:0]` PE | adder output low byte (Section 7.7) | yes |
-| B | DBG_INPUT | – | echo of the latched `ui_in` | yes |
-| C–F | illegal | – | set sticky illegal | no |
+| 2 | RUN | – | one multiply-accumulate step, 2 clocks | no |
+| 3 | DUMP_LOAD | – | copy partial sums → output buffer, start 24-nibble stream | no |
+| 4 | DUMP_ABORT | – | stop the stream, dump busy = 0 | no |
+| 5 | CLEAR | bit mask: bit 0 flags, bit 1 input buffer, bit 2 output buffer, bit 3 partial sums | clear the selected state; any conflict → whole CLEAR ignored and illegal set | no |
+| 6 | DEBUG_FLAGS | bank; only bank 0 is defined | 8-bit flag byte (Section 6.6) | yes |
+| 7 | DEBUG_BUFFER | bit 0: 0 = left, 1 = top | input buffer byte | yes |
+| 8 | DEBUG_PARTIAL_SUM | bits 1:0 processing element (dump order), bits 3:2 byte 0..2 | one byte of a 24-bit partial sum | yes |
+| 9 | DEBUG_MULTIPLY | bits 1:0 processing element | last product, sign-extended to 8 bits | yes |
+| A | DEBUG_ADD | bits 1:0 processing element | adder output, low byte (Section 6.7) | yes |
+| B | DEBUG_INPUT | – | echo of the registered `ui_in` | yes |
+| C–F | illegal | – | set the illegal flag | no |
 
-Illegal encodings that set sticky illegal and do **not** freeze: ops C–F, `DBG_FLAGS` bank ≠ 0, `DBG_PSUM` byte 3. In Cfg B, ops 3 and 4 are also illegal.
+These encodings set the illegal flag and do **not** freeze: opcodes C–F, DEBUG_FLAGS with bank ≠ 0, and DEBUG_PARTIAL_SUM with byte 3.
 
-PE index (for args and dump order): 0=PE(2,2), 1=PE(2,1), 2=PE(1,2), 3=PE(1,1).
+Processing element index (for arguments and dump order): 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1).
 
-## 6. Flags
+## 5. Flags
 
 | Flag | Kind | Set by | Cleared by |
 |---|---|---|---|
-| OVF | sticky | a 24b accumulate wrapping | `CLEAR` bit 0 |
-| illegal | sticky | any illegal op or collision | `CLEAR` bit 0 |
-| dump_busy | level | `DUMP_LOAD` | end of stream, `DUMP_ABORT` |
-| debug_busy | level | any freezing DBG (high during the frozen cycle) | next cycle |
-| run_busy | level | `RUN` (phase 1) | end of phase 2 |
-| dump_paused | level | freezing DBG during an active dump | next cycle |
+| Overflow | sticky | a 24-bit accumulate wrapping around | CLEAR bit 0 |
+| Illegal | sticky | an illegal opcode or a CLEAR / DUMP_LOAD / RUN conflict | CLEAR bit 0 |
+| Dump busy | level | DUMP_LOAD | end of stream, DUMP_ABORT |
+| Debug busy | level | a freezing debug read (high during the frozen cycle) | next cycle |
+| Run busy | level | RUN (first clock) | end of the second clock |
+| Dump paused | level | a freezing debug read during an active dump | next cycle |
 
-Reset gives known zeros [Alex]. Live `uo[7:4]` carries the first four; run_busy and dump_paused are only visible through `DBG_FLAGS`.
+Sticky means the flag stays set until CLEAR with bit 0. Reset sets every flag and register to zero. The live pins `uo[7:4]` carry the first four flags; run busy and dump paused are visible only through DEBUG_FLAGS.
 
-## 7. Semantics for host writers
+## 6. Behavior for host software
 
-### 7.1 RUN
-`RUN` is one full MAC step over 2 clocks [Alex]. Phase 1 (the RUN cycle) computes the four products into `mul`. Phase 2 (next cycle) accumulates `psum += mul` with 24b wrap and consumes `mul` (sets it to 0).
+### 6.1 RUN
+RUN is one full multiply-accumulate step over 2 clocks. On the first clock (the RUN cycle) the chip computes the four products. On the second clock it adds them to the partial sums, wrapping at 24 bits, and clears the products to 0.
 
-A `RUN` on the phase-2 cycle is "while busy": it is ignored and sets sticky illegal. Max rate is one RUN per 2 clocks: `RUN, NOP, RUN, NOP, …` (any non-RUN op may fill the gap).
+A RUN on the second clock of a previous RUN is ignored and sets the illegal flag. The maximum rate is one RUN every 2 clocks: `RUN, NOP, RUN, NOP, …` (any opcode other than RUN can fill the gap).
 
-On phase 2 the RUN still counts as in flight: other opcodes that cycle see `run_busy=1` and the pre-accumulate psum/mul. The accumulate commits after the opcode [Forge, Cast F1/F15].
+On the second clock the RUN still counts as in progress. Other opcodes on that cycle see run busy = 1 and the partial sums before the add; the add takes effect at the end of the cycle.
 
-**RUN during a debug freeze is allowed in product A** [Alex]. Cfg B forbids it (RUN is ignored and sets illegal).
+RUN is allowed during a debug freeze.
 
-### 7.2 DUMP_LOAD / DUMP_ABORT (A only)
-`DUMP_LOAD` copies the four PE sums into outbuf and streams 24 nibbles, one per cycle, starting on the next cycle's output. RUNs may proceed in parallel; they do not disturb the stream.
+### 6.2 DUMP_LOAD and DUMP_ABORT
+DUMP_LOAD copies the four partial sums into the output buffer and streams 24 nibbles, one per cycle, starting on the next cycle's output. RUNs can continue during the stream without affecting it.
 
-- `DUMP_LOAD` is **illegal while a dump is busy at cycle start**, including the final-nibble cycle. It does not restart; the current stream ends normally [Forge, Cast R3-F12].
-- `DUMP_LOAD` on a RUN phase-2 cycle captures the committed result, `wrap24(psum+mul)`. OVF from that capture is not double-counted; OVF commits only through the accumulate [Forge, R5-F22].
-- `DUMP_ABORT` stops the stream; `dump_busy` drops to 0.
+- DUMP_LOAD is **illegal while a dump is in progress** at the start of the cycle, including the cycle that sends the last nibble. It does not restart; the current stream finishes normally.
+- DUMP_LOAD on the second clock of a RUN captures the result of that RUN. The overflow flag is still set only once, by the RUN itself.
+- DUMP_ABORT stops the stream; dump busy drops to 0.
 
-There is no plain `DUMP` opcode [Alex].
+There is no separate plain DUMP opcode.
 
-### 7.3 CLEAR
-Args are a bitmask: `[0]` flags (OVF and illegal), `[1]` input buffer (left, top), `[2]` outbuf, `[3]` PE sums. Any collision ignores the **whole** CLEAR and sets illegal [Alex]:
+### 6.3 CLEAR
+The arguments are a bit mask: bit 0 flags (overflow and illegal), bit 1 input buffer (left and top), bit 2 output buffer, bit 3 partial sums. If any selected bit conflicts with work in progress, the **whole** CLEAR is ignored and the illegal flag is set:
 
-- `[3]` PE while a RUN is in flight, including the phase-2 cycle [Cast F1].
-- `[2]` outbuf while the dump was busy at cycle start, including the final-nibble cycle [Cast R2-F8]. (In Cfg B, `[2]` is always a collision.)
+- Bit 3 (partial sums) while a RUN is in progress, including its second clock.
+- Bit 2 (output buffer) while a dump was in progress at the start of the cycle, including the last-nibble cycle.
 
-An OVF raised by this cycle's phase-2 accumulate survives a same-cycle `CLEAR` flags; prior OVF and illegal are cleared [Forge, R2-F11].
+If the second clock of a RUN overflows on the same cycle as a CLEAR of the flags, the new overflow stays set. Earlier overflow and illegal are cleared.
 
-### 7.4 Sticky flags
-OVF and illegal stay set until `CLEAR` bit 0. Illegal is set once; repeated illegal events do not toggle it.
+### 6.4 Sticky flags
+Overflow and illegal stay set until CLEAR bit 0. Repeated illegal events leave the flag at 1.
 
-### 7.5 Idle output
-When no dump is active and no freeze is showing, the data nibble `uo[3:0]` is 0 and the flags in `uo[7:4]` stay live [Alex].
+### 6.5 Idle output
+When no dump is running and no debug freeze is showing, the data nibble `uo[3:0]` is 0 and the flags in `uo[7:4]` stay live.
 
-### 7.6 Debug reads (DBG_*)
-A freezing DBG op replaces all 8 `uo_out` bits with its byte for **1 cycle** (the cycle after the op at core level), with `debug_busy=1` [Alex]. The next cycle returns to live output.
+### 6.6 Debug reads
+A freezing debug read replaces all 8 `uo_out` bits with its byte for **1 cycle** (the cycle after the opcode), with debug busy = 1. The next cycle returns to live output.
 
-`DBG_FLAGS` bank 0 bit layout:
+DEBUG_FLAGS bank 0 bit layout:
 
-| bit | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-|---|---|---|---|---|---|---|---|---|
-| | OVF | illegal | dump_busy | debug_busy | run_busy | dump_paused | OP_PLACE | HAS_OUTBUF |
+| Bit | Meaning |
+|---|---|
+| 0 | Overflow |
+| 1 | Illegal |
+| 2 | Dump busy |
+| 3 | Debug busy (reads 1 in the frozen byte) |
+| 4 | Run busy |
+| 5 | Dump paused |
+| 6 | Load placement setting |
+| 7 | Output buffer present (reads 1) |
 
-- debug_busy (bit 3) reads 1 in the frozen byte [Cast F5].
-- dump_busy is busy-at-start; with a freeze during a dump, dump_paused=1 too, so the pair is coherent even on the final-nibble cycle [Cast R3-F13].
-- On RUN phase 2, run_busy=1 [Cast R3-F14], and bit 0 includes the pending OVF from the accumulate committing that cycle [R4-F16].
+- Dump busy reports the state at the start of the cycle. A freeze during a dump also shows dump paused = 1, so the two bits agree even on the last-nibble cycle.
+- On the second clock of a RUN, run busy = 1, and bit 0 includes any overflow from the add that finishes on that cycle.
 
-**Dump pause.** Only a freezing DBG pauses the dump. That cycle the stream does not advance, `dump_paused=1`, and it resumes next cycle. No nibbles are lost. An illegal non-freezing DBG (`DBG_FLAGS` bank≠0, `DBG_PSUM` byte 3) does not pause: the nibble goes out and the stream stays 24 intact [Forge, R2-F10].
+**Dump pause.** Only a debug read that freezes the output pauses the dump. On that cycle the stream does not advance, dump paused = 1, and the stream resumes on the next cycle. No nibbles are lost. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0, DEBUG_PARTIAL_SUM byte 3) does not pause: the nibble goes out and the stream stays complete.
 
-### 7.7 Phase-2 debug reads (high level)
-On the RUN phase-2 cycle:
+### 6.7 Debug reads on the second clock of a RUN
+- DEBUG_PARTIAL_SUM and DEBUG_MULTIPLY return the registers as they are before the add.
+- DEBUG_ADD returns a preview of the result: the low byte of the 24-bit wrapped sum of partial sum plus product. At other times it returns the low byte of the partial sum (the product is 0 after a finished RUN). It never sets overflow.
+- DEBUG_FLAGS returns the start-of-cycle busy flags plus any overflow from the add.
 
-- `DBG_PSUM`, `DBG_MUL`: raw registers before the commit.
-- `DBG_ADD`: preview of the pending result, low byte of `wrap24(psum+mul)`. Outside phase 2 it returns low byte of psum (mul is 0 after a completed RUN). It never sets OVF [Forge, R3-F15].
-- `DBG_FLAGS`: busy-at-start plus pending OVF.
+In short: reads that report this cycle's result, or that keep a copy past this cycle (DEBUG_ADD, DEBUG_FLAGS overflow, DUMP_LOAD capture), see the add. Plain register reads see the values before it.
 
-Rule of thumb: anything that reports "this cycle's result" or outlives the cycle (DBG_ADD, DBG_FLAGS OVF, dump capture) sees the pending accumulate; raw register reads stay pre-commit. Adversarial edge cases are in `LESSONS.md` (Cast F1–F22).
+## 7. Datapath
 
-## 8. Datapath
+### 7.1 LOAD packing
+A LOAD byte holds two signed int4 lanes: high nibble = lane 1, low nibble = lane 0. LOAD shifts the input buffers by one byte:
 
-### 8.1 LOAD packing
-A LOAD byte holds two signed int4 lanes: `{hi = lane1, lo = lane0}` [Alex].
-
-| OP_PLACE | Effect of LOAD |
+| Load placement (debug flags bit 6) | Effect of LOAD |
 |---|---|
 | 0 | old left → top; new byte → left |
 | 1 | old top → left; new byte → top |
 
-So two LOADs fill both buffers. With OP_PLACE=0 the first byte ends in top and the second in left.
+Two LOADs fill both buffers. With setting 0, the first byte ends up in top and the second in left.
 
-### 8.2 PE accumulate
-`PE(i,j) += left[i] * top[j]`, i,j ∈ {1,2}, where lane 0 is index 1 and lane 1 is index 2. Products fit in 8 bits signed. Sums are 24-bit two's complement and wrap; any wrap sets sticky OVF [Alex]. The RTL uses a carry-select adder, checked equivalent over 131.7M cases.
+### 7.2 Accumulate
+`PE(i,j) += left[i] × top[j]`, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. Products fit in 8 signed bits. Partial sums are 24-bit two's complement and wrap around; any wrap sets the sticky overflow flag.
 
-### 8.3 Dump stream order
-24 nibbles = 4 PEs × 6 nibbles [Alex]:
+### 7.3 Dump stream order
+24 nibbles = 4 processing elements × 6 nibbles:
 
-- PE order: (2,2), (2,1), (1,2), (1,1).
-- Within each 24b partial: **little endian, low nibble first** [Alex].
+- Processing element order: (2,2), (2,1), (1,2), (1,1).
+- Within each 24-bit partial sum: **little-endian, low nibble first**.
 
-Host reconstruction: for nibble n (0..23), `sum[n/6] |= nib << (4*(n%6))`, then sign-extend from bit 23.
+Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, then sign-extend from bit 23.
 
-## 9. Timing and physical (A0, timing rev re-PnR)
+## 8. Timing and physical results
 
-LibreLane 3.0.14, sky130A hd, clock 15.15 ns (66 MHz), post-GPL repair on, `clkdlybuf4s*` excluded. Source: `pnr/results/QUOTES.md`, "Timing rev re-PnR" table.
+Flow: LibreLane 3.0.14, SkyWater 130 nm (sky130A) high-density cells, 15.15 ns clock (66 MHz).
 
-| Metric | A0 |
+| Metric | Value |
 |---|---|
-| Die | TT 1x2, 334.88 × 225.76 µm |
-| Stdcell area / count | 29633.4 µm² / 4702 |
+| Die | Tiny Tapeout 1×2 tile, 334.88 × 225.76 µm |
+| Standard cell area / count | 29633.4 µm² / 4702 cells |
 | Utilization | 44.9% |
-| Setup WNS max_ss_100C | **+2.128 ns** |
-| Setup WNS nom_ss / min_ss | +2.549 / +3.018 ns |
-| Setup WNS nom_tt / nom_ff | +8.620 / +9.576 ns |
-| Setup TNS | 0 |
-| Hold WNS (all corners) | +0.207 ns |
-| Route DRC / Magic / KLayout / LVS | 0 / 0 / 0 / 0 |
-| max slew / max cap vios | 494 / 24 (ss only) |
+| Setup worst negative slack (WNS), slow corner 100 °C | **+2.128 ns** |
+| Setup WNS, nominal slow / minimum slow | +2.549 / +3.018 ns |
+| Setup WNS, nominal typical / nominal fast | +8.620 / +9.576 ns |
+| Setup total negative slack (TNS) | 0 |
+| Hold WNS, all corners | +0.207 ns |
+| Routing design rule check (DRC) / Magic DRC / KLayout DRC / layout versus schematic (LVS) | 0 / 0 / 0 / 0 errors |
+| Max slew / max capacitance violations | 494 / 24 (slow corner only) |
 
-A0 does not fit 1x1 (detailed placement failed at 76% effective utilization), so product A needs a 1x2 tile.
+The design does not fit a 1×1 tile, so it uses a 1×2 tile. The register-transfer level (RTL) design matches the reference model cycle for cycle on `uo_out` in random simulation.
 
-Footnote (comparison only): B0 closes in 1x1, ss WNS +2.749 ns, hold +0.065 ns.
+## 9. Open items
 
-## 10. Open items and non-goals
+- The remaining slow-corner slew and capacitance violations (494 / 24) are not yet fixed or waived.
+- DEBUG_FLAGS banks other than 0 are undefined and illegal.
+- The reference model does not model `ena`.
 
-- Remaining ss-corner slew/cap violations on A0 (494 / 24) are not yet fixed or waived.
-- No public repo and no git remote yet.
-- Cfg B is not the TT product; its thin hold margin (+65 ps) is deferred and not being worked.
-- `DBG_FLAGS` banks other than 0 are undefined (illegal).
-- Golden does not model `ena`.
+## 10. References
 
-## 11. References
-
-- `docs/LOCKS.md` — locked decisions
+- `docs/LOCKS.md` — design decisions
 - `docs/OPCODE_PROPOSAL.md` — opcode table
-- `LESSONS.md` — adversarial findings and phase-2 detail
-- `pnr/results/QUOTES.md` — PnR quotes
-- `golden/chip.c` — golden model (`chip_core_step` core, `chip_step` pin-level); RTL matches it cycle-exact on `uo_out` (3×200k random cycles × 4 configs)
-- Commit: the commit that added this file (`git log -1 -- docs/SPEC.md`); based on `d702ad5`.
-
-## Appendix A — Cfg B differences
-
-`HAS_OUTBUF=0`: no outbuf; ops 3/4 illegal; `CLEAR [2]` always collides; sums read with `DBG_PSUM`; RUN during a debug freeze is ignored and sets illegal. Single 1x1 tile. Not shipped on TT.
+- `LESSONS.md` — edge-case findings
+- `pnr/results/QUOTES.md` — place-and-route results
+- `golden/chip.c` — cycle-level reference model
