@@ -45,3 +45,20 @@ B0 iteration log (max_ss WNS): #1 inputs+uo_out regs+repair −0.812 (all violat
 through 9 clkdlybuf4s25_1 at ~1.2 ns each); #4 +exclude clkdlybuf4s* +2.749. A0 run once with all levers.
 DBG mux break and outbuf load break not needed. Remaining slew/cap vios are ss-corner only; hold on B0 is thin (+65 ps, ss/ff).
 Run paths: `b0_reprn*/RUN_PATH`, `a0_reprn/RUN_PATH`. All runs exit 0 under 9g docker cap, no OOM.
+
+## A0 PnR + G6 slew/cap fix (fix-not-waive) — 2026-11-01 ~16:15 CT
+- Tip SHA: 54f4beb709ba1fa1c381e4a54807655521849ae8 | host=server | LibreLane 3.0.14, --cpus=8, mem 24g
+- SDC: half-rate multicycle to uo_out (setup 2 / hold 1), CLOCK_PERIOD 15.15
+- Supersedes old tower baseline (494 slew / 24 cap ss, WNS +2.128).
+
+Run 1 (RUN_2026-11-01_22-10-30, log pnr/logs/a0_g6_server_1.log): MAX_TRANSITION 1.0, DESIGN_REPAIR slew/cap 30/30, GRT 20/20, post-GRT repair on
+- max_slew: max_ss 614, nom_ss 368, min_ss 306; tt/ff 0
+- max_cap: max_ss 30, nom_ss 19, min_ss 15; tt/ff 0
+- setup WS worst +2.503 ns (max_ss); WNS 0; hold WS +0.200
+
+Run 2 (RUN_2026-11-01_22-13-05, log pnr/logs/a0_g6_server_2.log; config saved pre-change as pnr/a0/config.g6_run1.json): MAX_TRANSITION 0.75, DESIGN_REPAIR 50/50, GRT 40/40, MAX_FANOUT 8
+- max_slew: max_ss 44; nom_ss 0; min_ss 0; tt/ff 0
+- max_cap: max_ss 2; nom_ss 0; min_ss 0; tt/ff 0
+- setup WS worst +3.940 ns (max_ss); WNS 0; hold WS +0.201
+
+STATUS: NOT CLEAN. G6 remaining punches: 44 max_slew + 2 max_cap at max_ss_100C_1v60 only. Not waived.
