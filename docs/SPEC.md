@@ -80,7 +80,7 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 | 0x9 | DEBUG_MULTIPLY | Return the last product, sign-extended to 8 bits | yes, 1 beat (full product) |
 | 0xA | DEBUG_ADD | Return one byte of the 24-bit wrapped adder output (Section 5.7) | yes, 1 beat (3 commands for 24 bits) |
 | 0xB | DEBUG_INPUT | Return the sampled `ui_in` byte | yes, 1 beat |
-| 0xC–0xF | — | Illegal: set the illegal flag | no |
+| 0xC–0xF | — | Reserved; illegal on this chip: set the illegal flag | no |
 
 | Command | Argument bits |
 |---|---|
@@ -96,6 +96,8 @@ Whenever a command takes a processing element index, the index sits in bits [1:0
 
 Every freezing debug read owns the output pins for exactly one beat. DEBUG_ADD and DEBUG_BUFFER are no exception: each shows its byte on all 8 `uo_out` bits for one beat and then releases the pins to the live nibble and flags.
 
+**Reserved opcodes.** Opcodes 0xC–0xF are reserved expansion slots. They may be filled in a future build with additional debug or conventional commands, if such commands prove useful for testing or operation. On this chip they remain illegal: each sets the illegal flag and has no other effect. A host must not issue them, and must not assume any of them will ever become legal.
+
 Three argument values are rejected rather than ignored: DEBUG_FLAGS with bank ≠ 0, DEBUG_PARTIAL_SUM with byte 3, and DEBUG_ADD with byte 3. Each sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that beat instead of a meaningless byte. Reserved bits, by contrast, are ignored by this revision; drive them to 0.
 
 ## 4. Flags
@@ -105,7 +107,7 @@ The chip keeps six status flags. Four of them are live on the output pins on eve
 | Flag | Kind | Set by | Cleared by |
 |---|---|---|---|
 | Overflow | sticky | a 24-bit accumulate wrapping around | CLEAR bit 0 |
-| Illegal | sticky | an illegal opcode (0xC–0xF); RUN on RUN phase 2; DUMP_LOAD while a dump is in progress; a CLEAR conflict (Section 5.3); DEBUG_FLAGS bank ≠ 0; DEBUG_PARTIAL_SUM byte 3; DEBUG_ADD byte 3 | CLEAR bit 0 |
+| Illegal | sticky | an illegal opcode (0xC–0xF, reserved; Section 3); RUN on RUN phase 2; DUMP_LOAD while a dump is in progress; a CLEAR conflict (Section 5.3); DEBUG_FLAGS bank ≠ 0; DEBUG_PARTIAL_SUM byte 3; DEBUG_ADD byte 3 | CLEAR bit 0 |
 | Dump busy | level | DUMP_LOAD | end of stream, DUMP_ABORT |
 | Debug busy | level | a freezing debug read; reads 1 as bit 3 of the frozen debug byte, which is on the pins for exactly one beat | the end of that beat |
 | Run busy | level | RUN phase 1 | end of RUN phase 2 |
@@ -219,7 +221,7 @@ The rule behind these cases: reads that report the adder output or a value latch
 ### 6.1 LOAD packing
 A LOAD byte holds two signed int4 lanes: the high nibble is lane 1 and the low nibble is lane 0. Each input buffer is one such byte, giving the two values for one side of the 2×2 array. LOAD shifts the input buffers by one byte, so the host fills both buffers with two consecutive LOADs:
 
-Each LOAD moves the old left byte to top and writes the new byte into left. So the first byte of a pair ends up in top and the second in left. This order is fixed; the host cannot change it. Physically, the input buffer feeding the array sits on the side of the floorplan furthest from the input pads, a placement chosen because place-and-route showed no preference between left and top. A host can verify the result with DEBUG_BUFFER before running.
+Each LOAD moves the old left byte to top and writes the new byte into left. So the first byte of a pair ends up in top and the second in left. This order is fixed; the host cannot change it. Physically, the input buffer feeding the array sits on the side of the floorplan furthest from the input pads, a placement chosen because layout showed no preference between left and top. A host can verify the result with DEBUG_BUFFER before running.
 
 ![Load path into the array](figures/load_path.svg)
 
