@@ -14,7 +14,7 @@ def chip_gemm(drv, A, B):
             drv.clear()
             for k in range(K): drv.mac(A[i:i+2, k], B[j:j+2, k])
             f = drv.flags()
-            if f & 0x3: raise RuntimeError(f"tile ({i},{j}) flags=0x{f:02x} (ovf/illegal)")
+            if f & 0x30: raise RuntimeError(f"tile ({i},{j}) flags=0x{f:02x} (ovf/illegal)")
             C[i:i+2, j:j+2] = drv.read_tile()
     return C[:M, :N]
 

@@ -56,16 +56,18 @@ static void t_freeze(void){ char id[96];
     for(int s=1;s<75;s++) st(&h,s==at?by[b]:0,s==at?0xB0:0); uint8_t w[24],nb[24]; tonib(h.c.outbuf,w);
     int n=dec_l(&h,j,nb,24); int ok=n==24&&nbeq(nb,w); tot++; if(!ok){ bad++; if(by[b]&0x40) bad6++; }
     h.ndbg=0; n=dec_l(&h,j,nb,24); if(!(n==24&&nbeq(nb,w))) u6bad++; }
-  printf("info F1 %d cases: locked j+3 host wrong=%d (bit6=1 subset %d); uo6-only host wrong=%d (expected >0, shows tracking needed)\n",tot,bad,bad6,u6bad);
+  printf("info F1 %d cases: j+3 host wrong=%d (bit6=1 subset %d); uo6-only host wrong=%d\n",tot,bad,bad6,u6bad);
   CHECK("R9-F1-j+3-drop-24/24-freeze-byte-bit6=1-both-par", bad==0);
-  CHECK("R9-F1b-uo6-only-still-breaks(lock is load-bearing)", u6bad>0);
+  CHECK("R9-F1b-uo6-only-skips-debug-nibbles", u6bad==0); /* bit 6 is forced 0 on a debug nibble, so bit-6 framing is enough */
   /* F2 (R7-D2 replacement): 0x8A and 0xCA frozen; decode with j+3, never with uo[7] */
   for(int al=0;al<2;al++) for(int q=0;q<2;q++){ uint8_t b=q?0xCA:0x8A; H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30); idle(&h,9); st(&h,b,0xB0); idle(&h,70);
     uint8_t w[24],nb[24]; tonib(h.c.outbuf,w); sprintf(id,"R9-F2-R7D2-fixed-j+3-byte%02X-par%d",b,al); CHECK(id, dec_l(&h,j,nb,24)==24&&nbeq(nb,w)); }
   /* F3: double freeze spacings 1 beat (legal), 3,5 edges (odd spacing), both parities, positions */
-  int sp[]={2,3,4,5,7}; for(unsigned k=0;k<5;k++){ int bd=0,c=0; for(int al=0;al<2;al++) for(int at=2;at<40;at++){ H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30);
-      for(int s=1;s<80;s++){ int f=(s==at||s==at+sp[k]); st(&h,f?0x55:0,f?0xB0:0); } uint8_t w[24],nb[24]; tonib(h.c.outbuf,w); c++; if(!(dec_l(&h,j,nb,24)==24&&nbeq(nb,w)&&!h.c.illegal)) bd++; }
-    printf("info F3 double-freeze spacing %d edges: %d/%d wrong\n",sp[k],bd,c); sprintf(id,"R9-F3-double-freeze-spacing%d",sp[k]); CHECK(id, bd==0); }
+  int sp[]={2,3,4,5,7}; for(unsigned k=0;k<5;k++){ int bd=0,c=0; int legal=sp[k]>=4; /* 8-bit window: second freeze executes legally only when issued >=4 pin steps later */
+    for(int al=0;al<2;al++) for(int at=2;at<40;at++){ H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30);
+      for(int s=1;s<80;s++){ int f=(s==at||s==at+sp[k]); st(&h,f?0x55:0,f?0xB0:0); } uint8_t w[24],nb[24]; tonib(h.c.outbuf,w); c++;
+      int dumpok=dec_u6(&h,j,nb)==24&&nbeq(nb,w); if(!(dumpok && h.c.illegal!=legal)) bd++; }
+    printf("info F3 double-freeze spacing %d edges (legal=%d): %d/%d wrong\n",sp[k],legal,bd,c); sprintf(id,"R9-F3-double-freeze-spacing%d",sp[k]); CHECK(id, bd==0); }
   /* F3b: consecutive DBG (spacing 1, unsupported per SPEC) -- record only */
   { int bd=0,c=0,il=0; for(int al=0;al<2;al++) for(int at=2;at<40;at++){ H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30);
       for(int s=1;s<80;s++){ int f=(s==at||s==at+1); st(&h,f?0x55:0,f?0xB0:0); } uint8_t w[24],nb[24]; tonib(h.c.outbuf,w); c++; il+=h.c.illegal; if(!(dec_l(&h,j,nb,24)==24&&nbeq(nb,w))) bd++; }
@@ -73,8 +75,8 @@ static void t_freeze(void){ char id[96];
   /* F4: random spaced DBG fuzz incl. phase-2 DUMP_LOAD (RUN just before) */
   { int bad=0,badil=0,badp2=0; srand(909); for(int ep=0;ep<20000;ep++){ H h; int al=rand()&1; hreset(&h,1,rand()&1,al); setrand(&h.c); int p2=rand()&1;
       if(p2){ st(&h,0x13,0x10); st(&h,0x13,0x10); st(&h,0,0x20); } int j=h.n; st(&h,0,0x30); int last=-10;
-      for(int s=1;s<90;s++){ int r=rand()%6; if(s-last>=2&&r<2){ uint8_t ops[]={0xB0,0x60,0x70,0x90}; st(&h,rand()&0xFF,ops[rand()%4]); /* 1-tick reads only: 0x80/0xA0 now freeze 3 output ticks (spacing 6) */ last=s; } else st(&h,0,0); }
-      idle(&h,120); uint8_t w[24],nb[24]; tonib(h.c.outbuf,w); if(!(dec_l(&h,j,nb,24)==24&&nbeq(nb,w))){ bad++; if(h.c.illegal) badil++; else if(p2) badp2++; } }
+      for(int s=1;s<90;s++){ int r=rand()%6; if(s-last>=4&&r<2){ uint8_t ops[]={0xB0,0x60,0x70,0x90}; st(&h,rand()&0xFF,ops[rand()%4]); /* 8-bit reads: next freeze at least 4 pin steps later */ last=s; } else st(&h,0,0); }
+      idle(&h,120); uint8_t w[24],nb[24]; tonib(h.c.outbuf,w); if(!(dec_u6(&h,j,nb)==24&&nbeq(nb,w))){ bad++; if(h.c.illegal) badil++; else if(p2) badp2++; } }
     printf("info F4 diag: wrong with illegal flagged=%d, legal+p2=%d\n",badil,badp2);
     printf("info F4 20000 random spaced-DBG episodes (half phase-2 DUMP_LOAD): wrong=%d\n",bad); CHECK("R9-F4-fuzz-spaced-DBG+p2-DUMP_LOAD-j+3", bad==0); }
 }
@@ -86,9 +88,10 @@ static void t_count(void){ char id[96];
   for(int al=0;al<2;al++) for(int fz=0;fz<2;fz++){ H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30); idle(&h,5); if(fz) st(&h,0x4C,0xB0); st(&h,0,0);
     uint8_t w1[24]; tonib(h.c.outbuf,w1); int e=0; while(!(h.c.dump_idx==23&&h.c.phase==1)&&e<200){ st(&h,0,0); e++; }
     for(int k=0;k<4;k++) ; st(&h,0,0x30); int ill=h.c.illegal; idle(&h,70);
-    int s0=-1; for(int s=j;s<h.n;s++) if((h.pad[s]&0x40)){ s0=s; break; } int run=0; for(int s=s0;s<h.n;s+=2){ int f=0; for(int d=0;d<h.ndbg;d++){int t=h.dbg[d]+3; if(t-((t-s0)&1)==s) f=1;} if(f) continue; if(h.pad[s]&0x40) run++; else break; }
-    uint8_t nb[48]; int n=dec_l(&h,j,nb,48);
-    sprintf(id,"R9-C2-merged-b2b-48-contig-par%d-fz%d",al,fz); CHECK(id, !ill && run==48);
+    int s0=-1; for(int s=j;s<h.n;s++) if((h.pad[s]&0x40)){ s0=s; break; } int run=0; for(int s=s0;s<h.n;s+=2){ if(h.pad[s]&0x40) run++; else if(!fz) break; }
+    uint8_t nb[48]; int n=dec_u6(&h,j,nb)==24?0:dec_u6(&h,j,nb); (void)n;
+    n=0; { int s0b=-1; for(int s=j;s<h.n;s++) if(h.pad[s]&0x40){ s0b=s; break; } for(int s=s0b;s<h.n && n<48;s+=2) if(h.pad[s]&0x40) nb[n++]=h.pad[s]&0xF; }
+    sprintf(id,"R9-C2-merged-b2b-48-u6-par%d-fz%d",al,fz); CHECK(id, !ill && (fz ? n==48 : run==48));
     sprintf(id,"R9-C2b-count24-recovers-stream1-par%d-fz%d",al,fz); CHECK(id, n==48 && nbeq(nb,w1) && nbeq(nb+24,w1)); }
   char*sp=slurp("docs/SPEC.md"),*lk=slurp("docs/LOCKS.md");
   CHECK("R9-C3-LOCKS-count-24-MUST", lk && strstr(lk,"MUST count 24"));
@@ -108,7 +111,7 @@ static void t_abort(void){ char id[96];
   CHECK("R9-A1b-wait>=1beat-separates-and-24/24", wbad==0);
   /* A2: ABORT tick vs non-tick after partial dump then DBG_FLAGS: paused=0 busy=0 */
   for(int al=0;al<2;al++) for(int off=6;off<8;off++){ H h; hreset(&h,1,0,al); setpat(&h.c); st(&h,0,0x30); idle(&h,off); int ja=h.n; st(&h,0,0x40); idle(&h,3); int jf=h.n; st(&h,0,0x60); idle(&h,5);
-    uint8_t f=h.pad[jf+3]; sprintf(id,"R9-A2-ABORT-tick%d-par%d-flags-clean",h.tick_exec[ja],al); CHECK(id, !h.c.dump_busy && !(f&0x24) && !h.c.illegal); }
+    uint8_t f=(h.pad[jf+3]&0xF)|((h.pad[jf+5]&0xF)<<4); sprintf(id,"R9-A2-ABORT-tick%d-par%d-flags-clean",h.tick_exec[ja],al); CHECK(id, !h.c.dump_busy && !(f&0x42) && (h.pad[jf+3]&0x80) && !h.c.illegal); }
   /* A3: CLEAR (outbuf 0x54 / flags 0x51) on the held freeze edge mid-dump */
   for(int al=0;al<2;al++) for(int q=0;q<2;q++){ H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30); idle(&h,9); st(&h,0x11,0xB0); st(&h,0,q?0x51:0x54); idle(&h,70);
     uint8_t w[24],nb[24]; tonib(h.c.outbuf,w); int n=dec_l(&h,j,nb,24);
@@ -123,7 +126,9 @@ static void t_live(void){ char id[96];
       if(r==0) i=0x10; else if(r==1) i=0x20; else if(r==2) i=0x30; else if(r==3) i=0x40; else if(r==4) i=0x50|(rand()&0xF); else if(r==5) i=0xC0;
       uint8_t o=chip_step(&h.c,rand()&0xFF,i); if(!h.c.ofz){ beats++; ones+=!!(o&0x80);} } }
   printf("info V1 %ld unfrozen steps, uo7=1 on %ld\n",beats,ones); CHECK("R9-V1-live-uo7==0-long-unfrozen", ones==0 && beats>0);
-  for(int al=0;al<2;al++){ H h; hreset(&h,1,0,al); idle(&h,3); int jf=h.n; st(&h,0,0x60); idle(&h,5); sprintf(id,"R9-V2-frozen-DEBUG_FLAGS-bit3=1-par%d",al); CHECK(id, h.pad[jf+3]&0x08); }
+  for(int al=0;al<2;al++){ H h; hreset(&h,1,0,al); idle(&h,3); int jf=h.n; st(&h,0,0x60); idle(&h,8);
+    uint8_t f=(h.pad[jf+3]&0xF)|((h.pad[jf+5]&0xF)<<4);
+    sprintf(id,"R9-V2-DEBUG_FLAGS-debug-busy-bit7-par%d",al); CHECK(id, (f&0x88)==0x88 && (h.pad[jf+3]&0x80) && (h.pad[jf+5]&0x80)); }
 }
 static void t_static(void){
   char*s=slurp("pnr/polite_vneg1.sdc"),*sp=slurp("docs/SPEC.md"),*ls=slurp("LESSONS.md"),*rd=slurp("README.md"),*ct=slurp("rtl/ctrl/polite_ctrl.sv"),*ch=slurp("host/mnist/chipio.py");

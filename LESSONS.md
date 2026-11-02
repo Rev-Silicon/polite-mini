@@ -3,7 +3,7 @@
 - [assumption] Nibble stream order is low nibble first within each 24b partial ("host endian" = LE?).
 - [assumption] Exact LOAD placement for OP_PLACE 0/1 (shift left→top vs bus→top).
 - [assumption] A RUN on the cycle right after a RUN is "while busy" (ignored + illegal). Max rate is 1 RUN per 2 clocks.
-- [resolved] RUN while debug is busy is allowed (SPEC).
+- [resolved, then superseded 2026-11-02 by t612/t620] RUN while debug is busy is allowed (SPEC). RUN inside the freeze window is now ignored and sticky-illegal.
 - TBD meaning of dump_paused (the model never sets it). How does ena/pause interact with dump?
 - TBD what DBG_ADD shows, plus the byte/PE arg encodings for DBG_PSUM/DBG_MUL.
 - [retired 2026-11-01, Alex t588u] Cfg B (no outbuf) dropped; its open CLEAR-outbuf question is moot.
@@ -13,7 +13,7 @@
 - [assumption, Cast F2/F4] A DBG_* that freezes during a dump pauses the stream for that cycle: dump_idx does not move, dump_paused=1, and the stream picks up on the next cycle. No nibbles are lost.
 - [assumption, Cast F3] DBG_PSUM arg[3:2]=3 is illegal (sticky) and does not freeze.
 - [assumption, Cast F6; revised R3-F15] DBG_ADD(arg[1:0]=PE) = low byte of the pending next-acc, wrap24(psum+mul), while a RUN is in flight (phase 2). Otherwise it returns low(psum). It never sets OVF.
-- [assumption, Cast F7] Live flags sit in uo[7:4]: uo[4]=OVF, uo[5]=illegal, uo[6]=dump busy (start of displayed edge), uo[7]=debug_busy (superseded R8-U9: live uo[7]=0). This matches DBG_FLAGS bank0[3:0].
+- [assumption, Cast F7] Live flags sit in uo[7:4]: uo[4]=OVF, uo[5]=illegal, uo[6]=dump busy (start of displayed edge), uo[7]=debug_busy (superseded R8-U9: live uo[7]=0; superseded again 2026-11-02 by t608: uo[7] is the debug-nibble marker, and DEBUG_FLAGS base [7:4] matches that live order with debug busy in bit 7 of the status byte).
 - [assumption, Cast R2-F8] CLEAR outbuf collides with a dump that was busy at the start of the cycle, including the final-nibble cycle (dump_idx 23->24). Whole CLEAR is ignored, illegal is set, outbuf is unchanged. Same pattern as F1 run_phase2.
 - [assumption, Cast R2-F9, revises F6] mul is consumed (zeroed) by the phase-2 accumulate. After a completed RUN, mul=0 and DBG_ADD returns low(psum). See R3-F15 for the phase-2 preview.
 - [Forge lock, R2-F9b, revised R3-F15] On the phase-2 cycle, DBG_ADD returns the pending preview low(wrap24(psum_before+mul)), taken before the accumulate commits. It has the same value as the post-acc psum, but it comes from the pre-commit state.
@@ -37,6 +37,7 @@ DUMP_LOAD on the RUN phase-2 cycle copies the pending wrap24(psum+mul) into outb
 
 ## RTL (2026-10-31)
 - [measured 2026-11-01, 33 MHz pad-out tree] RTL in rtl/ matches the half-rate golden (golden/chip.c at the 33 MHz pad-out commit) cycle for cycle on uo_out: 3x200k random cycles per config, 4 configs, 0 mismatches (verify/rtl_sim, server iverilog). The earlier 89dad4e measurement covers the pre-half-rate RTL only.
-- [measured] Live flag bit order is uo[4]=OVF uo[5]=illegal uo[6]=dump busy at start of the displayed edge (nibble-valid) (golden). [R8-U9/D7] Live uo[7] is 0, not debug busy; debug busy appears only as bit 3 of a frozen DEBUG_FLAGS byte. The old stub comment `{OVF,illegal,dump_busy,debug_busy}` read MSB-first is backwards; first RTL attempt got it wrong.
+- [measured] Live flag bit order is uo[4]=OVF uo[5]=illegal uo[6]=dump busy at start of the displayed edge (nibble-valid) (golden). [R8-U9/D7, qualified 2026-11-02 by t608] On a non-debug-nibble output tick, Live uo[7] is 0, not a debug-busy flag. On a debug-nibble output tick, live uo[7] is 1 and uo[6] is forced to 0. Debug busy is bit 7 of the captured DEBUG_FLAGS byte. The old stub comment `{OVF,illegal,dump_busy,debug_busy}` read MSB-first is backwards; first RTL attempt got it wrong.
+- [Alex GO 2026-11-02, t608/t609/t612/t620] Debug values stream as nibbles on uo[3:0], low nibble first: 2 output ticks for an 8-bit read, 6 for DEBUG_PARTIAL_SUM and DEBUG_ADD. RUN and a second freezing DBG are illegal while that window is open (k+1 through k+3, or k+1 through k+11). The second DBG does not restart the stream. DEBUG_FLAGS bank 0 is 0x88 or 0x8C after reset. Bank ≠ 0 does not freeze.
 - [measured] dump_paused needs no register: it is only observable via DBG_FLAGS on the freezing cycle, where it equals dump_adv.
 - uo_out is registered (pure function of post-edge state) — clean pad timing.

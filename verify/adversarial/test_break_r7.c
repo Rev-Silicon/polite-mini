@@ -33,12 +33,14 @@ static void pad_rate(void){
 static void latency(void){
   chip_t c; chip_reset(&c,1,0); uint8_t a=P(&c,0,0), b=P(&c,0,0);
   CHECK("R7-L0-reset-pad-0", a==0 && b==0);
-  for(int k=4;k<6;k++){ chip_reset(&c,1,0); int first=-1;
+  for(int k=4;k<6;k++){ chip_reset(&c,1,0); int first=-1, n1=0;
     for(int s=0;s<k;s++) P(&c,0,0);
-    for(int s=0;s<8;s++){ uint8_t o=P(&c,0x5A,s==0?0xB0:0x00); if(o==0x5A && first<0) first=s; }
-    printf("info L1 DBG_ECHO applied at pin step %d (parity %d): byte visible after +%d edges\n",k,k&1,first+1);
+    for(int s=0;s<12;s++){ uint8_t o=P(&c,0x5A,s==0?0xB0:0x00);
+      if((o&0x8F)==0x8A && first<0) first=s;          /* LS nibble of 0x5A, uo[7]=1 */
+      if(first>=0 && s==first+2 && (o&0x8F)==0x85) n1++; } /* MS nibble one output tick later */
+    printf("info L1 DBG_ECHO applied at pin step %d (parity %d): LS nibble after +%d edges\n",k,k&1,first+1);
     char id[64]; sprintf(id,"R7-L1-echo-latency-k+2-or-k+3-parity%d",k&1);
-    CHECK(id, first+1==3+(k&1)); } /* Forge R7 lock: counting the applying P() call, +3 = "after edge k+2" (exec edge is an out_tick), +4 = "after edge k+3" */
+    CHECK(id, first+1==3+(k&1) && n1==1); } /* same pad latency as the old first byte; 8-bit read is two nibble beats */
   /* SPEC/LOCKS still say 2 edges + uo loaded every edge: doc must state 2-or-3 edge (beat-aligned) latency */
   char*sp=slurp("docs/SPEC.md"), *lk=slurp("docs/LOCKS.md");
   CHECK("R7-L2-SPEC-no-'loaded every edge'", sp && !strstr(sp,"loaded every edge"));
@@ -55,7 +57,7 @@ static int collect(chip_t*c,int nsteps,uint8_t (*op)(int),uint8_t*beats){
 static int dump_seq_ok(uint8_t*b,int nb,int*nfz,int*dups,int*n_out){
   int idx=0, started=0; *nfz=0; *dups=0;
   for(int i=0;i<nb && idx<24;i++){ uint8_t o=b[i];
-    if(o&0x80){ if(started)(*nfz)++; continue; } /* uo[7]=debug_busy => frozen beat */
+    if(o&0x80){ if(started)(*nfz)++; continue; } /* uo[7]=1 => debug-nibble beat, not a dump nibble */
     if(!(o&0x40) && !started) continue;
     if(!started && (o&0xF)==pat(0)) started=1; /* skips the phase-dependent DUMP_LOAD junk beat (see D0) */
     if(!started) continue;
@@ -89,31 +91,33 @@ static void dump_pins(void){
     g_dbg_op=0x70; c.buf=0x8A; /* frozen byte (single input buffer): bit7 set like debug_busy */
     int nb=collect(&c,80,op_load_then,b); int nfz,d,no; int ok=dump_seq_ok(b,nb,&nfz,&d,&no);
     char id[80]; sprintf(id,"R7-D2-freeze-mid-dump-no-loss-dup-step%d",at); CHECK(id, ok);
-    sprintf(id,"R7-D2b-freeze-exactly-1-beat-step%d",at); CHECK(id, nfz==1);
+    sprintf(id,"R7-D2b-freeze-exactly-2-nibble-beats-step%d",at); CHECK(id, nfz==2); /* 8-bit DEBUG_BUFFER = 2 nibbles */
     g_dbg_at=-1; }
 }
 /* ---------- freeze vs beat ---------- */
 static void freeze_beats(void){
-  /* two DBG_ECHO with distinct bytes on consecutive edges, both parities: each byte must own one beat */
+  /* two freezing DBG on consecutive pin edges: the second is illegal and must not restart. Only the first value streams, on both phases. */
   for(int al=0;al<2;al++){ chip_t c; chip_reset(&c,0,0); for(int s=0;s<al+4;s++) P(&c,0,0);
-    int seenA=0, seenB=0; for(int s=0;s<10;s++){ uint8_t d= s==0?0x9A: s==1?0xB5:0; uint8_t o=P(&c,d,(s<2)?0xB0:0); if(o==0x9A) seenA++; if(o==0xB5) seenB++; }
-    printf("info F1 b2b DBG align%d: first byte on pad %d edges, second %d edges\n",al,seenA,seenB);
-    /* LOCKS [Forge, 33 MHz]: two freezing DBG on consecutive edges -> only the later one reaches the pins, in either phase */
-    char id[80]; sprintf(id,"R7-F1-b2b-DBG-phase-dependent-as-locked-align%d",al); CHECK(id, al==0 ? (seenA==2 && seenB==2) : (seenA==0 && seenB==2)); /* Forge R7 lock: b2b freezing DBG is phase-dependent; host rule = space debug reads >=2 edges (LOCKS/SPEC) */
-    sprintf(id,"R7-F1b-b2b-DBG-second-byte-reaches-pad-align%d",al); CHECK(id, seenB>=2); }
-  /* 4 DBG reads on 4 consecutive edges: 4 bytes requested, how many reach pins */
-  { chip_t c; chip_reset(&c,0,0); for(int s=0;s<4;s++) P(&c,0,0); uint8_t want[4]={0x91,0x92,0x93,0x94}; int got[4]={0};
-    for(int s=0;s<14;s++){ uint8_t o=P(&c,s<4?want[s]:0,s<4?0xB0:0); for(int k=0;k<4;k++) if(o==want[k]) got[k]=1; }
-    int n=got[0]+got[1]+got[2]+got[3]; printf("info F2 4 consecutive DBG -> %d/4 bytes visible at pins\n",n);
-    (void)n; }
-  /* Forge R7-F2 lock: consecutive freezing DBG is outside the host contract (phase-dependent). Spaced one beat apart, 4/4 on both parities, each exactly 1 beat. */
-  for(int al=0;al<2;al++){ chip_t c; chip_reset(&c,0,0); for(int s=0;s<al+4;s++) P(&c,0,0); uint8_t want[4]={0x91,0x92,0x93,0x94}; int got[4]={0};
-    for(int s=0;s<20;s++){ int k=s/2; int dbg=(s%2==0 && k<4); uint8_t o=P(&c,dbg?want[k]:0,dbg?0xB0:0); for(int j=0;j<4;j++) if(o==want[j]) got[j]++; }
-    char id[80]; sprintf(id,"R7-F2-spaced-DBG-4of4-each-1-beat-align%d",al); CHECK(id, got[0]==2&&got[1]==2&&got[2]==2&&got[3]==2); }
-  /* single DBG on tick vs non-tick: exactly one beat (2 pin edges) of frozen byte */
-  for(int al=0;al<2;al++){ chip_t c; chip_reset(&c,0,0); for(int s=0;s<al+4;s++) P(&c,0,0); int n=0;
-    for(int s=0;s<10;s++){ uint8_t o=P(&c,0xC3,s==0?0xB0:0); if(o==0xC3) n++; }
-    char id[80]; sprintf(id,"R7-F3-single-DBG-exactly-1-beat-align%d",al); CHECK(id, n==2); }
+    int nLo=0, nHi=0, nB=0; for(int s=0;s<12;s++){ uint8_t d= s==0?0x9A: s==1?0xB5:0; uint8_t o=P(&c,d,(s<2)?0xB0:0);
+      if((o&0x8F)==0x8A) nLo++; if((o&0x8F)==0x89) nHi++; if((o&0x8F)==0x85 || (o&0x8F)==0x8B) nB++; }
+    printf("info F1 nested DBG align%d: first LS %d edges, first MS %d, second nibbles %d, illegal=%d\n",al,nLo,nHi,nB,c.illegal);
+    char id[80]; sprintf(id,"R7-F1-nested-DBG-no-restart-align%d",al); CHECK(id, nLo==2 && nHi==2 && nB==0 && c.illegal); }
+  /* 4 DBG reads on 4 consecutive edges stay outside the contract: only the first value streams. */
+  { chip_t c; chip_reset(&c,0,0); for(int s=0;s<4;s++) P(&c,0,0); uint8_t want[4]={0x91,0x92,0x93,0x94}; int nLo=0, nLater=0;
+    for(int s=0;s<16;s++){ uint8_t o=P(&c,s<4?want[s]:0,s<4?0xB0:0);
+      if((o&0x8F)==0x81) nLo++; if((o&0x8F)==0x82 || (o&0x8F)==0x83 || (o&0x8F)==0x84) nLater++; }
+    printf("info F2 4 consecutive DBG: first LS edges=%d later-value nibble edges=%d illegal=%d\n",nLo,nLater,c.illegal);
+    CHECK("R7-F2-consecutive-DBG-only-first-streams", nLo==2 && nLater==0 && c.illegal); }
+  /* Spaced one 8-bit window apart (4 pin steps: op + 3 NOPs), both parities: 4 values, LS then MS, each held 2 edges. */
+  for(int al=0;al<2;al++){ chip_t c; chip_reset(&c,0,0); for(int s=0;s<al+4;s++) P(&c,0,0); uint8_t want[4]={0x12,0x34,0x56,0x78}; int got[4][2]={{0}};
+    for(int s=0;s<32;s++){ int k=s/4; int dbg=(s%4==0 && k<4); uint8_t o=P(&c,dbg?want[k]:0,dbg?0xB0:0);
+      for(int j=0;j<4;j++){ if((o&0x8F)==(0x80|(want[j]&0xF))) got[j][0]++; if((o&0x8F)==(0x80|(want[j]>>4))) got[j][1]++; } }
+    char id[80]; sprintf(id,"R7-F2b-spaced-DBG-4of4-two-nibbles-align%d",al);
+    CHECK(id, got[0][0]==2&&got[0][1]==2&&got[1][0]==2&&got[1][1]==2&&got[2][0]==2&&got[2][1]==2&&got[3][0]==2&&got[3][1]==2 && !c.illegal); }
+  /* single 8-bit DBG: two nibble beats, each held 2 pin edges, LS first. */
+  for(int al=0;al<2;al++){ chip_t c; chip_reset(&c,0,0); for(int s=0;s<al+4;s++) P(&c,0,0); int n0=0,n1=0;
+    for(int s=0;s<14;s++){ uint8_t o=P(&c,0xC3,s==0?0xB0:0); if((o&0x8F)==0x83) n0++; if((o&0x8F)==0x8C) n1++; }
+    char id[80]; sprintf(id,"R7-F3-single-DBG-two-nibble-beats-align%d",al); CHECK(id, n0==2 && n1==2); }
   /* debug_busy core-internal: DBG on non-tick, then ABORT on held edge: dump_paused must not stick while dump idle */
   { chip_t c; chip_reset(&c,1,0); setpat(&c); chip_core_step(&c,0,0x30); for(int i=0;i<5;i++) chip_core_step(&c,0,0);
     if(c.phase) chip_core_step(&c,0,0); /* next edge non-tick */
@@ -122,8 +126,8 @@ static void freeze_beats(void){
     CHECK("R7-F4-abort-on-held-edge-no-stale-paused", !(c.dump_paused && !c.dump_busy)); }
   /* DBG_FLAGS during dump: frozen byte busy=1 paused=1 on both held edges; pad shows it */
   for(int al=0;al<2;al++){ chip_t c; chip_reset(&c,1,0); setpat(&c); chip_core_step(&c,0,0x30); for(int i=0;i<4+al;i++) chip_core_step(&c,0,0);
-    uint8_t v=chip_core_step(&c,0,0x60); int p1=c.dump_paused; uint8_t v2=chip_core_step(&c,0,0); int p2=c.dump_paused;
-    char id[80]; sprintf(id,"R7-F5-DBG_FLAGS-busy+paused-align%d",al); CHECK(id, (v&0x24)==0x24 && v2==v);
+    chip_core_step(&c,0,0x60); int p1=c.dump_paused; uint32_t fz=c.fz_val; chip_core_step(&c,0,0); int p2=c.dump_paused;
+    char id[80]; sprintf(id,"R7-F5-DBG_FLAGS-busy-bit6+paused-bit1-align%d",al); CHECK(id, (fz&0x42)==0x42 && c.fz_val==fz);
     sprintf(id,"R7-F5b-dump_paused-both-held-edges-align%d",al); CHECK(id, p1 && p2); }
 }
 /* ---------- busy-at-start / final nibble ---------- */

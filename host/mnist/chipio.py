@@ -39,35 +39,49 @@ class Driver:
     def mac(self, a2, b2):
         """psum[r][c] += a2[r]*b2[c]: a = input buffer (LOAD, rows), b = bus byte on ui_in with RUN (cols)."""
         self.step(pack(*a2), LOAD); self.step(pack(*b2), RUN)  # RUN is pipelined: next LOAD overlaps phase 2 (affects later RUNs only)
-    # 33 MHz pad-out: uo_out updates once per output tick (2 core clocks). An op on pin step j executes on core edge j+1;
-    # pin step n shows the core output of edge n-1 iff n-1 is odd (out_tick), counted from reset. A debug read is
-    # stretched over 2 core edges, so it is always on the pads after step j+3. Debug reads are spaced one output tick (op, NOP).
+    # 33 MHz pad-out: uo_out updates once per output tick (2 core clocks). An op on pin step j executes on core edge j+1.
+    # An 8-bit debug read is two nibbles, low nibble first, on the output ticks with uo[7]=1 (phase-independent samples j+3 and j+5).
+    # A 24-bit read is six nibbles. The next freezing opcode waits until that window has closed (j+4 for 8-bit, j+12 for 24-bit).
     LAT = 3
     def flags(self): return self.query([(0, DBG_FLAGS)])[0]
     def query(self, ops):
-        """Issue each op followed by a NOP (one output tick per op); return the uo_out for each op read at step j+3."""
+        """Issue each 8-bit debug op and assemble two uo[7]=1 nibbles, low nibble first. Bits [7:4] of the pad are markers, not data."""
         outs, idx = [], []
-        for d, i in ops: idx.append(self.steps); outs.append(self.step(d, i)); outs.append(self.step(0, NOP))
-        base = idx[0] if idx else self.steps
-        outs += [self.step(0, NOP) for _ in range(self.LAT)]
-        return [outs[j - base + self.LAT] for j in idx]
+        for d, i in ops:
+            idx.append(len(outs))
+            outs.append(self.step(d, i))
+            outs.append(self.step(0, NOP))
+            for _ in range(6):
+                outs.append(self.step(0, NOP))  # covers j+5 and the held edge after it; next op is outside the 8-bit window
+        vals = []
+        for rel in idx:
+            s0 = next(i for i in range(rel, rel + 8) if outs[i] & 0x80)
+            b = 0
+            for n in range(2):
+                v = outs[s0 + 2 * n]
+                if (v & 0x80) == 0:
+                    raise RuntimeError("debug nibble missing uo[7]")
+                b |= (v & 0xF) << (4 * n)
+            vals.append(b)
+        return vals
     def read_tile(self):
-        """2x2 int32 tile [[(1,1),(1,2)],[(2,1),(2,2)]]. cfg A: DUMP_LOAD stream; cfg B: DBG_PSUM bytes."""
+        """2x2 int32 tile [[(1,1),(1,2)],[(2,1),(2,2)]]. cfg A: DUMP_LOAD stream; cfg B: DBG_PSUM nibbles."""
         raw = [0] * 4
         if self.A:
             self.step(0, DUMP_LOAD); edges = [self.step(0, NOP) for _ in range(60)]
-            # pins: one value per output tick (2 edges); nibble output ticks have uo[6]=1. No DBG is issued inside this window, so no
-            # freeze tracking is needed (LOCKS R8-U3: with DBG, drop the output tick at pin step j+3 per freezing DBG; uo[7] is
-            # not a freeze mark). Count exactly 24 nibbles (R8-U4); no separator output tick is assumed after the last one.
+            # One value per output tick (2 edges). Dump nibbles are the output ticks with uo[6]=1. This window issues no debug
+            # read. A debug-nibble tick would force bit 6 to 0 and set bit 7, so bit 6 framing would skip it. Count exactly 24 nibbles.
             s0 = next(i for i, v in enumerate(edges) if v & 0x40)
             o = [edges[s0 + 2 * n] for n in range(24)]
             assert all(v & 0x40 for v in o)
             for n in range(24): raw[n // 6] |= (o[n] & 0xF) << (4 * (n % 6))
         else:
-            # one DEBUG_PARTIAL_SUM opcode per PE -> 3 output ticks, LSB first; read after j+3, j+5, j+7; next read >= j+6
+            # one DEBUG_PARTIAL_SUM opcode per PE -> 6 nibbles, low nibble first, marked by uo[7]. Next read waits out the 12-tick window.
             for k in range(4):
-                o = [self.step(0, DBG_PSUM | k)] + [self.step(0, NOP) for _ in range(7)]
-                for b in range(3): raw[k] |= o[self.LAT + 2 * b] << (8 * b)
+                o = [self.step(0, DBG_PSUM | k)] + [self.step(0, NOP) for _ in range(16)]
+                s0 = next(i for i, v in enumerate(o) if v & 0x80)
+                for b in range(6):
+                    raw[k] |= (o[s0 + 2 * b] & 0xF) << (4 * b)
         t = [[0, 0], [0, 0]]
         for k in range(4): t[PR[k] - 1][PC[k] - 1] = ((raw[k] & 0xFFFFFF) ^ 0x800000) - 0x800000
         return t

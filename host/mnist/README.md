@@ -24,7 +24,7 @@ MLP 784→16 (ReLU)→10, trained in float with numpy for 1 epoch at startup. Ea
 | 0x59 CLEAR | before every tile: clear psum and ovf/illegal |
 | 0x10 LOAD | one per MAC step: input buffer = pack(lo = row 1, hi = row 2) |
 | 0x20 RUN | one per MAC step: bus byte on `ui_in` = pack(lo = col 1, hi = col 2); PE(i,j) += buf[i] × bus[j] |
-| 0x60 DEBUG_FLAGS | after each tile: must have ovf=0 and illegal=0 (read 3 pin steps after the opcode) |
-| 0x30 DUMP_LOAD + NOPs | read 24 nibbles (6 per PE, LSB first) in dump order (2,2),(2,1),(1,2),(1,1); nibbles are the output ticks with uo[6]=1 |
+| 0x60 DEBUG_FLAGS | after each tile: two nibbles, low nibble first, on output ticks with uo[7]=1. The assembled byte must have ovf=0 and illegal=0 (bits 4 and 5). Do not issue it, or RUN, while a debug stream is still on the pins |
+| 0x30 DUMP_LOAD + NOPs | read 24 nibbles (6 per PE, low nibble first) in dump order (2,2),(2,1),(1,2),(1,1). Dump nibbles are the output ticks with uo[6]=1. A debug-nibble tick forces bit 6 to 0 and sets bit 7, so it is not part of the 24 |
 
 `--place` is accepted for compatibility, but OP_PLACE is obsolete under buffer + bus, so place 0 and 1 behave the same. The 24-bit psums are sign-extended on the host. The worst case is K=784 × 64 ≈ 50k, so it stays well below 2²³.

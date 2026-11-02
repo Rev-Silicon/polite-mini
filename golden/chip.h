@@ -9,7 +9,7 @@ typedef struct {
   int ovf, illegal, run_busy, dump_busy, debug_busy, dump_paused;
   int32_t outbuf[4]; int dump_idx; /* nibble index 0..23 */
   int frozen; uint8_t frozen_val;
-  int phase, fz_prev, ofz, fz_n, fz_left, fz_k; uint32_t fz_val; /* multi-byte freeze: fz_n bytes over 2*fz_n edges */ /* 33 MHz pad-out: out_tick=phase (resets 0, toggles every core edge); fz_prev=freeze on prev edge; ofz=core output frozen this edge */
+  int phase, fz_prev, ofz, fz_n, fz_left, fz_k; uint32_t fz_val; /* nibble freeze: fz_n nibbles over 2*fz_n edges (8-bit n=2, 24-bit n=6); LS nibble first. out_tick=phase (resets 0); fz_prev=this edge started a freeze; ofz=core output inside the freeze window this edge; fz_left>0 at entry means ticks k+1..k+2n-1 */
   uint8_t in_d_q, in_i_q, uo_q, uo_pad; int otick_q; /* pad pipeline regs (input flops + registered uo_out) */
 } chip_t;
 void chip_reset(chip_t *c, int has_outbuf, int op_place);

@@ -16,10 +16,10 @@ static int32_t sx(uint32_t v){ return ((v&0xFFFFFF)^0x800000)-0x800000; }
 static int outeq(chip_t*c){ int ok=1; for(int k=0;k<4;k++) ok&=c->outbuf[k]==c->psum[k]; return ok; }
 
 static void f22a(void){ chip_t c,d; chip_reset(&c,1,0); l77(&c); S(&c,0,0x20); S(&c,0,0); S(&c,0,0x20);
-  d=c; uint8_t prev=S(&d,0,0xA0); /* DBG_ADD PE0 preview on phase 2 */
+  d=c; S(&d,0,0xA0); /* DBG_ADD PE0 preview on phase 2, captured in fz_val */
   S(&c,0,0x30);
   CHECK("R6-F22a-outbuf-eq-psum", outeq(&c) && c.psum[0]==98);
-  CHECK("R6-F22a-dbgadd-lowbyte-pe0", prev==(uint8_t)c.outbuf[0]);
+  CHECK("R6-F22a-dbgadd-lowbyte-pe0", d.fz_val==(uint32_t)(c.outbuf[0]&0xFFFFFF));
   int32_t got[4]={0}; uint8_t nb[24]; hr_idle_nibs(&c,nb,24); for(int n=0;n<24;n++) got[n/6]|=nb[n]<<(4*(n%6));
   int ok=1; for(int k=0;k<4;k++) ok&=sx(got[k])==c.psum[k];
   CHECK("R6-F22a-stream-24nib-eq-psum", ok); }

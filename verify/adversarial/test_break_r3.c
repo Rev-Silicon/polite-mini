@@ -23,18 +23,21 @@ static void f12(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); to_fina
   CHECK("R3-F12-dump-load-final-nibble-illegal", c.illegal);
   CHECK("R3-F12-dump-load-final-nibble-no-restart", !c.dump_busy); }
 static void f13(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); to_final(&c);
-  uint8_t o=S(&c,0,0x60);
-  CHECK("R3-F13-dbgflags-final-nibble-paused-bit5", o&0x20);
-  CHECK("R3-F13-dbgflags-final-nibble-busy-bit2-consistent", ((o>>2)&1)==((o>>5)&1)); }
-static void f14(void){ chip_t c; chip_reset(&c,1,0); load2(&c); S(&c,0,0x20); uint8_t o=S(&c,0,0x60);
-  CHECK("R3-F14-dbgflags-phase2-run_busy", o&0x10); /* Forge lock: phase 2 is in flight, matches CLEAR PE */ }
-static void f15(void){ /* DBG_ADD preview reachable? run_busy at switch time is always 0 */
+  S(&c,0,0x60);
+  CHECK("R3-F13-dbgflags-final-nibble-paused-bit1", c.fz_val&0x02);
+  CHECK("R3-F13-dbgflags-final-nibble-busy-bit6-consistent", ((c.fz_val>>6)&1)==((c.fz_val>>1)&1)); }
+static void f14(void){ chip_t c; chip_reset(&c,1,0); load2(&c); S(&c,0,0x20); S(&c,0,0x60);
+  CHECK("R3-F14-dbgflags-phase2-run_busy", c.fz_val&1); /* bit0 = run busy; phase 2 is in flight */ }
+static void f15(void){ /* DBG_ADD preview of the in-flight add, captured in fz_val */
   chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10); S(&c,0,0x20);
-  int32_t pre=c.psum[0]; uint8_t o=S(&c,0,0xA0); /* only cycle after RUN */
+  int32_t pre=c.psum[0]; S(&c,0,0xA0); /* only cycle after RUN */
   CHECK("R3-F15-precond-post-acc", c.psum[0]==pre+49);
-  CHECK("R3-F15-dbg-add-phase2-pending-preview", o==(uint8_t)(pre+49) && !c.ovf); /* Forge lock: deferred acc, DBG_ADD sees psum+mul */ }
+  CHECK("R3-F15-dbg-add-phase2-pending-preview", c.fz_val==(uint32_t)(pre+49) && !c.ovf); }
 static void dbgmul(void){ chip_t c; chip_reset(&c,1,0); load2(&c); S(&c,0,0x20); S(&c,0,0);
-  int16_t m0=c.mul[0], m3=c.mul[3]; CHECK("R3-S1-dbg-mul-after-phase2-sticky", m0!=0 && S(&c,0,0x90)==(uint8_t)m0 && S(&c,0,0x93)==(uint8_t)m3); } /* Alex lock: no zero after phase 2 */
+  int16_t m0=c.mul[0], m3=c.mul[3]; S(&c,0,0x90);
+  CHECK("R3-S1-dbg-mul-after-phase2-sticky", m0!=0 && c.fz_val==(uint8_t)m0);
+  for(int i=0;i<3;i++) S(&c,0,0); /* drain the 8-bit window before the next read */
+  S(&c,0,0x93); CHECK("R3-S1b-dbg-mul-pe3", c.fz_val==(uint8_t)m3 && !c.illegal); }
 static void ovf_bounds(void){ /* +: 7*7=49 all PEs; push each to wrap */
   chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10);
   for(int k=0;k<4;k++) c.psum[k]=0x7FFFFF-49;
@@ -63,8 +66,8 @@ static void cfgA_combo(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); 
   int32_t ob=c.outbuf[0]; S(&c,0,0x54); /* phase2 + final nibble + CLEAR outbuf */
   CHECK("R3-S6-cfgA-p2-final-clear-outbuf-collide", c.illegal && c.outbuf[0]==ob);
   CHECK("R3-S6-cfgA-p2-acc-done", c.psum[0]==2*p && !c.run_busy && !c.dump_busy); }
-static void sticky(void){ chip_t c; chip_reset(&c,1,0); S(&c,0,0xF0); uint8_t o=S(&c,0,0x60); S(&c,0,0);
-  CHECK("R3-S7-sticky-illegal-survives-dbgflags", (o&2) && c.illegal); }
+static void sticky(void){ chip_t c; chip_reset(&c,1,0); S(&c,0,0xF0); S(&c,0,0x60); S(&c,0,0);
+  CHECK("R3-S7-sticky-illegal-survives-dbgflags", (c.fz_val&0x20) && c.illegal); }
 static void place(void){ for(int P=0;P<2;P++){ chip_t c; chip_reset(&c,1,P); S(&c,0x77,0x10); mac(&c);
   CHECK(P?"R3-S8-place1-one-load-zero":"R3-S8-place0-one-load-zero", !c.psum[0]&&!c.psum[1]&&!c.psum[2]&&!c.psum[3]); } }
 static void neg8(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x88,0x10); S(&c,0x88,0x10); S(&c,0,0x20);
@@ -72,6 +75,7 @@ static void neg8(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x88,0x10); S(&c,0x88
   ok=1; for(int k=0;k<4;k++) ok&=c.psum[k]==64; CHECK("R3-S9-neg8-sq-psum", ok && !c.ovf); }
 static void dbgadd_then_wrap(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10);
   c.psum[0]=0x7FFFF0; S(&c,0,0xA0); CHECK("R3-S10-dbg-add-no-ovf", !c.ovf);
+  for(int i=0;i<11;i++) S(&c,0,0); /* 24-bit window is 12 edges; RUN on k+1 would be ignored */
   S(&c,0,0x20); S(&c,0,0xA0); CHECK("R3-S10-real-phase2-wrap-ovf", c.ovf); }
 int main(void){ f12(); f13(); f14(); f15(); dbgmul(); ovf_bounds(); clear_coll(); abort_reload(); clear_pe_dump(); cfgA_combo(); sticky(); place(); neg8(); dbgadd_then_wrap();
   printf("R3 pass=%d fail=%d gap=%d\n",passes,fails,gaps); return fails!=0; }

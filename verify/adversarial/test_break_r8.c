@@ -64,9 +64,8 @@ static void u_framing(void){ char id[96];
       n=dec_k(&h,j,nb); if(!(n==24 && nbeq(nb,want))) badk[0]++;
       n=dec_k2(&h,j,nb); if(!(n==24 && nbeq(nb,want))) badk[1]++;
       tot++; }
-    printf("info U3 %d cases: u6-only host wrong %d (frozen byte bit6=1) + %d (bit6=0); known-op host K wrong %d, K2 wrong %d\n",tot,bad6,bad6b,badk[0],badk[1]);
-    CHECK("R8-U3-u6-only-host-is-unsafe-as-SPEC-says(must-track-freezes)", bad6>0); /* updated 2026-11-01: SPEC 5.2 requires freeze tracking (R8-U3 amend) */
-    CHECK("R8-U3b-u6-only-host-survives-mid-dump-DBG-byte-with-bit6=0", bad6b==0);
+    printf("info U3 %d cases: u6-only host wrong %d (data bit6=1) + %d (bit6=0); legacy j+3 host K wrong %d, K2 wrong %d\n",tot,bad6,bad6b,badk[0],badk[1]);
+    CHECK("R8-U3-u6-only-skips-debug-nibbles(bit6-forced-0)", bad6==0 && bad6b==0); /* debug-nibble ticks force uo[6]=0, so bit 6 framing skips them */
     CHECK("R8-U3c-known-op-host(j+3 beat dropped)-24nib-both-parities", badk[0]==0);
     CHECK("R8-U3d-known-op-host-K2(no assumed s0 boundary)", badk[1]==0); }
   /* U4: back-to-back dumps: DUMP_LOAD on the first legal edge after the final nibble. SPEC 6.x: "the beat after [final] shows 0" */
@@ -92,8 +91,9 @@ static void u_framing(void){ char id[96];
     sprintf(id,"R8-U7-final-then-CLEAR-outbuf-legal-no-extra-beat-par%d",al); CHECK(id, !ill && z && cnt==48); }
   /* U8: DBG on the edge right after DUMP_LOAD (held edge = load+1/+2), both parities, known-op host */
   for(int al=0;al<2;al++) for(int d=1;d<=3;d++){ H h; hreset(&h,1,0,al); setpat(&h.c); int j=h.n; st(&h,0,0x30);
-    for(int s=1;s<70;s++) st(&h,s==d?0x5C:0,s==d?0xB0:0); uint8_t want[24]; tonib(h.c.outbuf,want); uint8_t nb[24]; int n=dec_k(&h,j,nb);
-    sprintf(id,"R8-U8-DBG-at-load+%d-known-host-par%d",d,al); CHECK(id, n==24 && nbeq(nb,want) && h.pad[h.dbg[0]+3]==0x5C); }
+    for(int s=1;s<70;s++) st(&h,s==d?0x5C:0,s==d?0xB0:0); uint8_t want[24]; tonib(h.c.outbuf,want); uint8_t nb[24]; int n=dec_u6(&h,j,nb);
+    int dj=h.dbg[0]; sprintf(id,"R8-U8-DBG-at-load+%d-u6-host-par%d",d,al);
+    CHECK(id, n==24 && nbeq(nb,want) && (h.pad[dj+3]&0x8F)==0x8C && (h.pad[dj+5]&0x8F)==0x85); }
   /* U9: live uo[7] (debug_busy) on an unfrozen beat: SPEC table says uo_out[7] = debug busy. Random fuzz with oracle of frozen beats */
   { int live7=0, beats=0; for(int cfg=0;cfg<4;cfg++){ chip_t c; chip_reset(&c,cfg>>1,cfg&1); srand(800+cfg); int ofz_core=0;
       for(int n=0;n<200000;n++){ int lt=c.otick_q; int src_ofz=ofz_core; uint8_t o=chip_step(&c,rand(),rand());
@@ -105,25 +105,29 @@ static void u_framing(void){ char id[96];
 /* ================= B: back-to-back / spaced DBG ================= */
 static void b_dbg(void){ char id[96];
   for(int al=0;al<2;al++){ H h; hreset(&h,0,0,al); idle(&h,4); int j=h.n; st(&h,0x9A,0xB0); st(&h,0xB5,0xB0); idle(&h,8);
-    int a=0,b=0; for(int s=j;s<h.n;s++){ a+=h.pad[s]==0x9A; b+=h.pad[s]==0xB5; }
-    printf("info B1 par%d b2b DBG: first exec tick=%d; pad j..j+7:",al,h.tick_exec[j]); for(int s=j;s<j+8;s++) printf(" %02X",h.pad[s]); printf(" (first %d edges, second %d)\n",a,b);
-    /* LOCKS: "If the first lands on an out_tick, both bytes show for one beat each. If not, only the later one shows." */
-    sprintf(id,"R8-B1-LOCKS-b2b-wording-matches-par%d",al); CHECK(id, h.tick_exec[j] ? (a==2&&b==2) : (a==0&&b==2)); }
+    int nLo=0,nHi=0,nB=0; for(int s=j;s<h.n;s++){ nLo+=(h.pad[s]&0x8F)==0x8A; nHi+=(h.pad[s]&0x8F)==0x89; nB+=(h.pad[s]&0x8F)==0x85 || (h.pad[s]&0x8F)==0x8B; }
+    printf("info B1 par%d nested DBG: exec tick=%d; pad j..j+7:",al,h.tick_exec[j]); for(int s=j;s<j+8&&s<h.n;s++) printf(" %02X",h.pad[s]); printf(" (LS %d, MS %d, second %d)\n",nLo,nHi,nB);
+    /* A second freezing DBG inside the window is illegal and does not restart. Both phases keep the first value. */
+    sprintf(id,"R8-B1-nested-DBG-no-restart-par%d",al); CHECK(id, nLo==2 && nHi==2 && nB==0 && h.c.illegal); }
   /* B2: chipio-style read at step j+3 always holds the byte, for any op spacing >=2, both parities, during dumps and RUNs */
   { int bad=0,badb=0,badn=0,eps=0; srand(4242);
     for(int ep=0;ep<20000;ep++){ H h; int al=rand()&1; hreset(&h,1,rand()&1,al); setrand(&h.c); int j=h.n; st(&h,0,0x30);
       uint8_t exp[64]; int ne=0, last=-10; uint8_t byte=1;
       for(int s=1;s<90;s++){ int r=rand()%8; uint8_t d=0,i=0;
-        if(s-last>=2 && r<3 && ne<60){ d=byte++; if(!byte) byte=1; i=0xB0; exp[ne++]=d; last=s; }
+        if(s-last>=4 && r<3 && ne<60){ d=byte++; if(!byte) byte=1; i=0xB0; exp[ne++]=d; last=s; } /* 8-bit window: next freeze at k+4 */
         else if(r==3) i=0x20; else if(r==4) i=0x51; else if(r==5) i=0xC0; /* RUN, CLEAR flags, illegal */
         st(&h,d,i); }
       idle(&h,140); eps++; uint8_t want[24]; tonib(h.c.outbuf,want);
-      for(int k=0;k<h.ndbg;k++){ int t=h.dbg[k]+3; if(h.pad[t]!=exp[k]) bad++; int cnt=0; for(int s=h.dbg[k]+1;s<=h.dbg[k]+5;s++) cnt+=h.pad[s]==exp[k]; if(cnt!=2) badb++; }
-      uint8_t nb[24]; int n=dec_k(&h,j,nb); if(!(n==24 && nbeq(nb,want))) badn++; }
+      for(int k=0;k<h.ndbg;k++){ int t=h.dbg[k]+3; uint8_t ls=0x80|(exp[k]&0xF), ms=0x80|(exp[k]>>4);
+        if((h.pad[t]&0x8F)!=ls || (h.pad[t+2]&0x8F)!=ms) bad++;
+        int held=(h.pad[t]==h.pad[t+1]) || (t>0 && h.pad[t]==h.pad[t-1]);
+        int held2=(h.pad[t+2]==h.pad[t+3]) || (h.pad[t+2]==h.pad[t+1]);
+        if(!held || !held2) badb++; }
+      uint8_t nb[24]; int n=dec_u6(&h,j,nb); if(!(n==24 && nbeq(nb,want))) badn++; }
     printf("info B2 %d episodes: byte not at j+3=%d, byte not exactly 1 beat=%d, known-op host dump wrong=%d\n",eps,bad,badb,badn);
-    CHECK("R8-B2-spaced-DBG-byte-at-j+3-always", bad==0);
-    CHECK("R8-B2b-spaced-DBG-exactly-one-beat", badb==0);
-    CHECK("R8-B2c-spaced-DBG-during-dump-no-nibble-drop-dup(known-op host)", badn==0); }
+    CHECK("R8-B2-spaced-DBG-nibbles-at-j+3-and-j+5", bad==0);
+    CHECK("R8-B2b-spaced-DBG-each-nibble-held-2-edges", badb==0);
+    CHECK("R8-B2c-spaced-DBG-during-dump-no-nibble-drop-dup(bit6 framing)", badn==0); }
   /* B3: doc/host must not encourage consecutive DBG */
   { char*sp=slurp("docs/SPEC.md"), *ch=slurp("host/mnist/chipio.py");
     CHECK("R8-B3-SPEC-forbids-consecutive-DBG", sp && strstr(sp,"must not be issued while an earlier freeze still owns the pins"));
@@ -131,9 +135,9 @@ static void b_dbg(void){ char id[96];
 }
 /* ================= L: latency ================= */
 static void l_lat(void){ char id[96];
-  for(int al=0;al<2;al++){ H h; hreset(&h,0,0,al); idle(&h,4); int j=h.n; st(&h,0x5A,0xB0); idle(&h,6); int f=-1; for(int s=j;s<h.n;s++) if(h.pad[s]==0x5A){ f=s; break; }
-    printf("info L1 par%d DBG_ECHO sampled edge k=%d exec tick=%d: byte after edge k+%d\n",al,j,h.tick_exec[j],f-j);
-    sprintf(id,"R8-L1-echo-after-k+2(tick)/k+3-par%d",al); CHECK(id, f-j==(h.tick_exec[j]?2:3)); }
+  for(int al=0;al<2;al++){ H h; hreset(&h,0,0,al); idle(&h,4); int j=h.n; st(&h,0x5A,0xB0); idle(&h,8); int f=-1; for(int s=j;s<h.n;s++) if((h.pad[s]&0x8F)==0x8A){ f=s; break; }
+    printf("info L1 par%d DBG_ECHO sampled edge k=%d exec tick=%d: LS nibble after edge k+%d\n",al,j,h.tick_exec[j],f-j);
+    sprintf(id,"R8-L1-echo-after-k+2(tick)/k+3-par%d",al); CHECK(id, f-j==(h.tick_exec[j]?2:3) && (h.pad[f+2]&0x8F)==0x85); }
   /* non-freeze op (illegal 0xC0) -> uo5 : LOCKS "after j+2 if j+1 is an out_tick, else j+3" */
   for(int al=0;al<2;al++){ H h; hreset(&h,0,0,al); idle(&h,4); int j=h.n; st(&h,0,0xC0); idle(&h,6); int f=-1; for(int s=j;s<h.n;s++) if(h.pad[s]&0x20){ f=s; break; }
     printf("info L2 par%d illegal op k=%d exec tick=%d: uo5 after edge k+%d\n",al,j,h.tick_exec[j],f-j);
@@ -150,20 +154,20 @@ static void l_lat(void){ char id[96];
 static void r_race(void){ char id[96];
   /* R1: phase-2 RUN + DUMP_LOAD on both parities, + DBG on held edge (load+1) and load+2; stream == committed psum (known host) */
   for(int al=0;al<2;al++) for(int dd=0;dd<3;dd++){ H h; hreset(&h,1,0,al); st(&h,0x77,0x10); st(&h,0x77,0x10); st(&h,0,0x20); int j=h.n; st(&h,0,0x30);
-    for(int s=1;s<70;s++) st(&h,(dd&&s==dd)?0x33:0,(dd&&s==dd)?0xA0:0); uint8_t want[24]; tonib(h.c.psum,want); uint8_t nb[24]; int n=dec_k(&h,j,nb);
+    for(int s=1;s<80;s++) st(&h,(dd&&s==dd)?0x33:0,(dd&&s==dd)?0xA0:0); uint8_t want[24]; tonib(h.c.psum,want); uint8_t nb[24]; int n=dec_u6(&h,j,nb);
     sprintf(id,"R8-R1-p2-DUMP_LOAD+DBG_ADD@+%d-par%d",dd,al); CHECK(id, n==24 && nbeq(nb,want) && !h.c.illegal); }
   /* R2: DBG then ABORT on held edge, and ABORT then DBG; later spaced DBG_FLAGS must show paused=0 busy=0 */
   for(int al=0;al<2;al++) for(int ord=0;ord<2;ord++){ H h; hreset(&h,1,0,al); setpat(&h.c); st(&h,0,0x30); idle(&h,7);
     if(!ord){ st(&h,0,0x70); st(&h,0,0x40); } else { st(&h,0,0x40); st(&h,0,0x70); }
-    idle(&h,3); int jf=h.n; st(&h,0,0x60); idle(&h,4); uint8_t f=h.pad[jf+3];
-    sprintf(id,"R8-R2-%s-then-flags-paused0-busy0-par%d",ord?"ABORT-DBG":"DBG-ABORT",al); CHECK(id, !(f&0x24) && (f&0x08) && !h.c.dump_busy); }
+    idle(&h,4); int jf=h.n; st(&h,0,0x60); idle(&h,8); uint8_t f=(h.pad[jf+3]&0xF)|((h.pad[jf+5]&0xF)<<4);
+    sprintf(id,"R8-R2-%s-then-flags-paused0-busy0-par%d",ord?"ABORT-DBG":"DBG-ABORT",al); CHECK(id, !(f&0x42) && (f&0x80) && (h.pad[jf+3]&0x80) && !h.c.dump_busy); }
   /* R3: CLEAR outbuf on the held edge of a DBG that paused the final nibble: busy-at-start -> collide */
   for(int al=0;al<2;al++){ H h; hreset(&h,1,0,al); setpat(&h.c); st(&h,0,0x30); int e=0; while(!(h.c.dump_idx==23 && h.c.phase==0) && e<200){ st(&h,0,0); e++; }
     st(&h,0,0x70); st(&h,0,0x54); st(&h,0,0); int ill=h.c.illegal; idle(&h,6);
     sprintf(id,"R8-R3-CLEAR-outbuf-on-held-edge-during-final-collides-par%d",al); CHECK(id, ill && h.c.outbuf[3]!=0); }
   /* R4: RUN cfg B on the 2nd held edge (edge+2 after DBG) is legal while pins still show the frozen beat (par dependent) */
-  for(int al=0;al<2;al++){ H h; hreset(&h,0,0,al); st(&h,0x11,0x10); st(&h,0x11,0x10); int j=h.n; st(&h,0x66,0xB0); st(&h,0,0); st(&h,0,0x20); idle(&h,5);
-    sprintf(id,"R8-R4-cfgB-RUN-at-DBG+2-legal-par%d",al); CHECK(id, !h.c.illegal && h.pad[j+3]==0x66); }
+  for(int al=0;al<2;al++){ H h; hreset(&h,0,0,al); st(&h,0x11,0x10); st(&h,0x11,0x10); int j=h.n; st(&h,0x66,0xB0); st(&h,0,0); st(&h,0,0x20); idle(&h,6);
+    sprintf(id,"R8-R4-RUN-inside-freeze-illegal-par%d",al); CHECK(id, h.c.illegal && !h.c.run_busy && h.c.psum[0]==0 && (h.pad[j+3]&0x8F)==0x86); }
 }
 /* ================= S: SDC / enable model ================= */
 static void s_sdc(void){
@@ -182,7 +186,8 @@ static void s_sdc(void){
 static void d_docs(void){
   char*sp=slurp("docs/SPEC.md"), *lk=slurp("docs/LOCKS.md"), *ls=slurp("LESSONS.md"), *ct=slurp("rtl/ctrl/polite_ctrl.sv"), *ob=slurp("rtl/outbuf/polite_outbuf.sv"), *ch=slurp("host/mnist/chipio.py");
   { char*q=sp?strstr(sp,"not frozen by a debug read"):NULL; char w[700]={0}; if(q) strncpy(w,q,600);
-    CHECK("R8-D1-SPEC-framing-para-says-how-host-finds-frozen-beats", q && (strstr(w,"k+3")||strstr(w,"j+3")||strstr(w,"bit 7"))); }
+    /* t608: the framing paragraph names the markers. Debug nibbles are bit 7; dump nibbles are bit 6, which a debug nibble forces to 0. */
+    CHECK("R8-D1-SPEC-framing-para-says-how-host-finds-frozen-beats", q && strstr(w,"bit 7") && strstr(w,"bit 6")); }
   CHECK("R8-D2-SPEC-'beat after final shows 0'-qualified-for-b2b-dump", sp && !strstr(sp,"and the beat after it shows 0, on either beat phase"));
   CHECK("R8-D3-LESSONS-uo6-meaning-updated(busy-at-start)", ls && !strstr(ls,"uo[6]=dump_busy uo[7]=debug_busy (golden)."));
   CHECK("R8-D4-ctrl-header-not-'per golden 89dad4e'", ct && !strstr(ct,"per golden/chip.c @89dad4e"));

@@ -1,21 +1,21 @@
-info F1 880 cases: locked j+3 host wrong=0 (bit6=1 subset 0); uo6-only host wrong=570 (expected >0, shows tracking needed)
+info F1 880 cases: j+3 host wrong=0 (bit6=1 subset 0); uo6-only host wrong=0
 pass [R9-F1-j+3-drop-24/24-freeze-byte-bit6=1-both-par]
-pass [R9-F1b-uo6-only-still-breaks(lock is load-bearing)]
+pass [R9-F1b-uo6-only-skips-debug-nibbles]
 pass [R9-F2-R7D2-fixed-j+3-byte8A-par0]
 pass [R9-F2-R7D2-fixed-j+3-byteCA-par0]
 pass [R9-F2-R7D2-fixed-j+3-byte8A-par1]
 pass [R9-F2-R7D2-fixed-j+3-byteCA-par1]
-info F3 double-freeze spacing 2 edges: 0/76 wrong
+info F3 double-freeze spacing 2 edges (legal=0): 0/76 wrong
 pass [R9-F3-double-freeze-spacing2]
-info F3 double-freeze spacing 3 edges: 0/76 wrong
+info F3 double-freeze spacing 3 edges (legal=0): 0/76 wrong
 pass [R9-F3-double-freeze-spacing3]
-info F3 double-freeze spacing 4 edges: 0/76 wrong
+info F3 double-freeze spacing 4 edges (legal=1): 0/76 wrong
 pass [R9-F3-double-freeze-spacing4]
-info F3 double-freeze spacing 5 edges: 0/76 wrong
+info F3 double-freeze spacing 5 edges (legal=1): 0/76 wrong
 pass [R9-F3-double-freeze-spacing5]
-info F3 double-freeze spacing 7 edges: 0/76 wrong
+info F3 double-freeze spacing 7 edges (legal=1): 0/76 wrong
 pass [R9-F3-double-freeze-spacing7]
-info F3b consecutive DBG (unsupported): j+3 host wrong 0/76, illegal flagged 0/76
+info F3b consecutive DBG (unsupported): j+3 host wrong 0/76, illegal flagged 76/76
 info F4 diag: wrong with illegal flagged=0, legal+p2=0
 info F4 20000 random spaced-DBG episodes (half phase-2 DUMP_LOAD): wrong=0
 pass [R9-F4-fuzz-spaced-DBG+p2-DUMP_LOAD-j+3]
@@ -23,13 +23,13 @@ pass [R9-C1-count24-par0-freeze0]
 pass [R9-C1-count24-par0-freeze1]
 pass [R9-C1-count24-par1-freeze0]
 pass [R9-C1-count24-par1-freeze1]
-pass [R9-C2-merged-b2b-48-contig-par0-fz0]
+pass [R9-C2-merged-b2b-48-u6-par0-fz0]
 pass [R9-C2b-count24-recovers-stream1-par0-fz0]
-pass [R9-C2-merged-b2b-48-contig-par0-fz1]
+pass [R9-C2-merged-b2b-48-u6-par0-fz1]
 pass [R9-C2b-count24-recovers-stream1-par0-fz1]
-pass [R9-C2-merged-b2b-48-contig-par1-fz0]
+pass [R9-C2-merged-b2b-48-u6-par1-fz0]
 pass [R9-C2b-count24-recovers-stream1-par1-fz0]
-pass [R9-C2-merged-b2b-48-contig-par1-fz1]
+pass [R9-C2-merged-b2b-48-u6-par1-fz1]
 pass [R9-C2b-count24-recovers-stream1-par1-fz1]
 pass [R9-C3-LOCKS-count-24-MUST]
 pass [R9-C3b-SPEC-count-exactly-24]
@@ -51,8 +51,8 @@ pass [R9-A4-LOCKS-ABORT-wait>=1beat]
 pass [R9-A4b-SPEC-ABORT-wait]
 info V1 800000 unfrozen steps, uo7=1 on 0
 pass [R9-V1-live-uo7==0-long-unfrozen]
-pass [R9-V2-frozen-DEBUG_FLAGS-bit3=1-par0]
-pass [R9-V2-frozen-DEBUG_FLAGS-bit3=1-par1]
+pass [R9-V2-DEBUG_FLAGS-debug-busy-bit7-par0]
+pass [R9-V2-DEBUG_FLAGS-debug-busy-bit7-par1]
 pass [R9-S1-SDC-setup2-from-clk-to-uo]
 pass [R9-S1b-SDC-hold1-from-clk-to-uo]
 pass [R9-S1c-SDC-no-bare-to-uo]

@@ -31,12 +31,12 @@ static void r2_f8(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c); S(&c,
   CHECK("R2-F8-clear-outbuf-last-nibble-illegal", c.illegal);
   CHECK("R2-F8-clear-outbuf-last-nibble-kept", c.outbuf[0]==ob && ob!=0); }
 static void r2_f9(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
-  uint8_t o=S(&c,0,0xA0); /* idle: run_busy=0 */
-  CHECK("R2-F9-dbg-add-idle-no-phantom-acc", o==(uint8_t)c.psum[0]);
+  S(&c,0,0xA0); /* idle: run_busy=0. Payload is fz_val, not the live return byte. */
+  CHECK("R2-F9-dbg-add-idle-no-phantom-acc", c.fz_val==(uint32_t)(c.psum[0]&0xFFFFFF));
   chip_t d; chip_reset(&d,1,0); load2(&d); mac(&d); S(&d,0,0x20); /* phase1 done, mul pending */
   /* DBG_ADD on phase2 cycle: pending preview psum+mul before the deferred accumulate (R3-F15 revision) */
-  int32_t pre=d.psum[0]; int16_t m=d.mul[0]; uint8_t o2=S(&d,0,0xA0);
-  CHECK("R2-F9b-dbg-add-phase2-pending-preview", o2==(uint8_t)(pre+m) && m!=0 && d.psum[0]==pre+m); /* Forge lock (revised R3-F15): phase-2 DBG_ADD == low(psum_before+mul) */ }
+  int32_t pre=d.psum[0]; int16_t m=d.mul[0]; S(&d,0,0xA0);
+  CHECK("R2-F9b-dbg-add-phase2-pending-preview", d.fz_val==(uint32_t)(pre+m) && m!=0 && d.psum[0]==pre+m); /* Forge lock (revised R3-F15): phase-2 DBG_ADD == wrap24(psum_before+mul) */ }
 static void r2_f10(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
   uint8_t ins[6]={0,0x62,0,0x61,0,0}; int32_t got[4]; int n=dump_collect(&c,ins,6,got);
   CHECK("R2-F10-illegal-dbg-during-dump-24-nibbles", n==24);
@@ -52,17 +52,17 @@ static void dbg_pauses(void){ chip_t c; chip_reset(&c,1,0); load2(&c); mac(&c);
   int n=dump_collect(&c,ins,12,got);
   CHECK("R2-A1-consec-dbg-pauses-24", n==24); CHECK("R2-A1-consec-dbg-pauses-content", content_ok(&c,got));
   chip_t d; chip_reset(&d,1,0); load2(&d); mac(&d); S(&d,0,0x30); S(&d,0,0x70);
-  int p1=d.dump_paused; S(&d,0,0); S(&d,0,0); CHECK("R2-A1-dump_paused-only-on-freeze", p1 && !d.dump_paused);
-  chip_t e; chip_reset(&e,1,0); load2(&e); mac(&e); S(&e,0,0x30); S(&e,0,0); uint8_t o=S(&e,0,0x60);
-  CHECK("R2-A2-dbgflags-during-dump-paused-bit5", o&0x20); CHECK("R2-A2-dbgflags-during-dump-busy-bit2", o&0x04);
+  int p1=d.dump_paused; for(int i=0;i<4;i++) S(&d,0,0); CHECK("R2-A1-dump_paused-only-on-freeze", p1 && !d.dump_paused);
+  chip_t e; chip_reset(&e,1,0); load2(&e); mac(&e); S(&e,0,0x30); S(&e,0,0); S(&e,0,0x60);
+  CHECK("R2-A2-dbgflags-during-dump-paused-bit1", e.fz_val&0x02); CHECK("R2-A2-dbgflags-during-dump-busy-bit6", e.fz_val&0x40);
   chip_t f; chip_reset(&f,1,0); load2(&f); mac(&f); S(&f,0,0x30); S(&f,0,0); S(&f,0,0x70); S(&f,0,0x40);
   CHECK("R2-A3-abort-after-pause", !f.dump_busy && f.outbuf[0]==f.psum[0] && !f.illegal); }
 static void cfg_run(void){ chip_t c; chip_reset(&c,1,0); load2(&c); S(&c,0,0x70); S(&c,0,0x20);
-  CHECK("R2-A4-cfgA-run-after-freeze-allowed", c.run_busy && !c.illegal);
-  chip_t d; chip_reset(&d,0,0); load2(&d); S(&d,0,0x8C); S(&d,0,0x51); S(&d,0,0x20);
-  CHECK("R2-A5-cfgB-run-after-illegal-nonfreeze-allowed", d.run_busy && !d.illegal);
+  CHECK("R2-A4-run-inside-freeze-window-illegal", !c.run_busy && c.illegal && c.psum[0]==0);
+  chip_t d; chip_reset(&d,0,0); load2(&d); S(&d,0,0x61); S(&d,0,0x51); S(&d,0,0x20);
+  CHECK("R2-A5-run-after-illegal-nonfreeze-allowed", d.run_busy && !d.illegal);
   chip_t e; chip_reset(&e,0,0); load2(&e); S(&e,0,0x70); S(&e,0,0x20);
-  CHECK("R2-A5b-cfgB-run-after-freeze-illegal", !e.run_busy && e.illegal); }
+  CHECK("R2-A5b-run-after-freeze-illegal", !e.run_busy && e.illegal); }
 static void dbgadd_ovf(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,0x77,0x10); S(&c,0,0x20); S(&c,0,0);
   c.psum[0]=0x7FFFF0; c.ovf=0; S(&c,0,0xA0); CHECK("R2-A6-dbg-add-no-ovf", !c.ovf); }
 static void clear_pe_p2(void){ for(int A=0;A<2;A++){ chip_t c; chip_reset(&c,A,0); load2(&c); mac(&c); int32_t b=c.psum[0];
