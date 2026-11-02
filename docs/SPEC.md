@@ -26,7 +26,7 @@ Terms used below:
 | Output buffer | Copy of the four partial sums that the dump stream reads from |
 | Core tick | One rising edge of the 66 MHz core clock (15.15 ns). "Edge", "clock" and "cycle" below all mean one core tick |
 | Output tick | One update of `uo_out`: every second core tick (33 MHz, 30.30 ns per value). Each value on `uo_out` is held for one output tick, i.e. 2 core ticks. Output ticks are counted from reset; the dump advances once per output tick |
-| Freeze | The output tick or ticks in which a debug read owns all 8 output pins. Most debug reads freeze for one output tick; DEBUG_PARTIAL_SUM and DEBUG_ADD freeze for three consecutive output ticks, because they send a 24-bit value one byte per output tick. The next output tick after the freeze returns to live output |
+| Freeze | The output tick or ticks in which a debug read owns all 8 output pins: one for an 8-bit read, three for a 24-bit read (Section 5.6) |
 | RUN phase 1 / phase 2 | The two pipeline stages of one RUN: phase 1 (multiply) on the core tick the RUN executes, phase 2 (accumulate) on the next core tick. Phase 1 of a new RUN may overlap phase 2 of the previous one (Section 5.1) |
 | Other short names | inbuf / outbuf = input / output buffer; OVF = overflow; DBG_* = DEBUG_* |
 
@@ -49,11 +49,11 @@ The `uio` pads are bidirectional in the Tiny Tapeout package, but this design dr
 
 <p align="center">Figure 1: pins between the host and the chip</p>
 
-Normally `uo_out` shows the data nibble and the live flags. A freezing debug read takes over all 8 output bits to show debug data (Section 5.6). An 8-bit debug read (DEBUG_FLAGS, DEBUG_BUFFER, DEBUG_MULTIPLY, DEBUG_INPUT) holds the pins for one output tick (2 core ticks). DEBUG_PARTIAL_SUM and DEBUG_ADD return 24-bit values, so each of them holds the pins for three consecutive output ticks (6 core ticks) and sends one byte per output tick, least significant byte first. On the output tick after the freeze ends, the pins return to the live nibble and flags without any further command.
+Normally `uo_out` shows the data nibble and the live flags. A freezing debug read takes over all 8 output bits to show debug data for one output tick, or three for a 24-bit value; freeze length, byte order and spacing are defined in Section 5.6.
 
 **Clock.** The chip uses a single rising-edge clock. The core logic and input sampling run at 66 MHz (a 15.15 ns clock). The output pads are slower than the core, so the outputs are allowed to change at no more than 33 MHz. Counting core ticks from reset, every second one is an *output tick*: `uo_out` is loaded only on the core tick right after an output-tick marker, so each value it shows is held stable for 2 core ticks. This gives the output pads and the host's input sampling twice as much time as a full-rate output would; the host may treat `uo_out` as a 33 MHz signal sampled once per output tick.
 
-Because outputs move once per output tick, each item the chip produces — a dump nibble or a single debug byte — occupies exactly one output tick at the pins. A 24-bit debug value is three bytes and therefore occupies three output ticks. The dump stream advances once per output tick for the same reason.
+Because outputs move once per output tick, each item the chip produces — a dump nibble or a single debug byte — occupies exactly one output tick at the pins. The dump stream advances once per output tick for the same reason.
 
 **Pad pipeline.** Inputs and outputs are both registered at the pins, which adds a small, fixed latency between the host and the core. `ui_in` and `uio_in` are sampled on edge k and the command executes in the core on edge k+1. All 8 `uo_out` bits update together, once per output tick. So an operation applied before edge k executes on edge k+1, and its result appears on `uo_out` after edge k+2 when edge k+1 is an output tick, or after edge k+3 otherwise. The one-edge difference is whether the result has to wait for the next output update.
 
@@ -76,7 +76,7 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 | 0x6 | DEBUG_FLAGS | Return the 8-bit flag byte (Section 5.6) | yes, 1 output tick |
 | 0x7 | DEBUG_BUFFER | Return the input buffer byte | yes, 1 output tick |
 | 0x8 | DEBUG_PARTIAL_SUM | Return the full 24-bit partial sum, one byte per output tick | yes, 3 output ticks (all 24 bits from one command) |
-| 0x9 | DEBUG_MULTIPLY | Return the last product as an 8-bit signed value (an int4 × int4 product always fits in 8 bits, so nothing is truncated) | yes, 1 output tick (full product) |
+| 0x9 | DEBUG_MULTIPLY | Return the last product as an 8-bit signed value (Section 6.2) | yes, 1 output tick (full product) |
 | 0xA | DEBUG_ADD | Return the full 24-bit wrapped adder output, one byte per output tick (Section 5.7) | yes, 3 output ticks (all 24 bits from one command) |
 | 0xB | DEBUG_INPUT | Return the sampled `ui_in` byte | yes, 1 output tick |
 | 0xC–0xF | — | Reserved; illegal on this chip: set the illegal flag | no |
@@ -85,18 +85,16 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 |---|---|
 | NOP, LOAD, RUN, DUMP_LOAD, DUMP_ABORT, DEBUG_BUFFER, DEBUG_INPUT | [3:0] reserved, drive 0 |
 | CLEAR | [3] partial sums, [2] output buffer, [1] input buffer, [0] flags (overflow and illegal); any combination |
-| DEBUG_FLAGS | [3:0] bank select; only bank 0 is defined on this chip, other banks are reserved for future flag expansion (Section 4) |
+| DEBUG_FLAGS | [3:0] bank select; only bank 0 is defined on this chip (other banks: see below) |
 | DEBUG_PARTIAL_SUM | [3:2] reserved, drive 0 (ignored); [1:0] processing element |
 | DEBUG_MULTIPLY | [3:2] reserved, drive 0 (ignored); [1:0] processing element |
 | DEBUG_ADD | [3:2] reserved, drive 0 (ignored); [1:0] processing element |
 
 Whenever a command takes a processing element index, the index sits in bits [1:0]. No command uses bits [3:2] as a byte select: DEBUG_PARTIAL_SUM and DEBUG_ADD send all three bytes of their 24-bit value from a single command, so there is nothing to select, and bits [3:2] are reserved for them. CLEAR uses all four bits as a mask, and DEBUG_FLAGS uses all four as a bank number. The processing element index is also the dump order: 0 = PE(2,2), 1 = PE(2,1), 2 = PE(1,2), 3 = PE(1,1). Using one numbering everywhere means a host can read a dumped sum and then inspect the same processing element with a debug read without translating indices.
 
-How long a freezing debug read owns the output pins depends on how wide its value is. DEBUG_FLAGS, DEBUG_BUFFER (the 8-bit input buffer), DEBUG_MULTIPLY and DEBUG_INPUT each return one byte and own all 8 `uo_out` bits for one output tick. DEBUG_PARTIAL_SUM and DEBUG_ADD each return a 24-bit value and own all 8 `uo_out` bits for three consecutive output ticks: bits [7:0] on the first, bits [15:8] on the second, and bits [23:16] on the third. After the last frozen output tick the pins return to the live nibble and flags.
+**Reserved opcodes and bits.** Opcodes 0xC–0xF are illegal on this chip: each sets the illegal flag and has no other effect; a host must not issue them. Reserved argument bits are ignored; drive them to 0.
 
-**Reserved opcodes.** Opcodes 0xC–0xF are reserved expansion slots. They may be filled in a future build with additional debug or conventional commands, if such commands prove useful for testing or operation. On this chip they remain illegal: each sets the illegal flag and has no other effect. A host must not issue them, and must not assume any of them will ever become legal.
-
-One argument case is rejected rather than ignored: DEBUG_FLAGS with bank ≠ 0. It sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that output tick instead of a meaningless byte. Reserved bits, by contrast, are ignored by this revision; drive them to 0.
+One argument case is rejected rather than ignored: DEBUG_FLAGS with bank ≠ 0 is illegal and does **not** freeze. It sets the illegal flag, and the host sees live output on that output tick instead of a meaningless byte. A host must not assume any other bank will become legal.
 
 ## 4. Flags
 
@@ -107,15 +105,15 @@ The chip keeps six status flags. Four of them are live on the output pins on eve
 | Overflow | sticky | a 24-bit accumulate wrapping around | CLEAR bit 0 |
 | Illegal | sticky | an illegal opcode (0xC–0xF, reserved; Section 3); DUMP_LOAD while a dump is in progress; a CLEAR conflict (Section 5.3); DEBUG_FLAGS bank ≠ 0 | CLEAR bit 0 |
 | Dump busy | level | DUMP_LOAD | end of stream, DUMP_ABORT |
-| Debug busy | level | a freezing debug read; reads 1 as bit 3 of the frozen DEBUG_FLAGS byte. Debug busy stays high for the whole freeze: one output tick for an 8-bit read, all three output ticks for DEBUG_PARTIAL_SUM and DEBUG_ADD | the end of the last frozen output tick |
+| Debug busy | level | a freezing debug read; reads 1 as bit 3 of the frozen DEBUG_FLAGS byte and stays high for the whole freeze (Section 5.6) | the end of the last frozen output tick |
 | Run busy | level | a RUN executing on the previous core tick (its phase 2 is in flight on this core tick; Section 5.1) | a core tick that follows a core tick with no RUN |
-| Dump paused | level | a freezing debug read during an active dump; the dump does not advance on any frozen output tick (three output ticks for DEBUG_PARTIAL_SUM and DEBUG_ADD). Visible only in a DEBUG_FLAGS frozen byte (bit 5) | end of the freeze |
+| Dump paused | level | a freezing debug read during an active dump; the dump does not advance on any frozen output tick (Section 5.6.1). Visible only in a DEBUG_FLAGS frozen byte (bit 5) | end of the freeze |
 
 *Sticky* means the flag stays set until the host clears it with CLEAR bit 0, no matter how much time passes. This matters for a host that polls only occasionally: an overflow or a rejected command is never lost just because the host looked at the pins a few output ticks too late. *Level* flags, by contrast, simply report what the chip is doing right now.
 
 Reset clears every flag and all chip state. The live pins `uo[7:4]` carry the first four flags; run busy and dump paused are visible only through DEBUG_FLAGS. Note that on a frozen output tick the upper pins carry bits of the debug byte, not the live flags, so a host watching `uo_out[7:4]` should skip the output ticks it froze itself.
 
-**Room to grow.** The current iteration of this chip has only one bank, bank 0 (layout in Section 5.6). DEBUG_FLAGS is intended to allow expansion: if RTL, verification, or physical design deem more flags useful, extra flags and banks may be added in a future iteration. Each bank is its own 8-bit flag byte, and the host selects which bank to read with the DEBUG_FLAGS argument bits [3:0]. Banks are a build-time expansion path, so a host driver written today keeps working unchanged — it simply keeps asking for bank 0. Any other bank is undefined and illegal on this chip, and a host must not assume a given bank will ever become legal: it sets the illegal flag and does **not** freeze the outputs, so the host sees live output on that output tick. Bank 0 is a normal freezing read of exactly one output tick.
+**Room to grow.** This chip has one flag bank, bank 0 (layout in Section 5.6), read as a normal one-output-tick freeze. The DEBUG_FLAGS bank argument is a build-time expansion path: a future chip may add banks, each its own 8-bit flag byte, and a driver written today keeps working by asking for bank 0. Other banks are illegal on this chip (Section 3).
 
 ## 5. Behavior for host software
 
@@ -131,9 +129,9 @@ Each RUN samples its own bus byte, so a stream of back-to-back RUNs with a fixed
 
 The two operands of a RUN come from two different places: one is the byte held in the input buffer, the other is the byte on the `ui_in` bus in the same instruction as the RUN. There is no shift register between them; LOAD only replaces the buffer byte. In regular use the host LOADs the operand it wants to reuse, then issues RUNs with a new bus byte each time, and LOADs again whenever the buffered operand must change (for example `LOAD, RUN, LOAD, RUN, …` when both operands change every step). Because the bus byte rides with the RUN itself, a RUN needs no LOAD of its own to receive a fresh bus operand.
 
-**LOAD during the pipeline.** Only one command executes per core tick, so a LOAD never shares a core tick with a RUN's phase 1. A LOAD on core tick t writes the buffer at the end of t; the first RUN that sees the new byte is one executing on core tick t+1 or later. A RUN that executed before the LOAD has already latched its products in phase 1, so its phase 2 (which may coincide with the LOAD's core tick) adds the products of the old buffer byte. In short: a LOAD affects every RUN issued after it and no RUN issued before it.
+**One command per core tick.** Only one command executes per core tick, so no other command — LOAD, CLEAR or a debug read — ever shares a core tick with a RUN's phase 1; at most a previous RUN's phase 2 is in flight alongside it. Sections 5.3 and 5.7 rely on this rule.
 
-A LOAD that changes the buffer spends an issue slot. Because RUN already takes its second operand from the bus, a fused LOAD+RUN would save only the LOAD's issue slot on steps that change the buffered operand; steps that reuse the buffer gain nothing. This chip is a test chip, however, and producing a design that works in the end has priority over that optimization. Keeping LOAD and RUN as separate, simple commands keeps each one easy to verify on its own and leaves the fused form as a candidate for a later revision.
+**LOAD during the pipeline.** A LOAD never shares a core tick with a RUN's phase 1. A LOAD on core tick t writes the buffer at the end of t; the first RUN that sees the new byte is one executing on core tick t+1 or later. A RUN that executed before the LOAD has already latched its products in phase 1, so its phase 2 (which may coincide with the LOAD's core tick) adds the products of the old buffer byte. In short: a LOAD affects every RUN issued after it and no RUN issued before it.
 
 **Run busy.** Run busy is 1 on core tick t exactly when a RUN executed on core tick t−1, i.e. when a phase 2 is in flight on t. Any other command executed on such a core tick sees run busy = 1 and sees the partial sums as they were *before* that add; the add takes effect at the end of the core tick. A command on the core tick after the last RUN of a stream therefore still sees run busy = 1; one core tick later it reads 0. (A RUN's own phase 1 never coincides with another command, so "phase 1 in flight" needs no separate flag.) Section 5.7 lists exactly which reads see the pre-add and which see the post-add values.
 
@@ -155,7 +153,7 @@ CLEAR zeroes chosen parts of the chip state. Its arguments are a bit mask, and a
 
 Some clears would destroy work that is still in progress. If any selected bit conflicts, the **whole** CLEAR is ignored — including its non-conflicting bits — and the illegal flag is set:
 
-- Bit 3 (partial sums) while run busy is 1 at the start of the core tick, i.e. on the core tick right after any RUN, when that RUN's phase 2 is in flight. Because a RUN and a CLEAR cannot execute on the same core tick, this covers every pipeline stage that could touch the partial sums: a CLEAR on a core tick with no phase 2 in flight is safe even in the middle of a RUN stream with gaps. In a gap-free RUN stream there is no free core tick until one core tick after the last RUN.
+- Bit 3 (partial sums) while run busy is 1 at the start of the core tick, i.e. on the core tick right after any RUN, when that RUN's phase 2 is in flight. Because only one command executes per core tick (Section 5.1), this covers every pipeline stage that could touch the partial sums: a CLEAR on a core tick with no phase 2 in flight is safe even in the middle of a RUN stream with gaps. In a gap-free RUN stream there is no free core tick until one core tick after the last RUN.
 - Bit 2 (output buffer) while a dump was in progress at the start of the core tick, including the last-nibble core tick.
 
 The all-or-nothing rule is intentional. If a CLEAR could partly succeed, the host would have to read back the state to find out which parts were actually cleared. With all-or-nothing, the host only has to check one thing — the illegal flag — and if it is clear, every bit it asked for took effect. One consequence is worth spelling out: a CLEAR that includes bit 0 and is rejected does not clear the flags, so the illegal flag it sets remains visible.
@@ -171,7 +169,7 @@ When no dump is running and no debug freeze is showing, the data nibble `uo[3:0]
 ### 5.6 Debug reads
 Debug reads let the host inspect internal state through the same 8 output pins that normally carry the dump stream and flags. Every legal debug opcode is a freezing read: it owns all 8 `uo_out` bits for as many output ticks as its value needs. DEBUG_FLAGS, DEBUG_BUFFER, DEBUG_MULTIPLY and DEBUG_INPUT return one byte and freeze for **one output tick** (2 core ticks). DEBUG_PARTIAL_SUM and DEBUG_ADD return 24 bits and freeze for **three consecutive output ticks** (6 core ticks): the first carries bits [7:0], the second bits [15:8], and the third bits [23:16]. All three bytes are captured on the same core tick, so the host always receives one consistent 24-bit value. Debug busy is high for the whole freeze (DEBUG_FLAGS reports it as bit 3 of its own frozen byte). The output tick after the last frozen one returns to the live nibble and flags without any further command.
 
-A new freezing read must not be issued while an earlier freeze still owns the pins. Two freezing reads too close together would compete for the same output tick, and which byte reaches the pins would depend on the output-tick phase. After a one-output-tick read, wait at least 2 core ticks: opcode, NOP. After DEBUG_PARTIAL_SUM or DEBUG_ADD, wait until the three-output-tick hold completes: at least 6 core ticks, i.e. the opcode followed by five NOPs (or other non-freezing commands). Spaced reads always return their bytes in order, one byte per output tick. The spacing rule is the cost of half-rate outputs: the pins can carry only one byte per output tick, so the host cannot request bytes faster than that.
+A new freezing read must not be issued while an earlier freeze still owns the pins; otherwise two reads compete for the same output tick. The minimum spacing is given in Section 5.6.1. Spaced reads always return their bytes in order, one byte per output tick. The spacing rule is the cost of half-rate outputs: the pins can carry only one byte per output tick, so the host cannot request bytes faster than that.
 
 DEBUG_FLAGS bank 0 bit layout:
 
@@ -193,9 +191,9 @@ Bit 6 is reserved and reads 0. Bit 7 is a fixed identity bit that reads 1 (outpu
 
 #### 5.6.1 Debug read latency and width
 
-Each debug opcode produces one freeze, and that freeze returns the whole value the opcode names. For the 8-bit reads the freeze is one output tick carrying one byte. For DEBUG_PARTIAL_SUM and DEBUG_ADD the freeze is three consecutive output ticks carrying the three bytes of a 24-bit value, least significant byte first. The host never needs more than one opcode to read any debug value.
+Each debug opcode produces one freeze that returns the whole value the opcode names (Section 5.6), so the host never needs more than one opcode to read any debug value.
 
-**Read points at the pins.** This is the same pad pipeline as in Section 2. An opcode sampled on core tick k shows its first (or only) byte on `uo_out` after core tick k+2 or k+3, depending on the output-tick phase, and holds it for one output tick (2 core ticks). Reading `uo_out` after core tick k+3 always returns that byte, so a host that does not track the phase can use k+3 as its read point. For DEBUG_PARTIAL_SUM and DEBUG_ADD the next two output ticks follow immediately, with no gap: bits [15:8] are on the pins 2 core ticks later and bits [23:16] 2 core ticks after that. Phase-independent read points are therefore after core tick k+3 (bits [7:0]), after core tick k+5 (bits [15:8]) and after core tick k+7 (bits [23:16]).
+**Read points at the pins.** By the pad pipeline of Section 2, an opcode sampled on core tick k shows its first (or only) byte after core tick k+2 or k+3 and holds it for one output tick; k+3 is the phase-independent read point. For DEBUG_PARTIAL_SUM and DEBUG_ADD the next two output ticks follow immediately, with no gap: bits [15:8] are on the pins 2 core ticks later and bits [23:16] 2 core ticks after that. Phase-independent read points are therefore after core tick k+3 (bits [7:0]), after core tick k+5 (bits [15:8]) and after core tick k+7 (bits [23:16]).
 
 **Spacing.** After a one-output-tick read, the next freezing debug opcode may be sampled on core tick k+2 or later (opcode, NOP). After DEBUG_PARTIAL_SUM or DEBUG_ADD, the next freezing debug opcode may be sampled on core tick k+6 or later (opcode plus five NOPs or other non-freezing commands), so that it does not overlap the three-output-tick hold. Issuing a second freezing read earlier is a host error; which byte reaches the pins is undefined.
 
@@ -204,26 +202,26 @@ Each debug opcode produces one freeze, and that freeze returns the whole value t
 | DEBUG_FLAGS | 8 bits | 1 | after edge k+2 or k+3; read after k+3 |
 | DEBUG_BUFFER | 8 bits (input buffer) | 1 | after edge k+2 or k+3; read after k+3 |
 | DEBUG_PARTIAL_SUM | 24 bits | 3 | bits [7:0] after k+2/k+3, bits [15:8] after k+4/k+5, bits [23:16] after k+6/k+7 depending on the output-tick phase; read after k+3, k+5, k+7 |
-| DEBUG_MULTIPLY | full 8-bit signed product (int4 × int4 always fits in 8 bits) | 1 | after edge k+2 or k+3; read after k+3 |
+| DEBUG_MULTIPLY | 8-bit signed product | 1 | after edge k+2 or k+3; read after k+3 |
 | DEBUG_ADD | 24 bits of the wrapped sum | 3 | as DEBUG_PARTIAL_SUM: read after k+3, k+5, k+7 |
 | DEBUG_INPUT | 8 bits | 1 | after edge k+2 or k+3; read after k+3 |
 
-Because DEBUG_PARTIAL_SUM and DEBUG_ADD capture all 24 bits on a single core tick and then stream them, the three bytes always belong to the same value, even if a RUN completes or a partial-sum CLEAR lands during the three-output-tick hold. A RUN or CLEAR during the hold still takes effect in the datapath (a freeze affects only the pins); its result is simply visible to the next debug read. In particular, DEBUG_ADD executed while a RUN phase 2 is in flight returns the complete 24-bit in-progress add preview from that one moment.
+Because all 24 bits are captured on one core tick (Section 5.6), a RUN or partial-sum CLEAR that lands during the three-output-tick hold does not mix into the bytes being sent. It still takes effect in the datapath (a freeze affects only the pins); its result is simply visible to the next debug read. Which value DEBUG_ADD captures is defined in Section 5.7.
 
 ![Debug read timing](figures/debug_timing.svg)
 
 <p align="center">Figure 2: one-output-tick debug reads at the pins, one byte per opcode, held for one output tick (2 core ticks)</p>
 
-*Note on Figure 2:* the figure shows the one-output-tick case (DEBUG_FLAGS, DEBUG_BUFFER, DEBUG_MULTIPLY, DEBUG_INPUT). DEBUG_PARTIAL_SUM and DEBUG_ADD follow the same timing for their first byte and then keep the pins frozen for two more output ticks, showing bits [15:8] and then bits [23:16], before the live nibble and flags return.
+*Note on Figure 2:* 24-bit reads follow the same timing for their first byte, then hold the pins for two more output ticks (bits [15:8], then [23:16]).
 
 **Dump pause.** A debug read and the dump stream share the same pins, so they cannot both use the same output tick. Only a debug read that actually freezes the output pauses the dump. The stream does not advance on any output tick covered by the freeze (dump paused = 1), and it resumes on the next output tick that is not frozen. No nibbles are lost; the dump simply takes one output tick longer for each one-output-tick freeze and three output ticks longer for each DEBUG_PARTIAL_SUM or DEBUG_ADD, whose three frozen output ticks all pause the stream. This is why the framing rule in Section 5.2 says to skip frozen output ticks: each one carries a debug byte, and the nibble that would have gone out is sent on the first output tick after the freeze instead. An illegal debug read that does not freeze (DEBUG_FLAGS bank ≠ 0) does not pause: the nibble goes out on schedule and the stream stays complete.
 
 ### 5.7 Debug reads while the RUN pipeline is busy
-The partial sums change only on a core tick where a RUN phase 2 is in flight (run busy = 1, the core tick right after a RUN). That is where "which value does this read see?" needs a precise answer. A debug opcode is itself the one command on its core tick, so it never overlaps a RUN's phase 1: on any debug core tick at most one stage is active, namely the phase 2 of the RUN executed one core tick earlier. In a back-to-back RUN stream the multiply and add stages overlap on every core tick, but a debug read can only land after the stream (or in a gap), so it always sees exactly one in-flight add or none.
+The partial sums change only on a core tick where a RUN phase 2 is in flight (run busy = 1, the core tick right after a RUN). That is where "which value does this read see?" needs a precise answer. Because only one command executes per core tick (Section 5.1), a debug read never overlaps a RUN's phase 1: on any debug core tick at most one stage is active, namely the phase 2 of the RUN executed one core tick earlier. In a back-to-back RUN stream the multiply and add stages overlap on every core tick, but a debug read can only land after the stream (or in a gap), so it always sees exactly one in-flight add or none.
 
 - DEBUG_PARTIAL_SUM returns the partial sum before the in-flight add.
 - DEBUG_MULTIPLY returns the product register: the products latched by the most recent RUN. While that RUN's phase 2 is in flight these are the products being added; afterwards they stay unchanged until the next RUN overwrites them.
-- DEBUG_ADD returns a preview of the result: the 24-bit wrapped sum of partial sum plus the in-flight product, all three bytes over three frozen output ticks. With no phase 2 in flight (run busy = 0) no add is pending, so DEBUG_ADD returns the current partial sum; the products still held in the product register are not added. It never sets overflow.
+- DEBUG_ADD returns a preview of the result: the 24-bit wrapped sum of partial sum plus the in-flight product. With no phase 2 in flight (run busy = 0) no add is pending, so DEBUG_ADD returns the current partial sum; the products still held in the product register are not added. It never sets overflow.
 - DEBUG_FLAGS returns the start-of-core-tick busy flags (run busy = 1 here) plus any overflow from the in-flight add.
 
 The rule behind these cases: reads that report the adder output or a value latched on this core tick (DEBUG_ADD, DEBUG_FLAGS overflow, DUMP_LOAD capture) see the add. Plain register reads see the values before it.
@@ -231,14 +229,14 @@ The rule behind these cases: reads that report the adder output or a value latch
 ## 6. Datapath
 
 ### 6.1 Operand packing
-A data byte, whether written to the input buffer by LOAD or presented on `ui_in` with RUN, holds two signed int4 lanes: the high nibble is lane 1 and the low nibble is lane 0. The input buffer is a single byte; LOAD overwrites it in one edge and nothing else moves. CLEAR bit 1 zeroes it. Physically, the input buffer sits on the side of the floorplan furthest from the input pads, a placement chosen because layout showed no preference. A host can verify it with DEBUG_BUFFER before running.
+A data byte, whether written to the input buffer by LOAD or presented on `ui_in` with RUN, holds two signed int4 lanes: the high nibble is lane 1 and the low nibble is lane 0. The input buffer is a single byte; LOAD overwrites it in one edge and nothing else moves. CLEAR bit 1 zeroes it. A host can verify it with DEBUG_BUFFER before running.
 
 ![Load path into the array](figures/load_path.svg)
 
 <p align="center">Figure 3: operand paths (LOAD → input buffer; RUN → bus byte). High nibble [7:4] is lane 1 = index 2; low nibble [3:0] is lane 0 = index 1. All four processing elements feed the output buffer, which DUMP_LOAD fills in one edge and streams out on `uo_out[3:0]`.</p>
 
 ### 6.2 Accumulate
-Each RUN performs `PE(i,j) += buf[i] × bus[j]`, where `buf` is the input buffer byte and `bus` is the `ui_in` byte sampled with the RUN, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. The product of two int4 values always fits in an 8-bit signed value. Partial sums are 24-bit two's complement and wrap around on overflow rather than saturating; any wrap sets the sticky overflow flag. A host that sees overflow set knows that at least one add wrapped since the flags were last cleared, so the sums may not equal the true mathematical result (the flag is sticky: a later opposite wrap may have restored a sum, or the flag may be left over from an earlier tile) and can decide whether to discard or rescale the tile.
+Each RUN performs `PE(i,j) += buf[i] × bus[j]`, where `buf` is the input buffer byte and `bus` is the `ui_in` byte sampled with the RUN, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. The product of two int4 values always fits in an 8-bit signed value, so nothing is truncated. Partial sums are 24-bit two's complement and wrap around on overflow rather than saturating; any wrap sets the sticky overflow flag. A host that sees overflow set knows that at least one add wrapped since the flags were last cleared, so the sums may not equal the true mathematical result (the flag is sticky: a later opposite wrap may have restored a sum, or the flag may be left over from an earlier tile) and can decide whether to discard or rescale the tile.
 
 ### 6.3 Dump stream order
 A dump is 24 nibbles = 4 processing elements × 6 nibbles each:
@@ -252,7 +250,6 @@ Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, wh
 
 ## 7. Open items
 
-- DEBUG_FLAGS banks other than 0 are undefined and illegal (reserved for future testing-flag expansion, Section 4).
 - The reference model does not model `ena`. Behavior at the pins: a hold takes effect one edge after `ena` goes low and ends one edge after it goes high; the edges in between are *hold edges*. Commands presented only during hold edges are **not** sampled; whatever is on the pads on the first enabled edge after the hold is what gets captured. All state, including the output-tick phase, freezes while held and resumes where it stopped, so a host tracking the output-tick phase by counting core ticks should not count hold edges.
 
 ## 8. References
