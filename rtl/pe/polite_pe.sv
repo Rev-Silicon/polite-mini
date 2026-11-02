@@ -29,12 +29,35 @@ module polite_pe (input logic clk, rst_n, ena, mul_en, acc_en, clr,
   assign sum_dn   = hi_sub - 16'd1;
   assign pend     = {up ? sum_up : dn ? sum_dn : hi_pass, lo[7:0]};
   assign pend_ovf = (up && hi_cmp == 16'h7FFF) || (dn && hi_cmp == 16'h8000);
+  // psum update selects. Cast A0 @d0c5138 left clkbuf _2803_/X (net _0904_) in
+  // g_pe[3] at fanout 9: the shared hold select drove 8 psum-mux loads, and an
+  // antenna diode made 9. ABC buffers to MAX_FANOUT 8, so one shared select
+  // sits on the limit. Private ena/acc/clr copies stop that select being common
+  // across PEs. A 4-trunk x 6-leaf tree then gives each bit its own load and
+  // hold copy (structural fanout ≤6). clr still wins over acc_en. Same bits, same cycle.
+  logic ena_l, acc_l, clr_l, load_sel, hold_sel;
+  (* keep *) (* dont_touch *) sky130_fd_sc_hd__buf_2 u_ena (.A(ena),    .X(ena_l));
+  (* keep *) (* dont_touch *) sky130_fd_sc_hd__buf_2 u_acc (.A(acc_en), .X(acc_l));
+  (* keep *) (* dont_touch *) sky130_fd_sc_hd__buf_2 u_clr (.A(clr),    .X(clr_l));
+  assign load_sel = ena_l & ~clr_l & acc_l;                 // write pend
+  assign hold_sel = ~ena_l | (~clr_l & ~acc_l);             // else recirculate; both 0 => clear
+  logic [3:0] load_t, hold_t;
+  logic [23:0] load_b, hold_b, psum_d;
+  for (genvar t = 0; t < 4; t++) begin : g_sel_trunk
+    (* keep *) (* dont_touch *) sky130_fd_sc_hd__buf_2 u_load (.A(load_sel), .X(load_t[t]));
+    (* keep *) (* dont_touch *) sky130_fd_sc_hd__buf_2 u_hold (.A(hold_sel), .X(hold_t[t]));
+  end
+  for (genvar i = 0; i < 24; i++) begin : g_sel_leaf
+    localparam int ti = i / 6;
+    (* keep *) (* dont_touch *) sky130_fd_sc_hd__buf_2 u_load (.A(load_t[ti]), .X(load_b[i]));
+    (* keep *) (* dont_touch *) sky130_fd_sc_hd__buf_2 u_hold (.A(hold_t[ti]), .X(hold_b[i]));
+    assign psum_d[i] = (load_b[i] & pend[i]) | (hold_b[i] & psum[i]);
+  end
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin psum <= '0; mul_q <= '0; end
-    else if (ena) begin
-      if (clr)         psum <= '0;    // ctrl guarantees clr never coincides with acc_en (F1 collision)
-      else if (acc_en) psum <= pend;
-      if (mul_en)      mul_q <= p;
+    else begin
+      psum <= psum_d;
+      if (ena && mul_en) mul_q <= p;
     end
   end
 endmodule
