@@ -114,6 +114,8 @@ The chip keeps six status flags. Together with the output-buffer occupancy bit a
 
 <p align="center">Table 6: status flags</p>
 
+Occupancy and output-tick phase live in the DEBUG_FLAGS data nibble (bits 3 and 2); see Section 5.6.
+
 | Flag | Kind | Set by | Cleared by |
 |---|---|---|---|
 | Overflow | sticky | a 24-bit accumulate wrapping around | CLEAR bit 0 |
@@ -195,12 +197,13 @@ DEBUG_FLAGS returns one coherent 8-bit status byte as those two nibbles. Every b
 | 6 | base, every bank | Dump busy at the start of the DEBUG_FLAGS core tick |
 | 5 | base, every bank | Illegal, as it stood at the start of that core tick |
 | 4 | base, every bank | Overflow, including an in-flight phase-2 overflow |
-| 3 | bank 0 data | Output buffer non-empty. 1 when the output buffer holds unread dump data at the start of the DEBUG_FLAGS core tick; 0 when it is empty |
+| 3 | bank 0 data | Output buffer non-empty (equals dump busy at start, bit 6). 1 when the output buffer holds unread dump data at the start of the DEBUG_FLAGS core tick; 0 when empty, including after a finished stream |
 | 2 | bank 0 data | Output-tick phase. 1 when the DEBUG_FLAGS core tick is an output tick (the on half of the output clock), 0 when it falls between output ticks |
 | 1 | bank 0 data | Dump paused. 1 when a dump was busy at the start of that core tick |
 | 0 | bank 0 data | Run busy. 1 when a phase 2 is in flight |
 
 - Dump busy (bit 6) reports the state at the start of the core tick. A freeze during a dump also shows dump paused (bit 1) = 1, so the two bits agree even on the last-nibble core tick.
+- Output buffer non-empty (bit 3) tracks the same condition as dump busy (bit 6), so it clears when the stream ends.
 - Run busy (bit 0) follows the pipeline definition in Section 5.1: it reads 1 when DEBUG_FLAGS executes on the core tick right after a RUN (a phase 2 in flight), and 0 otherwise. On such a core tick bit 4 also includes any overflow from the add that finishes on that core tick.
 - After reset, with no dump and no overflow, DEBUG_FLAGS reads 0x80 when its core tick is not an output tick and 0x84 when it is.
 

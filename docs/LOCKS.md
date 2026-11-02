@@ -20,7 +20,7 @@
 - [SUPERSEDED 2026-11-01 by the buffer+bus lock: PE(i,j) += buf[i] × bus[j]] [assumption] PE(i,j) += left[i]*top[j], i,j∈{1,2}.
 - [assumption, superseded 2026-11-01 by 33 MHz pad-out below] A DBG_* read freezes uo_out for 1 cycle (the next cycle) with debug_busy high.
 ## Golden-proven host rules (detail in docs/LESSONS.md)
-- [Forge, F7; amended R8-U9/D7] Live flag bits: uo[4]=OVF uo[5]=illegal uo[6]=dump busy at start of the displayed edge. Live (unfrozen) uo[7] reads 0 and is NOT a debug-busy indicator. Debug busy is visible only as bit 3 of a frozen DEBUG_FLAGS byte (DBG_FLAGS bank0[3:0] layout unchanged).
+- [SUPERSEDED 2026-11-02 by t609–t611 eight-bit DEBUG_FLAGS (debug busy = bit 7) and the ~01:07 CT bit3-occupancy lock] [Forge, F7; amended R8-U9/D7] Live flag bits: uo[4]=OVF uo[5]=illegal uo[6]=dump busy at start of the displayed edge. Live (unfrozen) uo[7] reads 0 and is NOT a debug-busy indicator. Debug busy is visible only as bit 3 of a frozen DEBUG_FLAGS byte (DBG_FLAGS bank0[3:0] layout unchanged).
 - [Forge, R3-F12] DUMP_LOAD is illegal if the dump was busy at cycle start, incl. the final-nibble cycle; no restart.
 - [Forge, F1/R2-F8] CLEAR collisions use busy-at-start: PE vs RUN in flight incl. phase 2; outbuf vs dump busy incl. final nibble.
 - [SUPERSEDED 2026-11-01 ~14:50 CT by the 3-output-tick lock: DBG_ADD returns all 24 bits of the same preview, LSB first] [Forge, R3-F15] DBG_ADD on RUN phase 2 = low(wrap24(psum+mul)) preview; else low(psum); never sets OVF.
