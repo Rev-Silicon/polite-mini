@@ -1,7 +1,7 @@
 # POLITE Mini: Tiny Tapeout demo chip
 Alex GO 2026-10-31. Forge owns Maintenance/RevSilicon. Repo: https://github.com/Rev-Silicon/polite-mini
 
-**Branches:** `main` is docs + golden only. Full chip (RTL, verify, host, pnr, configs) lives on [`experimental`](https://github.com/Rev-Silicon/polite-mini/tree/experimental) (tip `d0c5138`).
+**Branches:** `main` is docs + golden only. Full chip (RTL, verify, host, pnr, configs) lives on [`experimental`](https://github.com/Rev-Silicon/polite-mini/tree/experimental) (tip `25e230e`, A0 CLEAN).
 
 A 2×2 signed-int4 MAC array. The host handles scale, zero point, ReLU and bias.
 - Pins: ui_in = 8b data and uio = 8b instruction ([7:4] op, [3:0] args), both inputs every cycle. uo_out[3:0] is a data nibble. uo_out[7:4] stay live: bit 4 overflow, bit 5 illegal, bit 6 dump-nibble marker, bit 7 debug-nibble marker. A debug read streams 2 nibbles (8-bit) or 6 nibbles (24-bit), low nibble first; it does not take over the upper pins. RUN, and a second debug read, are illegal while that stream is still going out.

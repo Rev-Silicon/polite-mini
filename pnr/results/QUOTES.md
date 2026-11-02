@@ -76,3 +76,15 @@ Peak memory in logs: DRT 743 MB. OpenROAD RSS stayed well below 20 GiB.
 - Root cause of 114: RUN_HEURISTIC_DIODE_INSERTION added ~1 diode per sink after GRT (post-CTS fanout was 6 -> 114 at step 45), plus pnr SDC set_max_fanout 10 (signoff limit was 10, not 8).
 - Knobs added: MAX_FANOUT_CONSTRAINT 8 (unchanged); PNR/SIGNOFF_SDC_FILE -> pnr/a0/polite_mini_fo8.sdc (copy of polite_mini.sdc with set_max_fanout 8); RUN_HEURISTIC_DIODE_INSERTION false; RUN_ANTENNA_REPAIR true; DESIGN_REPAIR_BUFFER_INPUT/OUTPUT_PORTS true; DESIGN_REPAIR_REMOVE_BUFFERS false; SYNTH_BUFFERING true; CTS_SINK_CLUSTERING_SIZE 8. G6 knobs kept (MAX_TRANSITION 0.6, DR 70/70, GRT 50/50).
 - Signoff (9 corners): max_fanout 0 (was 114), max_slew 0, max_cap 0 -> G6 CLEAN. Setup WS min +4.061 ns, hold WS min +0.045 ns, 0 setup/hold vios. Antenna 0, Magic/KLayout DRC 0, LVS 0.
+
+## A0 @25e230e — server — 2026-11-02 ~03:00 CT — **CLEAN** (supersedes fanout@8 FAILs @09b821f / @d0c5138)
+```
+Cast A0 @ 25e230e (server RUN_2026-11-02_08-59-45, Flow complete)
+G6: CLEAN — max_slew 0 / max_cap 0 all 9 corners
+Fanout@8: CLEAN — max_fanout_violation 0 (MAX_FANOUT 8)
+Setup WS ~+2.94; hold WS ~+0.056; setup/hold vio 0; WNS/TNS 0
+Antenna PASS (0 nets/pins; 10 diodes); DRC PASS; LVS PASS
+Util ~53.4%
+```
+- Log: pnr/logs/a0_20261102_085944.log
+- Prior _4195_/hi[8] gone; no new fanout violators.
