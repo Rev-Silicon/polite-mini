@@ -10,7 +10,7 @@ The chip has an output buffer. Full semantics: docs/SPEC.md (source of truth).
 |3|DUMP_LOAD|snapshot PE sums → outbuf and stream nibbles; RUN can run in parallel|
 |4|DUMP_ABORT|stop the stream, dump_busy=0|
 |5|CLEAR|args bitmask [0]flags [1]inbuf [2]outbuf [3]PE; any collision → whole CLEAR ignored + illegal|
-|6|DBG_FLAGS|arg = bank; only bank0 is defined: [0]OVF [1]illegal [2]dump_busy [3]debug_busy [4]run_busy [5]dump_paused [6]OP_PLACE [7]HAS_OUTBUF|
+|6|DBG_FLAGS|arg = bank; only bank0 is defined: [0]OVF [1]illegal [2]dump_busy [3]debug_busy [4]run_busy [5]dump_paused [6]OP_PLACE [7]HAS_OUTBUF (always 1)|
 |7|DBG_BUFFER|arg[0]: 0=left 1=top byte|
 |8|DBG_PSUM|arg[1:0]=PE index (dump order), arg[3:2]=byte 0..2|
 |9|DBG_MUL|arg[1:0]=PE, last product (sign-ext 8b)|
