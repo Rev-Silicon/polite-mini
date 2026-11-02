@@ -3,10 +3,10 @@
 - [assumption] Nibble stream order is low nibble first within each 24b partial ("host endian" = LE?).
 - [assumption] Exact LOAD placement for OP_PLACE 0/1 (shift left→top vs bus→top).
 - [assumption] A RUN on the cycle right after a RUN is "while busy" (ignored + illegal). Max rate is 1 RUN per 2 clocks.
-- [assumption] What happens to RUN while debug is busy in cfg A? The model allows it.
+- [resolved] RUN while debug is busy is allowed (SPEC).
 - TBD meaning of dump_paused (the model never sets it). How does ena/pause interact with dump?
 - TBD what DBG_ADD shows, plus the byte/PE arg encodings for DBG_PSUM/DBG_MUL.
-- TBD whether CLEAR outbuf in cfg B is a collision (the model treats it as illegal).
+- [retired 2026-11-01, Alex t588u] Cfg B (no outbuf) dropped; its open CLEAR-outbuf question is moot.
 - [revised 2026-10-31, Cast F5] DBG_FLAGS shows debug_busy=1 while frozen (bit3 reads 1). The old snapshot-before-freeze rule was wrong: the host could never see debug_busy.
 - TBD the live data nibble when no dump is active (0 in the model).
 - [assumption, Cast F1] On the RUN phase-2 cycle the RUN still counts as in flight: CLEAR PE collides (whole CLEAR ignored, illegal set). The phase-2 accumulate still completes.
