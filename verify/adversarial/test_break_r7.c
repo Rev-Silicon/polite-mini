@@ -172,7 +172,7 @@ static void static_checks(void){
   CHECK("R7-S3-SDC-header-names-33MHz-out", s && strstr(s,"33"));
   CHECK("R7-T1-golden-test()-not-core-only(#define chip_step chip_core_step)", g && !strstr(g,"#define chip_step chip_core_step"));
   CHECK("R7-T2-golden-test_pipe-checks-odd-edge-hold", g && strstr(g,"if(n&1) CHECK(o==prev)"));
-  char*l=slurp("LESSONS.md"); CHECK("R7-T3-LESSONS-rtl-match-claim-not-stale", l && !strstr(l,"RTL in rtl/ matches golden 89dad4e cycle-exact"));
+  char*l=slurp("docs/LESSONS.md"); CHECK("R7-T3-LESSONS-rtl-match-claim-not-stale", l && !strstr(l,"RTL in rtl/ matches golden 89dad4e cycle-exact"));
 }
 int main(void){ pad_rate(); latency(); dump_pins(); freeze_beats(); final_nib(); static_checks();
   printf("R7 pass=%d fail=%d gap=%d\n",passes,fails,gaps); return fails!=0; }

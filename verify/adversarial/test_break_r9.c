@@ -131,7 +131,7 @@ static void t_live(void){ char id[96];
     sprintf(id,"R9-V2-DEBUG_FLAGS-debug-busy-bit7-par%d",al); CHECK(id, (f&0x88)==0x88 && (h.pad[jf+3]&0x80) && (h.pad[jf+5]&0x80)); }
 }
 static void t_static(void){
-  char*s=slurp("pnr/polite_vneg1.sdc"),*sp=slurp("docs/SPEC.md"),*ls=slurp("LESSONS.md"),*rd=slurp("README.md"),*ct=slurp("rtl/ctrl/polite_ctrl.sv"),*ch=slurp("host/mnist/chipio.py");
+  char*s=slurp("pnr/polite_vneg1.sdc"),*sp=slurp("docs/SPEC.md"),*ls=slurp("docs/LESSONS.md"),*rd=slurp("README.md"),*ct=slurp("rtl/ctrl/polite_ctrl.sv"),*ch=slurp("host/mnist/chipio.py");
   CHECK("R9-S1-SDC-setup2-from-clk-to-uo", s && strstr(s,"set_multicycle_path -setup 2 -from [get_clocks clk] -to $uo_ports"));
   CHECK("R9-S1b-SDC-hold1-from-clk-to-uo", s && strstr(s,"set_multicycle_path -hold  1 -from [get_clocks clk] -to $uo_ports"));
   CHECK("R9-S1c-SDC-no-bare-to-uo", s && !strstr(s,"-setup 2 -to $uo_ports") && !strstr(s,"-hold  1 -to $uo_ports"));

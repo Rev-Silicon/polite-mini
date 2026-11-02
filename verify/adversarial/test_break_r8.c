@@ -184,7 +184,7 @@ static void s_sdc(void){
 }
 /* ================= D: docs / RTL static ================= */
 static void d_docs(void){
-  char*sp=slurp("docs/SPEC.md"), *lk=slurp("docs/LOCKS.md"), *ls=slurp("LESSONS.md"), *ct=slurp("rtl/ctrl/polite_ctrl.sv"), *ob=slurp("rtl/outbuf/polite_outbuf.sv"), *ch=slurp("host/mnist/chipio.py");
+  char*sp=slurp("docs/SPEC.md"), *lk=slurp("docs/LOCKS.md"), *ls=slurp("docs/LESSONS.md"), *ct=slurp("rtl/ctrl/polite_ctrl.sv"), *ob=slurp("rtl/outbuf/polite_outbuf.sv"), *ch=slurp("host/mnist/chipio.py");
   { char*q=sp?strstr(sp,"not frozen by a debug read"):NULL; char w[700]={0}; if(q) strncpy(w,q,600);
     /* t608: the framing paragraph names the markers. Debug nibbles are bit 7; dump nibbles are bit 6, which a debug nibble forces to 0. */
     CHECK("R8-D1-SPEC-framing-para-says-how-host-finds-frozen-beats", q && strstr(w,"bit 7") && strstr(w,"bit 6")); }

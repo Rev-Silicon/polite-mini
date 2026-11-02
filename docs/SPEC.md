@@ -272,5 +272,5 @@ Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, wh
 ## 8. References
 
 - `docs/LOCKS.md` — design decisions
-- `LESSONS.md` — edge-case findings (internal)
+- `docs/LESSONS.md` — edge-case findings (internal)
 - `golden/chip.c` — cycle-level reference model (internal)
