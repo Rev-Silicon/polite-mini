@@ -6,7 +6,7 @@ gcc -O2 -DCHIP_NO_MAIN -o $O/gen $D/gen_adv.c golden/chip.c || exit 1
 SRC=$(find rtl -name '*.sv' | sort)
 for c in configs/a0_outbuf_place0.vh configs/b0_no_outbuf_place0.vh; do n=$(basename $c .vh); A=$(awk '/HAS_OUTBUF/{print $3}' $c)
   W=$O/$n; mkdir -p $W; cp $c $W/cfg.vh
-  iverilog -g2012 -I$W -s tb_adv -o $W/tb.vvp $SRC verify/rtl_elab/cfg_wrap.sv $D/tb_adv.sv 2>$W/build.log || { echo "$n BUILD FAIL"; rc=1; continue; }
+  iverilog -g2012 -I$W -s tb_adv -o $W/tb.vvp $SRC verify/rtl_elab/cfg_wrap.sv $D/sky130_buf_stub.sv $D/tb_adv.sv 2>$W/build.log || { echo "$n BUILD FAIL"; rc=1; continue; }
   for m in 0 1 2; do $O/gen $A $m $N $m > $W/v$m.txt 2>$W/gen$m.log
     r=$(vvp -n $W/tb.vvp +VEC=$W/v$m.txt | grep -E '^(PASS|FAIL)'); echo "$n mode$m $r $(cat $W/gen$m.log)" | tee -a $O/results.txt; echo "$r" | grep -q PASS || rc=1; done
   cfg=$([ "$A" = 1 ] && echo A || echo B); python3 $D/mnist_record.py $cfg $W/mnist.txt 2 >/dev/null || rc=1

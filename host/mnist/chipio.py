@@ -14,7 +14,7 @@ class Chip(ctypes.Structure):
                 ("phase", ctypes.c_int), ("fz_prev", ctypes.c_int), ("ofz", ctypes.c_int),
                 ("fz_n", ctypes.c_int), ("fz_left", ctypes.c_int), ("fz_k", ctypes.c_int), ("fz_val", ctypes.c_uint32),
                 ("in_d_q", ctypes.c_uint8), ("in_i_q", ctypes.c_uint8), ("uo_q", ctypes.c_uint8), ("uo_pad", ctypes.c_uint8),
-                ("otick_q", ctypes.c_int)]
+                ("otick_q", ctypes.c_int), ("ena_q", ctypes.c_int)]
 
 def _lib():
     src = os.path.join(ROOT, "golden", "chip.c")

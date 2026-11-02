@@ -1,4 +1,4 @@
-# MNIST int4 on the POLITE V(−1) golden chip
+# MNIST int4 on the POLITE Mini golden chip
 
 The host does all scale/zero-point/bias/ReLU work. The chip does only signed int4 2×2 outer-product MACs.
 

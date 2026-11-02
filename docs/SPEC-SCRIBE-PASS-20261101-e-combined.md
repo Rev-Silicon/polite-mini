@@ -1,7 +1,7 @@
 # Scribe pass e: combined tip 0f20e44 (R8 host locks + pass-c fixes)
 
 - Tip verified: HEAD = `0f20e44` on `30677ec`. 0f20e44 touches only docs/SPEC.md (+11/−11), docs/LOCKS.md (+1) and SPEC.pdf. Design tip is still `677ce98`. I did not edit SPEC.md.
-- Evidence checked: `rtl/top/tt_um_polite_vneg1.sv`, `rtl/ctrl/polite_ctrl.sv`, docs/LOCKS.md, and the pass-c notes.
+- Evidence checked: `rtl/top/tt_um_polite_mini.sv`, `rtl/ctrl/polite_ctrl.sv`, docs/LOCKS.md, and the pass-c notes.
 
 ## 1. Verdict
 **Implementability: PASS.** The pass-c conditions C1–C3 are closed. The R8 host contract can be implemented and matches LOCKS. Three small clarity edits remain (E1–E3), plus one optional edit. None of them changes a rule. C4 (G6 494/24, Cast A0 re-PnR) is still open and affects tapeout only.

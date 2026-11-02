@@ -3,14 +3,14 @@
     "version": 3,
     "flow": "Classic"
   },
-  "DESIGN_NAME": "tt_um_polite_vneg1_a0",
+  "DESIGN_NAME": "tt_um_polite_mini_a0",
   "VERILOG_FILES": [
     "dir::../../rtl/ctrl/polite_ctrl.sv",
     "dir::../../rtl/dbg/polite_dbg.sv",
     "dir::../../rtl/mac/polite_mac.sv",
     "dir::../../rtl/outbuf/polite_outbuf.sv",
     "dir::../../rtl/pe/polite_pe.sv",
-    "dir::../../rtl/top/tt_um_polite_vneg1.sv",
+    "dir::../../rtl/top/tt_um_polite_mini.sv",
     "dir::top.sv"
   ],
   "CLOCK_PORT": "clk",
@@ -37,8 +37,8 @@
   "STA_THREADS": 4,
   "KLAYOUT_DRC_THREADS": 4,
   "KLAYOUT_XOR_THREADS": 4,
-  "PNR_SDC_FILE": "dir::polite_vneg1_fo8.sdc",
-  "SIGNOFF_SDC_FILE": "dir::polite_vneg1_fo8.sdc",
+  "PNR_SDC_FILE": "dir::polite_mini_fo8.sdc",
+  "SIGNOFF_SDC_FILE": "dir::polite_mini_fo8.sdc",
   "MAX_FANOUT_CONSTRAINT": 8,
   "MAX_TRANSITION_CONSTRAINT": 0.6,
   "CLOCK_UNCERTAINTY_CONSTRAINT": 0.3,

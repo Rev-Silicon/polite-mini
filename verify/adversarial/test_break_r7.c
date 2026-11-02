@@ -163,7 +163,7 @@ static void final_nib(void){
 }
 /* ---------- RTL / SDC / self-test ---------- */
 static void static_checks(void){
-  char*r=slurp("rtl/top/tt_um_polite_vneg1.sv"), *s=slurp("pnr/polite_vneg1.sdc"), *g=slurp("golden/chip.c");
+  char*r=slurp("rtl/top/tt_um_polite_mini.sv"), *s=slurp("pnr/polite_mini.sdc"), *g=slurp("golden/chip.c");
   CHECK("R7-R1-RTL-has-out_tick", r && (strstr(r,"out_tick")||strstr(r,"otick")));
   CHECK("R7-R2-RTL-uo_q-not-loaded-every-en-edge", r && !strstr(r,"else if (en) uo_q <="));
   CHECK("R7-R3-RTL-freeze-2-edges(frozen_q not single flop of freeze_now)", r && !strstr(r,"frozen_q <= freeze_now;"));

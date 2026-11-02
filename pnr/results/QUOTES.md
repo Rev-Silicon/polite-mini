@@ -1,5 +1,5 @@
-# POLITE V(-1) LibreLane PnR quotes — 2026-10-31 (tower, librelane 3.0.14, sky130A hd)
-Clock 15.15 ns (66 MHz), single-edge SDC `pnr/polite_vneg1.sdc`; RUN_POST_GPL_DESIGN_REPAIR=false; density 55%; met4 max; docker cap 9g.
+# POLITE Mini LibreLane PnR quotes — 2026-10-31 (tower, librelane 3.0.14, sky130A hd)
+Clock 15.15 ns (66 MHz), single-edge SDC `pnr/polite_mini.sdc`; RUN_POST_GPL_DESIGN_REPAIR=false; density 55%; met4 max; docker cap 9g.
 
 | | A0 (HAS_OUTBUF=1) | B0 (HAS_OUTBUF=0) |
 |---|---|---|
@@ -74,5 +74,5 @@ Peak memory in logs: DRT 743 MB. OpenROAD RSS stayed well below 20 GiB.
 - host=server, RTL 54f4beb (HEAD unchanged), knobs base cc79d7d pass-3 (backup pnr/a0/config.g6_pass3.json)
 - Run: pnr/a0/runs/RUN_2026-11-01_22-51-47 (1 iteration); log pnr/logs/a0_fanout_iter1.log
 - Root cause of 114: RUN_HEURISTIC_DIODE_INSERTION added ~1 diode per sink after GRT (post-CTS fanout was 6 -> 114 at step 45), plus pnr SDC set_max_fanout 10 (signoff limit was 10, not 8).
-- Knobs added: MAX_FANOUT_CONSTRAINT 8 (unchanged); PNR/SIGNOFF_SDC_FILE -> pnr/a0/polite_vneg1_fo8.sdc (copy of polite_vneg1.sdc with set_max_fanout 8); RUN_HEURISTIC_DIODE_INSERTION false; RUN_ANTENNA_REPAIR true; DESIGN_REPAIR_BUFFER_INPUT/OUTPUT_PORTS true; DESIGN_REPAIR_REMOVE_BUFFERS false; SYNTH_BUFFERING true; CTS_SINK_CLUSTERING_SIZE 8. G6 knobs kept (MAX_TRANSITION 0.6, DR 70/70, GRT 50/50).
+- Knobs added: MAX_FANOUT_CONSTRAINT 8 (unchanged); PNR/SIGNOFF_SDC_FILE -> pnr/a0/polite_mini_fo8.sdc (copy of polite_mini.sdc with set_max_fanout 8); RUN_HEURISTIC_DIODE_INSERTION false; RUN_ANTENNA_REPAIR true; DESIGN_REPAIR_BUFFER_INPUT/OUTPUT_PORTS true; DESIGN_REPAIR_REMOVE_BUFFERS false; SYNTH_BUFFERING true; CTS_SINK_CLUSTERING_SIZE 8. G6 knobs kept (MAX_TRANSITION 0.6, DR 70/70, GRT 50/50).
 - Signoff (9 corners): max_fanout 0 (was 114), max_slew 0, max_cap 0 -> G6 CLEAN. Setup WS min +4.061 ns, hold WS min +0.045 ns, 0 setup/hold vios. Antenna 0, Magic/KLayout DRC 0, LVS 0.

@@ -174,7 +174,7 @@ static void s_sdc(void){
   /* RTL: en=ena_q (registered); out_phase_q toggles when en; uo_q loads when en && !out_phase_q. Prove no two consecutive loads under random ena */
   { srand(9); int ena_q=1, ph=0, prevld=0, bad=0, loads=0; for(int n=0;n<1000000;n++){ int ena=rand()%4!=0; int ld= ena_q && !ph; if(ld&&prevld) bad++; loads+=ld; prevld=ld; if(ena_q) ph^=1; ena_q=ena; }
     printf("info S1 random-ena model: %d loads, consecutive-load edges=%d\n",loads,bad); CHECK("R8-S1-uo_q-never-loads-on-consecutive-edges-with-ena", bad==0); }
-  char*s=slurp("pnr/polite_vneg1.sdc"), *r=slurp("rtl/top/tt_um_polite_vneg1.sv");
+  char*s=slurp("pnr/polite_mini.sdc"), *r=slurp("rtl/top/tt_um_polite_mini.sv");
   CHECK("R8-S2-SDC-setup2-and-hold1-same-target", s && strstr(s,"set_multicycle_path -setup 2 -from [get_clocks clk] -to $uo_ports") && strstr(s,"set_multicycle_path -hold  1 -from [get_clocks clk] -to $uo_ports"));
   CHECK("R8-S3-SDC-inputs-not-multicycled", s && !strstr(s,"-from [get_ports {ui_in") && !strstr(s,"-from $non_clk_inputs"));
   CHECK("R8-S4-RTL-uo_q-enable-is-!out_phase_q", r && strstr(r,"else if (en && !out_phase_q) uo_q <="));

@@ -52,8 +52,8 @@ static void x_sticky(void){ chip_t c; chip_reset(&c,1,0); l77(&c); c.psum[0]=0x7
   CHECK("R5-X5-clear-no-bit0-keeps-both", c.ovf && c.illegal); S(&c,0,0x51);
   CHECK("R5-X5-clear-bit0-clears-both", !c.ovf && !c.illegal); }
 static void x_straps(void){ int ok=1; for(int a=0;a<2;a++) for(int p=0;p<2;p++){ chip_t c; chip_reset(&c,a,p);
-  S(&c,0,0x60); ok&=c.fz_val==(uint32_t)(0x80|(a<<3)); /* bit7 debug busy, bit3 outbuf; bit6 dump busy stays 0 */
-  S(&c,0,0x5F); S(&c,0,0x51); S(&c,0,0); S(&c,0,0x60); ok&=c.fz_val==(uint32_t)(0x80|(a<<3)) && !c.illegal; }
+  S(&c,0,0x60); ok&=c.fz_val==0x80; /* bit7 debug busy, bit3 unread dump = 0, bit6 dump busy stays 0 */
+  S(&c,0,0x5F); S(&c,0,0x51); S(&c,0,0); S(&c,0,0x60); ok&=c.fz_val==0x80 && !c.illegal; }
   CHECK("R5-X6-straps-match-reset-survive-clear", ok); }
 static void x_dnib(void){ chip_t c; chip_reset(&c,1,0); l77(&c); mac(&c); int ok=1;
   for(int i=0;i<4;i++) ok&=(S(&c,0,0)&0xF)==0;

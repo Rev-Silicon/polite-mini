@@ -23,7 +23,8 @@ int main(int argc,char**argv){ int A=atoi(argv[1]),mode=atoi(argv[2]),N=atoi(arg
       else if(op==2 && open_at_exec) op=0; /* RUN in the window is illegal; NOP stays legal */
       if(op>=0xC && rand()%4) op=0;
       ins=op<<4|arg; ena=(rand()%9)!=0; }
-    if(enq){ last=chip_step(&c,d,ins); pending_frz=freezing(ins); } /* edge uses registered ena from previous pin value; a held edge does not store ins */
+    last=chip_step_ena(&c,d,ins,ena); /* registered ena: this edge runs iff enq; a hold does not sample ins */
+    if(enq) pending_frz=freezing(ins);
     printf("%d %02x %02x %02x\n",ena,d,ins,last); enq=ena; if(c.ovf) ovfn++; }
   fprintf(stderr,"golden ovf-edges=%d\n",ovfn);
   return 0; }

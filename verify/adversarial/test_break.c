@@ -89,8 +89,8 @@ static void t_sticky(void){ chip_t c; chip_reset(&c,1,0); S(&c,0x77,0x10); S(&c,
   S(&c,0,0x51); CHECK("P9-ovf-cleared", !c.ovf);
   for(int op=0xC;op<=0xF;op++){ S(&c,0,0x51); S(&c,0,op<<4); S(&c,0,0); S(&c,0,0); CHECK("P9-illegal-CF-sticky", c.illegal); } }
 static void t_flags(int A,int P){ chip_t c; chip_reset(&c,A,P); S(&c,0,0x60);
-  /* bank 0: bit7 debug busy, bit3 output buffer present, bit6 dump busy = 0. Phase 0 right after reset. */
-  CHECK("P10-straps", c.fz_val==(uint32_t)(0x80|(A<<3))); S(&c,0,0); S(&c,0,0x61); CHECK("P10-bank1-illegal", c.illegal); }
+  /* bank 0: bit7 debug busy, bit3 unread dump data = 0, bit6 dump busy = 0. Phase 0 right after reset. */
+  CHECK("P10-straps", c.fz_val==0x80); S(&c,0,0); S(&c,0,0x61); CHECK("P10-bank1-illegal", c.illegal); }
 /* RUN on k+1..k+3 after an 8-bit DBG is ignored and sticky-illegal. k+4 still executes (illegal stays set). */
 static void t_run_window(void){ chip_t c; chip_reset(&c,1,0); c.buf=0x11; S(&c,0,0x70);
   for(int i=0;i<3;i++){ S(&c,0x11,0x20); CHECK("T612-run-in-8bit-window-ignored", c.illegal && !c.run_busy && c.psum[0]==0 && c.fz_val==0x11); }

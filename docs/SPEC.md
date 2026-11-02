@@ -1,16 +1,16 @@
-# POLITE V(−1) — Architecture and Instruction Set Specification
+# POLITE Mini — Architecture and Instruction Set Specification
 
 <p align="center">Table 1: document information</p>
 
 | | |
 |---|---|
-| Chip | POLITE V(−1), Tiny Tapeout demonstration chip |
+| Chip | POLITE Mini, Tiny Tapeout demonstration chip |
 | Document | Architecture and instruction set architecture (ISA) specification |
 | Date | 2026-11-02 (US Central) |
 
 ## 1. Overview
 
-POLITE V(−1) is a 2×2 array of signed 4-bit integer (int4) multiply-accumulate units, called processing elements. Each processing element multiplies one int4 value from the input buffer by one int4 value taken live from the `ui_in` data bus on the RUN core tick and adds the product into its own 24-bit signed partial sum. The four processing elements together compute a 2×2 outer product per step, so repeated steps build up a small matrix multiply.
+POLITE Mini is a 2×2 array of signed 4-bit integer (int4) multiply-accumulate units, called processing elements. Each processing element multiplies one int4 value from the input buffer by one int4 value taken live from the `ui_in` data bus on the RUN core tick and adds the product into its own 24-bit signed partial sum. The four processing elements together compute a 2×2 outer product per step, so repeated steps build up a small matrix multiply.
 
 The chip deliberately does only the multiply-accumulate. Everything that turns a raw integer sum into a usable result — scale, zero point, rectified linear unit (ReLU) and bias — is the host's job. There is no on-chip ReLU, bias or scale. This keeps the silicon small and keeps the arithmetic exact: what comes out is the true wrapped 24-bit sum, and the host applies whatever post-processing its number format needs.
 
@@ -63,7 +63,9 @@ Because outputs move once per output tick, each item the chip produces — a dum
 
 **Pad pipeline.** Inputs and outputs are both registered at the pins, which adds a small, fixed latency between the host and the core. `ui_in` and `uio_in` are sampled on edge k and the command executes in the core on edge k+1. All 8 `uo_out` bits update together, once per output tick. So an operation applied before edge k executes on edge k+1, and its result appears on `uo_out` after edge k+2 when edge k+1 is an output tick, or after edge k+3 otherwise. The one-edge difference is whether the result has to wait for the next output update.
 
-The host can know which case it is in by counting clocks from reset, since output ticks alternate starting from reset. A host that does not want to track the phase can always read after edge k+3, which is safe in both cases. Reset makes the inputs read as NOP and drives `uo_out` to 0, so the chip comes out of reset idle with all-zero outputs. A hold driven by `ena` takes effect one edge after the pin changes (Section 7).
+The host can know which case it is in by counting clocks from reset, since output ticks alternate starting from reset. A host that does not want to track the phase can always read after edge k+3, which is safe in both cases. Reset makes the inputs read as NOP and drives `uo_out` to 0, so the chip comes out of reset idle with all-zero outputs.
+
+**Enable.** `ena` is sampled into a register on every rising edge, including hold edges, and that register resets to 1. The registered value is what gates the chip, so the effect lags the pin by one edge. The edge on which `ena` falls is still enabled: it samples `ui_in` and `uio_in` and runs. Every following edge is a hold until the edge after `ena` rises. The edge on which `ena` rises is still a hold. Hold edges do not sample the input pins, do not execute a command, and do not change any other state. The output-tick phase freezes with the rest of the chip and resumes on the next enabled edge, so a host that counts core ticks to track that phase must not count hold edges. The first enabled edge after a hold executes the command sampled on the last enabled edge, and captures the pins presented on that first enabled edge. Commands presented only on hold edges are not sampled. The reference model (`chip_step_ena`) follows this rule; `chip_step` drives `ena` high.
 
 The rest of this document describes behavior one edge at a time *inside the core*, because that is where the rules are simplest to state. To translate any of it to pin timing, add the pad latency (2 or 3 core ticks, as above) and remember that the outputs update only once per output tick.
 
@@ -265,11 +267,7 @@ A dump is 24 nibbles = 4 processing elements × 6 nibbles each:
 
 Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, where `n/6` is integer division (processing element order above) and `sum` starts at 0. Then sign-extend each sum from bit 23: `if (sum & 0x800000) sum -= 0x1000000` (equivalently `sum |= ~0xFFFFFF` in a 32-bit signed integer).
 
-## 7. Open items
-
-- **`ena` is not covered by the reference model.** Pin behavior: a hold takes effect one edge after `ena` goes low and ends one edge after it goes high. Commands presented only during hold edges are not sampled, and all state, including the output-tick phase, freezes and resumes where it stopped. A host that counts core ticks to track the output-tick phase must not count hold edges.
-
-## 8. References
+## 7. References
 
 - `docs/LOCKS.md` — design decisions
 - `docs/LESSONS.md` — edge-case findings (internal)

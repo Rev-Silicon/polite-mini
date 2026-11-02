@@ -1,8 +1,8 @@
 # Lessons (tags: [measured] [Alex] [assumption])
-> **Currency note, 2026-11-02 (tip after 09b821f):** many entries below are historical (byte-wide freeze, 1-RUN-per-2-clocks, DBG_ADD low byte, 3-byte reads, live uo[7]=debug_busy). The current contract is docs/SPEC.md + docs/LOCKS.md; where they disagree, LOCKS wins. Golden/RTL still report DEBUG_FLAGS bit3=1 (old "outbuf present") until the next Grok Build tip.
+> **Currency note, 2026-11-02:** many entries below are historical (byte-wide freeze, 1-RUN-per-2-clocks, DBG_ADD low byte, 3-byte reads, live uo[7]=debug_busy). The current contract is docs/SPEC.md + docs/LOCKS.md; where they disagree, LOCKS wins. DEBUG_FLAGS bit 3 is unread dump data (dump busy at the start of that core tick), not "outbuf present"; after reset the byte is 0x80 or 0x84. This chip was formerly called POLITE V(−1).
 
-## ena (golden gap, moved from SPEC §7)
-- [assumption] golden/chip.c has no `ena` input, so lockstep never exercises hold edges. RTL registers ena once (ena_q in tt_um_polite_vneg1.sv), so a hold takes effect one edge after the pad changes; the rest of the SPEC §7 pin behavior is from RTL intent, not lockstep. Pin behavior is stated in SPEC §7; a golden ena model plus vectors is still owed.
+## ena
+- [measured] `chip_step_ena` in golden/chip.c matches the register in `rtl/top/tt_um_polite_mini.sv`: the hold takes effect one edge after the pad changes, hold edges (including the edge where `ena` rises) are not sampled, the first enabled edge captures, and every state bit including the output-tick phase freezes and resumes. `chip_step` drives ena=1 so older suites stay valid. Covered by the golden self-test and by `verify/rtl_sim/run_sim_adv.sh`.
 ## Open TBDs
 - [assumption] Nibble stream order is low nibble first within each 24b partial ("host endian" = LE?).
 - [assumption] Exact LOAD placement for OP_PLACE 0/1 (shift left→top vs bus→top).

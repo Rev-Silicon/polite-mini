@@ -28,8 +28,9 @@ module polite_ctrl #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
   assign acc_en    = run_phase2;
   assign freeze_now= dbg_freeze && !freeze_active; // a real start; nested DBG does not reload the window
 
-  // Bank 0: [7:4] base = {debug busy, dump busy-at-start, illegal, OVF incl. in-flight}; [3:0] = {outbuf, out_tick, paused, run busy}.
-  assign flags8 = {1'b1, dump_adv, illegal, ovf | (run_phase2 & pend_ovf_any), HAS_OUTBUF, out_tick, dump_adv, run_phase2};
+  // Bank 0: [7:4] = {debug busy, dump busy-at-start, illegal, OVF incl. in-flight};
+  // [3:0] = {outbuf non-empty (= dump busy-at-start), output-tick phase, dump paused, run busy}.
+  assign flags8 = {1'b1, dump_adv, illegal, ovf | (run_phase2 & pend_ovf_any), dump_adv, out_tick, dump_adv, run_phase2};
 
   logic ill_set; assign ill_set = run_ill | dl_ill | da_ill | clr_coll | other_ill | dbg_illegal | nested_dbg;
   always_ff @(posedge clk or negedge rst_n) begin

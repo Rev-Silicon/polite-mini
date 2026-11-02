@@ -11,8 +11,10 @@ typedef struct {
   int frozen; uint8_t frozen_val;
   int phase, fz_prev, ofz, fz_n, fz_left, fz_k; uint32_t fz_val; /* nibble freeze: fz_n nibbles over 2*fz_n edges (8-bit n=2, 24-bit n=6); LS nibble first. out_tick=phase (resets 0); fz_prev=this edge started a freeze; ofz=core output inside the freeze window this edge; fz_left>0 at entry means ticks k+1..k+2n-1 */
   uint8_t in_d_q, in_i_q, uo_q, uo_pad; int otick_q; /* pad pipeline regs (input flops + registered uo_out) */
+  int ena_q; /* registered ena; resets to 1. Hold (0) freezes every state bit, including out_phase. */
 } chip_t;
 void chip_reset(chip_t *c, int has_outbuf, int op_place);
-uint8_t chip_step(chip_t *c, uint8_t ui_in, uint8_t uio_in); /* pin level: returns uo_out after this edge (2-edge latency) */
+uint8_t chip_step(chip_t *c, uint8_t ui_in, uint8_t uio_in); /* pin level, ena=1: returns uo_out after this edge */
+uint8_t chip_step_ena(chip_t *c, uint8_t ui_in, uint8_t uio_in, int ena); /* pin level; ena is the pad, effect one edge later */
 uint8_t chip_core_step(chip_t *c, uint8_t d, uint8_t ins); /* core semantics, no pad regs (adversarial R1-R6 target) */
 #endif

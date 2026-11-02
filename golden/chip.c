@@ -1,4 +1,4 @@
-/* POLITE V(-1) golden model. Canon: docs/SPEC.md and docs/LOCKS.md (docs/OPCODE_PROPOSAL.md is superseded).
+/* POLITE Mini golden model. Canon: docs/SPEC.md and docs/LOCKS.md (docs/OPCODE_PROPOSAL.md is superseded).
  * One chip_core_step call = one core tick; one chip_step call = one rising edge at the pins (adds the pad pipeline).
  * RUN is a 2-stage pipeline: phase 1 (multiply, latch products) on the RUN's core tick, phase 2 (accumulate) on the
  * next core tick; phase 1 of RUN N overlaps phase 2 of RUN N-1. */
@@ -11,12 +11,12 @@ static int lane(uint8_t b,int i){ return s4(i? b>>4 : b); }
 static int32_t wrap24(int64_t v,int *ovf){ int64_t w=((v&0xFFFFFF)^0x800000)-0x800000; if(w!=v)*ovf=1; return (int32_t)w; }
 /* dump-order index -> (row,col) 1-based */
 static const int PR[4]={2,2,1,1}, PC[4]={2,1,2,1};
-void chip_reset(chip_t *c,int a,int p){ memset(c,0,sizeof *c); c->has_outbuf=a; c->op_place=p; }
+void chip_reset(chip_t *c,int a,int p){ memset(c,0,sizeof *c); c->has_outbuf=a; c->op_place=p; c->ena_q=1; }
 /* Bank 0 status byte. [7:4] base = live uo[7:4] order (debug busy, dump busy-at-start, illegal, OVF);
- * [3:0] bank data = {outbuf present, out_tick phase, dump paused, run busy}. Only bank 0 is legal. */
+ * [3:0] bank data = {outbuf non-empty (= dump busy-at-start), output-tick phase, dump paused, run busy}. Only bank 0 is legal. */
 static uint8_t flags_bank0(chip_t *c,int tick,int dump_adv,int run_phase2,int pend_ovf){
   int base=((c->ovf|pend_ovf)&1)<<4 | (c->illegal&1)<<5 | (dump_adv&1)<<6 | 1<<7;
-  int data=(run_phase2&1) | (dump_adv&1)<<1 | (tick&1)<<2 | (c->has_outbuf&1)<<3;
+  int data=(run_phase2&1) | (dump_adv&1)<<1 | (tick&1)<<2 | (dump_adv&1)<<3;
   return (uint8_t)(base|data);
 }
 /* Start a freeze of `nibs` nibbles (2 or 6), LS nibble first. A call while one is already open is illegal and does not restart. */
@@ -96,14 +96,22 @@ uint8_t chip_core_step(chip_t *c,uint8_t d,uint8_t ins){
  * Pin-level latency: inputs applied before edge k -> core acts on edge k+1 -> on uo_out after edge k+2 (k+1 is an
  * out_tick) or k+3 (otherwise).
  * Reset: in_q = 0 (NOP), uo_q = 0. */
-uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){
-  int t=c->phase;
-  if(c->otick_q) c->uo_pad=c->uo_q;   /* pad register loads only on the edge after an out_tick: <=33 MHz toggles */
-  uint8_t o=c->uo_pad;
-  c->uo_q=chip_core_step(c,c->in_d_q,c->in_i_q); c->otick_q=t;
-  c->in_d_q=d; c->in_i_q=ins;
+uint8_t chip_step_ena(chip_t *c,uint8_t d,uint8_t ins,int ena){
+  /* ena_q is the enable for THIS edge (sampled on the previous edge, reset 1). The pin is
+   * always captured, including on a hold, so the effect lags the pad by one edge. A hold
+   * does not sample ui/uio, does not step the core, and does not move out_phase. */
+  uint8_t o;
+  if(c->ena_q){
+    int t=c->phase;
+    if(c->otick_q) c->uo_pad=c->uo_q;   /* pad register loads only on the edge after an out_tick: <=33 MHz toggles */
+    o=c->uo_pad;
+    c->uo_q=chip_core_step(c,c->in_d_q,c->in_i_q); c->otick_q=t;
+    c->in_d_q=d; c->in_i_q=ins;
+  } else o=c->uo_pad;
+  c->ena_q=ena?1:0;
   return o;
 }
+uint8_t chip_step(chip_t *c,uint8_t d,uint8_t ins){ return chip_step_ena(c,d,ins,1); }
 #ifndef CHIP_NO_MAIN
 static int fails=0;
 #define CHECK(x) do{ if(!(x)){printf("FAIL %s:%d %s\n",__FILE__,__LINE__,#x);fails++;} }while(0)
@@ -118,10 +126,10 @@ static void test_core(int A,int P){
   chip_core_step(&c,0,0x00);
   int L=0x3F, T=0x21;
   for(int k=0;k<4;k++){ int e=5*lane(L,PR[k]-1)*lane(T,PC[k]-1); CHECK(c.psum[k]==e); printf("PE(%d,%d)=%d\n",PR[k],PC[k],c.psum[k]); }
-  o=chip_core_step(&c,0,0x60); CHECK(c.fz_val==(uint32_t)(0x80|(A<<3))); printf("DBG_FLAGS=0x%02X phase0\n",c.fz_val); /* not an out_tick: 0x80 or 0x88 */
+  o=chip_core_step(&c,0,0x60); CHECK(c.fz_val==0x80); printf("DBG_FLAGS=0x%02X phase0\n",c.fz_val); /* not an out_tick, empty outbuf: 0x80 */
   for(int i=0;i<4;i++) chip_core_step(&c,0,0); /* leave the 8-bit window (k+1..k+3) before the next DBG */
   chip_core_step(&c,0,0x51); CHECK(!c.illegal);
-  o=chip_core_step(&c,0,0x60); CHECK(!c.illegal && (c.fz_val&~4u)==(uint32_t)(0x80|(A<<3))); (void)o;
+  o=chip_core_step(&c,0,0x60); CHECK(!c.illegal && (c.fz_val&~4u)==0x80); (void)o;
   for(int i=0;i<4;i++) chip_core_step(&c,0,0); /* finish this freeze before DUMP_LOAD so the stream is not paused */
   if(A){
     chip_core_step(&c,0,0x30); int32_t got[4]={0};
@@ -143,7 +151,7 @@ static void test_pin(int A,int P){
     { uint8_t seq[16]; int ns=0; seq[ns++]=chip_step(&c,0,0x60); while(ns<14) seq[ns++]=chip_step(&c,0,0);
       int s0=-1; for(int i=0;i<ns;i++) if(seq[i]&0x80){ s0=i; break; }
       uint8_t f=0; int okf=s0>=0; for(int b=0;b<2;b++){ int i=s0+2*b; if(s0<0||i>=ns||!(seq[i]&0x80)||(seq[i]&0x40)) okf=0; else f|=(seq[i]&0xF)<<(4*b); }
-      CHECK(okf && (f&0xF0)==0x80 && ((f>>3)&1)==A); }
+      CHECK(okf && (f&0xF0)==0x80 && ((f>>3)&1)==0); } /* bit3 = unread dump data; this read is before DUMP_LOAD */
     int L=0x3F, T=0x21; int32_t want[4];
     for(int k=0;k<4;k++) want[k]=4*lane(L,PR[k]-1)*lane(T,PC[k]-1);
     int32_t got[4]={0};
@@ -207,8 +215,8 @@ static void test_pipeline(void){ chip_t c; chip_reset(&c,1,0); uint8_t o;
   printf("PIPELINE ok\n"); }
 /* Nibble DEBUG, 8-flag bank 0, RUN-in-window illegal, nested DBG does not restart. */
 static void test_freeze_rules(void){ chip_t c;
-  chip_reset(&c,1,0); chip_core_step(&c,0,0x60); CHECK(c.fz_val==0x88 && !c.illegal); /* phase 0 */
-  chip_reset(&c,1,0); chip_core_step(&c,0,0); chip_core_step(&c,0,0x60); CHECK(c.fz_val==0x8C && !c.illegal); /* phase 1 = out_tick */
+  chip_reset(&c,1,0); chip_core_step(&c,0,0x60); CHECK(c.fz_val==0x80 && !c.illegal); /* phase 0, empty outbuf */
+  chip_reset(&c,1,0); chip_core_step(&c,0,0); chip_core_step(&c,0,0x60); CHECK(c.fz_val==0x84 && !c.illegal); /* phase 1 = out_tick */
   /* 8-bit window: RUN on k+1..k+3 illegal and ignored; k+4 legal. Prior RUN's phase 2 still commits on the DBG tick. */
   chip_reset(&c,1,0); chip_core_step(&c,0x11,0x10); chip_core_step(&c,0x11,0x20); /* RUN on the tick before DBG */
   chip_core_step(&c,0x5A,0xB0); CHECK(c.fz_val==0x5A && c.psum[0]==1); /* phase 2 completed on the DBG tick */
@@ -238,5 +246,62 @@ static void test_freeze_rules(void){ chip_t c;
     if(t && (b&0x40)) gotn[n++]=b&0xF; }
   CHECK(n==24 && gotn[0]==1 && gotn[1]==2 && gotn[2]==3 && gotn[5]==6 && c.illegal==0);
   printf("FREEZE ok\n"); }
-int main(void){ test_bufbus(); test_pipeline(); test_freeze_rules(); for(int a=1;a>=0;a--) for(int p=0;p<2;p++) { test_core(a,p); test_pin(a,p); test_pipe(a,p); } printf(fails?"FAILED %d\n":"ALL PASS\n",fails); return fails!=0; }
+/* Bit 3 is unread dump data (dump busy at the DEBUG_FLAGS core tick), not the HAS_OUTBUF strap. */
+static void test_flags_occ(void){ chip_t c;
+  for(int A=0;A<2;A++){
+    chip_reset(&c,A,0); chip_core_step(&c,0,0x60); CHECK(c.fz_val==0x80); /* phase 0 */
+    for(int i=0;i<4;i++) chip_core_step(&c,0,0);
+    chip_reset(&c,A,0); chip_core_step(&c,0,0); chip_core_step(&c,0,0x60); CHECK(c.fz_val==0x84); /* phase 1 */
+    for(int i=0;i<4;i++) chip_core_step(&c,0,0);
+  }
+  chip_reset(&c,1,0); c.psum[0]=1; chip_core_step(&c,0,0x30); /* phase 0 DUMP_LOAD → dump busy, next tick is phase 1 */
+  chip_core_step(&c,0,0x60); CHECK(c.fz_val==0xCE); /* bit7+6+3+2+1: busy, occupancy, out_tick, paused */
+  for(int i=0;i<4;i++) chip_core_step(&c,0,0); /* close the 8-bit window */
+  chip_core_step(&c,0,0x40); CHECK(!c.dump_busy && !c.illegal); /* DUMP_ABORT */
+  chip_core_step(&c,0,0x60); CHECK((c.fz_val&0x4A)==0); /* bit6, bit3, bit1 clear */
+  for(int i=0;i<4;i++) chip_core_step(&c,0,0);
+  /* stream end: drain, then bit3 is 0 even though the buffer still holds the copy */
+  chip_reset(&c,1,0); c.psum[0]=0x1; chip_core_step(&c,0,0x30);
+  { int e=0; while(c.dump_busy && e<80){ chip_core_step(&c,0,0); e++; } CHECK(!c.dump_busy && c.outbuf[0]==1); }
+  chip_core_step(&c,0,0x60); CHECK((c.fz_val&~4u)==0x80);
+  for(int i=0;i<4;i++) chip_core_step(&c,0,0);
+  /* CLEAR bit 2 during a dump is illegal and does not clear; a later successful CLEAR leaves bit3 at 0 */
+  chip_reset(&c,1,0); c.psum[0]=0x11; chip_core_step(&c,0,0x30); chip_core_step(&c,0,0x54);
+  CHECK(c.illegal && c.dump_busy && c.outbuf[0]==0x11);
+  chip_core_step(&c,0,0x40); CHECK(!c.dump_busy);
+  chip_core_step(&c,0,0x51); CHECK(!c.illegal); /* clear the sticky illegal from the collision */
+  chip_core_step(&c,0,0x54); CHECK(!c.illegal && !c.dump_busy); /* successful CLEAR bit 2, nothing unread */
+  chip_core_step(&c,0,0x60); CHECK((c.fz_val&8)==0);
+  printf("FLAGS occ ok\n"); }
+static int same_pin(const chip_t *a,const chip_t *b){
+  if(a->phase!=b->phase||a->buf!=b->buf||a->illegal!=b->illegal||a->ovf!=b->ovf) return 0;
+  if(a->dump_busy!=b->dump_busy||a->run_busy!=b->run_busy||a->fz_val!=b->fz_val||a->fz_left!=b->fz_left) return 0;
+  if(a->uo_pad!=b->uo_pad||a->uo_q!=b->uo_q||a->dump_idx!=b->dump_idx||a->otick_q!=b->otick_q) return 0;
+  if(a->in_d_q!=b->in_d_q||a->in_i_q!=b->in_i_q||a->ena_q!=b->ena_q) return 0;
+  for(int k=0;k<4;k++) if(a->psum[k]!=b->psum[k]||a->mul[k]!=b->mul[k]||a->outbuf[k]!=b->outbuf[k]) return 0;
+  return 1;
+}
+/* Hold edges (and the edge where ena rises) are not sampled. Compare against an always-enabled twin. */
+static void test_ena(void){
+  static const uint8_t sd[]={0x11,0x11,0x22,0x00,0x5A,0x00}, si[]={0x10,0x20,0x20,0x00,0x10,0x00};
+  chip_t a,b; chip_reset(&a,1,0); chip_reset(&b,1,0); CHECK(a.ena_q==1 && b.ena_q==1);
+  for(int i=0;i<6;i++){
+    chip_step_ena(&a,sd[i],si[i],1);
+    chip_step_ena(&b,sd[i],si[i],0); /* this edge still runs and samples; the next ones hold */
+    uint8_t pad=b.uo_pad; int ph=b.phase, buf=b.buf;
+    chip_step_ena(&b,0xFF,0x20,0); chip_step_ena(&b,0xEE,0x10,0); chip_step_ena(&b,0xDD,0x30,0);
+    CHECK(b.phase==ph && b.buf==buf && b.uo_pad==pad && b.in_d_q==sd[i] && b.in_i_q==si[i] && b.ena_q==0 && b.mul[0]==a.mul[0]);
+    chip_step_ena(&b,0xCC,0x40,1); /* rising edge is still a hold */
+    CHECK(b.phase==ph && b.in_d_q==sd[i] && b.in_i_q==si[i] && b.ena_q==1);
+    CHECK(same_pin(&a,&b));
+  }
+  /* First enabled edge after the rise executes the command sampled earlier and captures LOAD 0x5A. */
+  chip_reset(&a,1,0);
+  chip_step_ena(&a,0x11,0x10,0); int ph=a.phase;
+  chip_step_ena(&a,0xFF,0x20,0); chip_step_ena(&a,0xEE,0x10,0);
+  chip_step_ena(&a,0xDD,0x30,1); CHECK(a.buf==0 && a.in_i_q==0x10 && a.ena_q==1 && a.phase==ph);
+  chip_step_ena(&a,0x5A,0x10,1); CHECK(a.buf==0x11 && a.in_d_q==0x5A && a.in_i_q==0x10 && a.phase==(ph^1));
+  chip_step_ena(&a,0x00,0x00,1); CHECK(a.buf==0x5A);
+  printf("ENA ok\n"); }
+int main(void){ test_bufbus(); test_pipeline(); test_freeze_rules(); test_flags_occ(); test_ena(); for(int a=1;a>=0;a--) for(int p=0;p<2;p++) { test_core(a,p); test_pin(a,p); test_pipe(a,p); } printf(fails?"FAILED %d\n":"ALL PASS\n",fails); return fails!=0; }
 #endif

@@ -128,10 +128,10 @@ static void t_live(void){ char id[96];
   printf("info V1 %ld unfrozen steps, uo7=1 on %ld\n",beats,ones); CHECK("R9-V1-live-uo7==0-long-unfrozen", ones==0 && beats>0);
   for(int al=0;al<2;al++){ H h; hreset(&h,1,0,al); idle(&h,3); int jf=h.n; st(&h,0,0x60); idle(&h,8);
     uint8_t f=(h.pad[jf+3]&0xF)|((h.pad[jf+5]&0xF)<<4);
-    sprintf(id,"R9-V2-DEBUG_FLAGS-debug-busy-bit7-par%d",al); CHECK(id, (f&0x88)==0x88 && (h.pad[jf+3]&0x80) && (h.pad[jf+5]&0x80)); }
+    sprintf(id,"R9-V2-DEBUG_FLAGS-debug-busy-bit7-par%d",al); CHECK(id, (f&0x88)==0x80 && (h.pad[jf+3]&0x80) && (h.pad[jf+5]&0x80)); } /* idle: bit3 occupancy is 0 */
 }
 static void t_static(void){
-  char*s=slurp("pnr/polite_vneg1.sdc"),*sp=slurp("docs/SPEC.md"),*ls=slurp("docs/LESSONS.md"),*rd=slurp("README.md"),*ct=slurp("rtl/ctrl/polite_ctrl.sv"),*ch=slurp("host/mnist/chipio.py");
+  char*s=slurp("pnr/polite_mini.sdc"),*sp=slurp("docs/SPEC.md"),*ls=slurp("docs/LESSONS.md"),*rd=slurp("README.md"),*ct=slurp("rtl/ctrl/polite_ctrl.sv"),*ch=slurp("host/mnist/chipio.py");
   CHECK("R9-S1-SDC-setup2-from-clk-to-uo", s && strstr(s,"set_multicycle_path -setup 2 -from [get_clocks clk] -to $uo_ports"));
   CHECK("R9-S1b-SDC-hold1-from-clk-to-uo", s && strstr(s,"set_multicycle_path -hold  1 -from [get_clocks clk] -to $uo_ports"));
   CHECK("R9-S1c-SDC-no-bare-to-uo", s && !strstr(s,"-setup 2 -to $uo_ports") && !strstr(s,"-hold  1 -to $uo_ports"));

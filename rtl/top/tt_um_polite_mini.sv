@@ -1,8 +1,8 @@
-// POLITE V(-1) Tiny Tapeout top. ui_in = data, uio_in = instr (all inputs).
+// POLITE Mini Tiny Tapeout top. ui_in = data, uio_in = instr (all inputs).
 // Pad pipeline: ui_in/uio_in sampled into in_d_q/in_i_q (executed next edge). uo_out is the register uo_q, loaded
 // once per output tick (2 clk, 33 MHz pad-out): only on the edge after an out_tick (out_phase_q==1). See docs/LOCKS.md.
 // A debug read streams nibbles on uo[3:0] (LS first). uo[7:4] stay live: uo[7] marks a debug nibble, uo[6] a dump nibble.
-module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
+module tt_um_polite_mini #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE = 0) (
   input wire [7:0] ui_in, output wire [7:0] uo_out, input wire [7:0] uio_in, output wire [7:0] uio_out,
   output wire [7:0] uio_oe, input wire ena, clk, rst_n);
   assign uio_out = 8'h00; assign uio_oe = 8'h00;
@@ -13,7 +13,7 @@ module tt_um_polite_vneg1 #(parameter bit HAS_OUTBUF = 1, parameter bit OP_PLACE
   logic [95:0] psums, pends; logic [31:0] muls; logic [3:0] povf;
   logic [7:0] in_d_q, in_i_q, uo_q;
   // ena is registered once (resets to 1) so the TT enable is a reg->reg fanout, not a pad->every-flop path.
-  // Effect: a hold via ena takes effect one edge after the pad changes (golden does not model ena).
+  // Effect: a hold via ena takes effect one edge after the pad changes. Golden: chip_step_ena.
   logic ena_q, en;
   always_ff @(posedge clk or negedge rst_n) if (!rst_n) ena_q <= 1'b1; else ena_q <= ena;
   assign en = ena_q;

@@ -1,4 +1,4 @@
-# POLITE V(-1) - 66 MHz (15.15 ns), single-edge
+# POLITE Mini - 66 MHz (15.15 ns), single-edge
 set clk_period 15.15
 create_clock -name clk -period $clk_period [get_ports clk]
 set_clock_uncertainty -setup 0.30 [get_clocks clk]

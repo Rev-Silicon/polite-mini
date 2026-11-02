@@ -2,7 +2,7 @@
 
 - Tip verified: HEAD = `f9cec6a` ("SPEC prose expand"). Only `docs/SPEC.md` and `docs/SPEC.pdf` changed vs `aee2b47` (+65/−43 lines). Figures are untouched.
 - Word count: 3450 (aee2b47) → 5121 (f9cec6a), about +48%.
-- Evidence checked: `rtl/ctrl/polite_ctrl.sv`, `rtl/pe/polite_pe.sv`, `rtl/top/tt_um_polite_vneg1.sv`, `docs/LOCKS.md`. SPEC.md was not edited.
+- Evidence checked: `rtl/ctrl/polite_ctrl.sv`, `rtl/pe/polite_pe.sv`, `rtl/top/tt_um_polite_mini.sv`, `docs/LOCKS.md`. SPEC.md was not edited.
 
 ## 1. Verdict
 

@@ -1,6 +1,6 @@
 # SPEC.md — Scribe clarity pass (2026-11-01)
 
-Reviewed: `docs/SPEC.md` (tip, figures through `6b5fe8c`), `LOCKS.md`, `OPCODE_PROPOSAL.md`, `README.md`, `docs/figures/*.svg`, `rtl/**`, `pnr/results/QUOTES.md`, `pnr/polite_vneg1.sdc`, and comments in `golden/chip.c`. Scribe filled in no numbers. All numbers in SPEC §8 match `QUOTES.md` "A0 after".
+Reviewed: `docs/SPEC.md` (tip, figures through `6b5fe8c`), `LOCKS.md`, `OPCODE_PROPOSAL.md`, `README.md`, `docs/figures/*.svg`, `rtl/**`, `pnr/results/QUOTES.md`, `pnr/polite_mini.sdc`, and comments in `golden/chip.c`. Scribe filled in no numbers. All numbers in SPEC §8 match `QUOTES.md` "A0 after".
 
 ## 1. Verdict
 
