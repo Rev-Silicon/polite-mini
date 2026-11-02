@@ -9,4 +9,4 @@ A 2×2 signed-int4 MAC array. The host handles scale, zero point, ReLU and bias.
 - Output buffer: the chip always has one, so the PE sums stream out (DUMP_LOAD / DUMP_ABORT) while RUN continues.
 - Param: `OP_PLACE` (0: bus→left→top, 1: swapped); obsolete under buffer + bus, kept for compatibility.
 - Clock: single edge, target 66 MHz in and 33 MHz out.
-**TT product: one chip, with the output buffer.** Spec: docs/SPEC.md (PDF: docs/SPEC.pdf). See docs/LOCKS.md and docs/OPCODE_PROPOSAL.md. Golden model: `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test`
+**TT product: one chip, with the output buffer.** Spec: docs/SPEC.md (PDF: docs/SPEC.pdf). See docs/LOCKS.md (decisions) and docs/OPTS-DEFERRED.md (optional follow-ups). Golden model: `gcc -Wall -O2 -o chip_test golden/chip.c && ./chip_test`
