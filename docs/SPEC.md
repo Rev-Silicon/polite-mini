@@ -1,5 +1,7 @@
 # POLITE V(−1) — Architecture and Instruction Set Specification
 
+<p align="center">Table 1: document information</p>
+
 | | |
 |---|---|
 | Chip | POLITE V(−1), Tiny Tapeout demonstration chip |
@@ -18,6 +20,8 @@ From the host's point of view the interface is synchronous. Every clock, the hos
 
 Terms used below:
 
+<p align="center">Table 2: terms used in this specification</p>
+
 | Term | Meaning |
 |---|---|
 | Processing element (PE) | One of the four multiply-accumulate cells, named PE(row, column) |
@@ -31,6 +35,8 @@ Terms used below:
 | Other short names | inbuf / outbuf = input / output buffer; OVF = overflow; DBG_* = DEBUG_* |
 
 ## 2. Pins and clock
+
+<p align="center">Table 3: pin list</p>
 
 | Pin | Direction | Meaning |
 |---|---|---|
@@ -65,6 +71,8 @@ The rest of this document describes behavior one edge at a time *inside the core
 
 A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode and bits [3:0] are its arguments. A new command can be given on every rising edge; there is no handshake and no instruction queue. Commands that need more than one core tick (RUN, the dump stream, a debug freeze) carry on by themselves, and the rules in Section 5 say which commands may overlap with them.
 
+<p align="center">Table 4: opcode map</p>
+
 | Op | Name | What it does | Freezes output? |
 |---|---|---|---|
 | 0x0 | NOP | Nothing; the dump stream and flags keep flowing | no |
@@ -80,6 +88,8 @@ A command is one 8-bit instruction byte on `uio_in`: bits [7:4] are the opcode a
 | 0xA | DEBUG_ADD | Return the full 24-bit wrapped adder output as six nibbles, low nibble first (Section 5.7) | yes, 6 output ticks (all 24 bits from one command) |
 | 0xB | DEBUG_INPUT | Return the sampled `ui_in` byte as two nibbles, low nibble first | yes, 2 output ticks |
 | 0xC–0xF | — | Reserved; illegal on this chip: set the illegal flag | no |
+
+<p align="center">Table 5: argument bits per command</p>
 
 | Command | Argument bits |
 |---|---|
@@ -98,7 +108,9 @@ One argument case is rejected rather than ignored: DEBUG_FLAGS with bank ≠ 0 i
 
 ## 4. Flags
 
-The chip keeps six status flags, packed with two fixed identity bits into one 8-bit status byte. DEBUG_FLAGS returns that byte as two nibbles, low nibble first (Section 5.6). The host can also watch the pins: bit 4 and bit 5 are overflow and illegal on every output tick, bit 6 marks a dump nibble, and bit 7 marks a debug nibble.
+The chip keeps six status flags. Together with the output-buffer occupancy bit and the output-tick phase bit they form one 8-bit status byte. DEBUG_FLAGS returns that byte as two nibbles, low nibble first (Section 5.6). The host can also watch the pins: bit 4 and bit 5 are overflow and illegal on every output tick, bit 6 marks a dump nibble, and bit 7 marks a debug nibble.
+
+<p align="center">Table 6: status flags</p>
 
 | Flag | Kind | Set by | Cleared by |
 |---|---|---|---|
@@ -111,7 +123,7 @@ The chip keeps six status flags, packed with two fixed identity bits into one 8-
 
 *Sticky* means the flag stays set until the host clears it with CLEAR bit 0, no matter how much time passes. This matters for a host that polls only occasionally: an overflow or a rejected command is never lost just because the host looked at the pins a few output ticks too late. *Level* flags, by contrast, simply report what the chip is doing right now.
 
-Reset clears every flag and all chip state. On this chip a DEBUG_FLAGS read after reset returns 0x88 when that core tick is not an output tick, and 0x8C when it is: bit 7 is debug busy because the read itself freezes, bit 3 is the output buffer, and bit 2 is the output-tick phase. Bit 4 (overflow) and bit 5 (illegal) are also live on `uo_out` during the freeze. Bit 6 on the pins is the dump-nibble marker and is forced to 0 on each debug-nibble output tick, so it is not a copy of the captured status bit during those ticks. Bit 7 on the pins is the debug-nibble marker: it is 1 exactly on those ticks, and on a non-debug-nibble output tick, live `uo_out[7]` is 0.
+Reset clears every flag and all chip state. On this chip a DEBUG_FLAGS read after reset returns 0x80 when that core tick is not an output tick, and 0x84 when it is: bit 7 is debug busy because the read itself freezes, bit 3 is 0 because the output buffer is empty, and bit 2 is the output-tick phase. Bit 4 (overflow) and bit 5 (illegal) are also live on `uo_out` during the freeze. Bit 6 on the pins is the dump-nibble marker and is forced to 0 on each debug-nibble output tick, so it is not a copy of the captured status bit during those ticks. Bit 7 on the pins is the debug-nibble marker: it is 1 exactly on those ticks, and on a non-debug-nibble output tick, live `uo_out[7]` is 0.
 
 **Room to grow.** This chip has one flag bank, bank 0 (layout in Section 5.6). Every bank keeps the same four base flags in bits [7:4]; a bank only changes the data nibble in bits [3:0]. The DEBUG_FLAGS bank argument is a build-time expansion path: a future chip may add banks, and a driver written today keeps working by asking for bank 0. Bank ≠ 0 is illegal and does not freeze.
 
@@ -173,22 +185,24 @@ A second freezing read must not be issued while an earlier freeze still owns the
 
 DEBUG_FLAGS returns one coherent 8-bit status byte as those two nibbles. Every bank keeps the same four base flags in bits [7:4], in the same order as the live markers and flags the host already watches. A bank changes only the data nibble in bits [3:0]. On this chip only bank 0 is legal.
 
+<p align="center">Table 7: DEBUG_FLAGS status byte</p>
+
 | Bit | Half | Meaning |
 |---|---|---|
 | 7 | base, every bank | Debug busy. This bit is 1 in the byte captured by a freezing DEBUG_FLAGS, because that read is itself a freeze |
 | 6 | base, every bank | Dump busy at the start of the DEBUG_FLAGS core tick |
 | 5 | base, every bank | Illegal, as it stood at the start of that core tick |
 | 4 | base, every bank | Overflow, including an in-flight phase-2 overflow |
-| 3 | bank 0 data | Output buffer present. This chip reads 1 |
-| 2 | bank 0 data | Output-tick phase of the DEBUG_FLAGS core tick. 1 when that core tick is an output tick |
+| 3 | bank 0 data | Output buffer non-empty. 1 when the output buffer holds unread dump data at the start of the DEBUG_FLAGS core tick; 0 when it is empty |
+| 2 | bank 0 data | Output-tick phase. 1 when the DEBUG_FLAGS core tick is an output tick (the on half of the output clock), 0 when it falls between output ticks |
 | 1 | bank 0 data | Dump paused. 1 when a dump was busy at the start of that core tick |
 | 0 | bank 0 data | Run busy. 1 when a phase 2 is in flight |
 
 - Dump busy (bit 6) reports the state at the start of the core tick. A freeze during a dump also shows dump paused (bit 1) = 1, so the two bits agree even on the last-nibble core tick.
 - Run busy (bit 0) follows the pipeline definition in Section 5.1: it reads 1 when DEBUG_FLAGS executes on the core tick right after a RUN (a phase 2 in flight), and 0 otherwise. On such a core tick bit 4 also includes any overflow from the add that finishes on that core tick.
-- After reset, with no dump and no overflow, DEBUG_FLAGS reads 0x88 when its core tick is not an output tick and 0x8C when it is.
+- After reset, with no dump and no overflow, DEBUG_FLAGS reads 0x80 when its core tick is not an output tick and 0x84 when it is.
 
-Bit 3 is the identity bit a host can use after reset to confirm it is talking to this chip (output buffer present). Bank ≠ 0 sets sticky illegal, does not freeze, and produces no debug nibbles.
+Bit 2 lets a host that has lost count of core ticks re-learn the output-tick phase, so it knows which edges carry a new `uo_out` value. Bank ≠ 0 sets sticky illegal, does not freeze, and produces no debug nibbles.
 
 #### 5.6.1 Debug read latency and width
 
@@ -197,6 +211,8 @@ Each debug opcode produces one freeze that returns the whole value the opcode na
 **Read points at the pins.** By the pad pipeline of Section 2, an opcode sampled on edge k executes on edge k+1. Its first nibble, the low nibble, appears on `uo_out` after edge k+2 when edge k+1 is an output tick, or after edge k+3 otherwise, and each nibble is held for one output tick. Reading the low nibble after edge k+3 is safe on either phase. The following nibbles occupy the following output ticks, with no gap. For an 8-bit read the phase-independent samples are after edge k+3 (bits [3:0]) and after edge k+5 (bits [7:4]). For a 24-bit read they continue after edges k+7, k+9, k+11 and k+13 (bits [23:20] last). On every one of those output ticks bit 7 is 1 and bit 6 is 0. The host assembles the value by shifting each low nibble into place, low nibble first. It must not treat the whole pad byte as the debug value: bits [7:4] of the pad are the live markers and flags, not data.
 
 **Spacing.** Count edges from the sample edge k of a freezing debug opcode. The next freezing debug opcode may be sampled on edge k+4 or later after an 8-bit read (the opcode, then three non-freezing commands), and on edge k+12 or later after a 24-bit read. That is the first sample whose command executes at the first legal core tick, k_exec+4 or k_exec+12, where k_exec is the core tick the earlier debug command executed. Issuing a second freezing read earlier is illegal: sticky illegal is set, and the freeze already on the pins is not restarted.
+
+<p align="center">Table 8: debug read widths and sample points</p>
 
 | Opcode | Width | Debug-nibble output ticks | Where to sample (opcode sampled on edge k) |
 |---|---|---|---|
@@ -211,7 +227,7 @@ The whole value is captured on one core tick (Section 5.6), so later commands do
 
 ![Debug read timing](figures/debug_timing.svg)
 
-<p align="center">Figure 2: a debug read streams nibbles on `uo_out[3:0]`, low nibble first, while bits [7:4] stay live. Bit 7 is 1 on each debug-nibble output tick and bit 6 is forced to 0. An 8-bit read is two output ticks; a 24-bit read is six.</p>
+<p align="center">Figure 2: a debug read streams nibbles on <code>uo_out[3:0]</code>, low nibble first, while bits [7:4] stay live. Bit 7 is 1 on each debug-nibble output tick and bit 6 is forced to 0. An 8-bit read is two output ticks; a 24-bit read is six.</p>
 
 *Note on Figure 2:* the first nibble is on the pins after edge k+2 or after edge k+3, depending on the output-tick phase. Each later nibble follows one output tick later and is held for two core ticks.
 
@@ -234,7 +250,7 @@ A data byte, whether written to the input buffer by LOAD or presented on `ui_in`
 
 ![Load path into the array](figures/load_path.svg)
 
-<p align="center">Figure 3: operand paths (LOAD → input buffer; RUN → bus byte). High nibble [7:4] is lane 1 = index 2; low nibble [3:0] is lane 0 = index 1. All four processing elements feed the output buffer, which DUMP_LOAD fills in one edge and streams out on `uo_out[3:0]`.</p>
+<p align="center">Figure 3: operand paths (LOAD → input buffer; RUN → bus byte). High nibble [7:4] is lane 1 = index 2; low nibble [3:0] is lane 0 = index 1. All four processing elements feed the output buffer, which DUMP_LOAD fills in one edge and streams out on <code>uo_out[3:0]</code>.</p>
 
 ### 6.2 Accumulate
 Each RUN performs `PE(i,j) += buf[i] × bus[j]`, where `buf` is the input buffer byte and `bus` is the `ui_in` byte sampled with the RUN, with i, j ∈ {1, 2}; lane 0 is index 1 and lane 1 is index 2. The product of two int4 values always fits in an 8-bit signed value, so nothing is truncated. Partial sums are 24-bit two's complement and wrap around on overflow rather than saturating; any wrap sets the sticky overflow flag. A host that sees overflow set knows that at least one add wrapped since the flags were last cleared, so the sums may not equal the true mathematical result (the flag is sticky: a later opposite wrap may have restored a sum, or the flag may be left over from an earlier tile) and can decide whether to discard or rescale the tile.
@@ -251,7 +267,7 @@ Host reconstruction: for nibble n (0..23), `sum[n/6] |= nibble << (4*(n%6))`, wh
 
 ## 7. Open items
 
-- The reference model does not model `ena`. Behavior at the pins: a hold takes effect one edge after `ena` goes low and ends one edge after it goes high; the edges in between are *hold edges*. Commands presented only during hold edges are **not** sampled; whatever is on the pads on the first enabled edge after the hold is what gets captured. All state, including the output-tick phase, freezes while held and resumes where it stopped, so a host tracking the output-tick phase by counting core ticks should not count hold edges.
+- **`ena` is not covered by the reference model.** Pin behavior: a hold takes effect one edge after `ena` goes low and ends one edge after it goes high. Commands presented only during hold edges are not sampled, and all state, including the output-tick phase, freezes and resumes where it stopped. A host that counts core ticks to track the output-tick phase must not count hold edges.
 
 ## 8. References
 

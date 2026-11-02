@@ -1,4 +1,8 @@
 # Lessons (tags: [measured] [Alex] [assumption])
+> **Currency note, 2026-11-02 (tip after 09b821f):** many entries below are historical (byte-wide freeze, 1-RUN-per-2-clocks, DBG_ADD low byte, 3-byte reads, live uo[7]=debug_busy). The current contract is docs/SPEC.md + docs/LOCKS.md; where they disagree, LOCKS wins. Golden/RTL still report DEBUG_FLAGS bit3=1 (old "outbuf present") until the next Grok Build tip.
+
+## ena (golden gap, moved from SPEC §7)
+- [assumption] golden/chip.c has no `ena` input, so lockstep never exercises hold edges. RTL registers ena once (ena_q in tt_um_polite_vneg1.sv), so a hold takes effect one edge after the pad changes; the rest of the SPEC §7 pin behavior is from RTL intent, not lockstep. Pin behavior is stated in SPEC §7; a golden ena model plus vectors is still owed.
 ## Open TBDs
 - [assumption] Nibble stream order is low nibble first within each 24b partial ("host endian" = LE?).
 - [assumption] Exact LOAD placement for OP_PLACE 0/1 (shift left→top vs bus→top).
@@ -7,7 +11,7 @@
 - TBD meaning of dump_paused (the model never sets it). How does ena/pause interact with dump?
 - TBD what DBG_ADD shows, plus the byte/PE arg encodings for DBG_PSUM/DBG_MUL.
 - [retired 2026-11-01, Alex t588u] Cfg B (no outbuf) dropped; its open CLEAR-outbuf question is moot.
-- [revised 2026-10-31, Cast F5] DBG_FLAGS shows debug_busy=1 while frozen (bit3 reads 1). The old snapshot-before-freeze rule was wrong: the host could never see debug_busy.
+- [revised 2026-10-31, Cast F5] DBG_FLAGS shows debug_busy=1 while frozen (then bit3; now bit7 of the 8-bit byte per t609). The old snapshot-before-freeze rule was wrong: the host could never see debug_busy.
 - TBD the live data nibble when no dump is active (0 in the model).
 - [assumption, Cast F1] On the RUN phase-2 cycle the RUN still counts as in flight: CLEAR PE collides (whole CLEAR ignored, illegal set). The phase-2 accumulate still completes.
 - [assumption, Cast F2/F4] A DBG_* that freezes during a dump pauses the stream for that cycle: dump_idx does not move, dump_paused=1, and the stream picks up on the next cycle. No nibbles are lost.
@@ -38,6 +42,6 @@ DUMP_LOAD on the RUN phase-2 cycle copies the pending wrap24(psum+mul) into outb
 ## RTL (2026-10-31)
 - [measured 2026-11-01, 33 MHz pad-out tree] RTL in rtl/ matches the half-rate golden (golden/chip.c at the 33 MHz pad-out commit) cycle for cycle on uo_out: 3x200k random cycles per config, 4 configs, 0 mismatches (verify/rtl_sim, server iverilog). The earlier 89dad4e measurement covers the pre-half-rate RTL only.
 - [measured] Live flag bit order is uo[4]=OVF uo[5]=illegal uo[6]=dump busy at start of the displayed edge (nibble-valid) (golden). [R8-U9/D7, qualified 2026-11-02 by t608] On a non-debug-nibble output tick, Live uo[7] is 0, not a debug-busy flag. On a debug-nibble output tick, live uo[7] is 1 and uo[6] is forced to 0. Debug busy is bit 7 of the captured DEBUG_FLAGS byte. The old stub comment `{OVF,illegal,dump_busy,debug_busy}` read MSB-first is backwards; first RTL attempt got it wrong.
-- [Alex GO 2026-11-02, t608/t609/t612/t620] Debug values stream as nibbles on uo[3:0], low nibble first: 2 output ticks for an 8-bit read, 6 for DEBUG_PARTIAL_SUM and DEBUG_ADD. RUN and a second freezing DBG are illegal while that window is open (k+1 through k+3, or k+1 through k+11). The second DBG does not restart the stream. DEBUG_FLAGS bank 0 is 0x88 or 0x8C after reset. Bank ≠ 0 does not freeze.
+- [Alex GO 2026-11-02, t608/t609/t612/t620] Debug values stream as nibbles on uo[3:0], low nibble first: 2 output ticks for an 8-bit read, 6 for DEBUG_PARTIAL_SUM and DEBUG_ADD. RUN and a second freezing DBG are illegal while that window is open (k+1 through k+3, or k+1 through k+11). The second DBG does not restart the stream. DEBUG_FLAGS bank 0 was 0x88 or 0x8C after reset (superseded 2026-11-02 ~01:07 CT: bit3 = outbuf non-empty, reset reads 0x80/0x84). Bank ≠ 0 does not freeze.
 - [measured] dump_paused needs no register: it is only observable via DBG_FLAGS on the freezing cycle, where it equals dump_adv.
 - uo_out is registered (pure function of post-edge state) — clean pad timing.
