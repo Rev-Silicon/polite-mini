@@ -1,0 +1,132 @@
+`default_nettype none
+// POLITE Mini — Tiny Tapeout top.
+//
+// Pad pipeline (golden/chip.c chip_step_ena):
+//   ena_q     : registered ena, resets to 1; gates every core and pad flop
+//               one edge after the pin changes. Sampled on every edge.
+//   in_*_q    : ui_in / uio_in sampled on edge k, executed by the core on k+1.
+//   otick_q   : phase of the core tick that produced uo_q.
+//   uo_q      : core output of the last enabled tick.
+//   uo_out    : loads uo_q only on the edge after an output tick (33 MHz).
+//
+// uio is input-only: uio_oe = 0, uio_out = 0.
+module tt_um_polite_mini (
+    input  wire [7:0] ui_in,
+    output wire [7:0] uo_out,
+    input  wire [7:0] uio_in,
+    output wire [7:0] uio_out,
+    output wire [7:0] uio_oe,
+    input  wire       ena,
+    input  wire       clk,
+    input  wire       rst_n
+);
+    assign uio_out = 8'h00;
+    assign uio_oe  = 8'h00;
+
+    // ---- pad registers ---------------------------------------------------
+    reg       ena_q;
+    reg [7:0] in_d_q, in_i_q, uo_q, uo_pad;
+    reg       otick_q;
+    wire      en = ena_q;
+    wire [7:0] core_uo;
+    wire       phase;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            ena_q   <= 1'b1;
+            in_d_q  <= 8'h00;      // reset reads as NOP
+            in_i_q  <= 8'h00;
+            uo_q    <= 8'h00;
+            uo_pad  <= 8'h00;
+            otick_q <= 1'b0;
+        end else begin
+            ena_q <= ena;
+            if (en) begin
+                if (otick_q)
+                    uo_pad <= uo_q;
+                uo_q    <= core_uo;
+                otick_q <= phase;
+                in_d_q  <= ui_in;
+                in_i_q  <= uio_in;
+            end
+        end
+    end
+    assign uo_out = uo_pad;
+
+    // ---- control -----------------------------------------------------------
+    wire       run_busy, illegal, ovf, illegal_d, ovf_d;
+    wire       run_now, acc_en, clr_psum, clr_outbuf, dump_load, dump_abort;
+    wire       dbg_start, dump_busy, fz_open, ofz, dbg_tick;
+    wire [3:0] dbg_op, dbg_nib, dump_nib;
+    wire [1:0] dbg_pe;
+    wire [7:0] inbuf, status;
+    wire [3:0] pe_ovf;
+
+    polite_ctrl u_ctrl (
+        .clk(clk), .rst_n(rst_n), .en(en),
+        .d(in_d_q), .ins(in_i_q),
+        .dump_busy(dump_busy), .fz_open(fz_open), .pe_ovf_any(|pe_ovf),
+        .phase(phase), .run_busy(run_busy), .inbuf(inbuf),
+        .illegal(illegal), .ovf(ovf), .illegal_d(illegal_d), .ovf_d(ovf_d),
+        .run_now(run_now), .acc_en(acc_en),
+        .clr_psum(clr_psum), .clr_outbuf(clr_outbuf),
+        .dump_load(dump_load), .dump_abort(dump_abort),
+        .dbg_start(dbg_start), .dbg_op(dbg_op), .dbg_pe(dbg_pe),
+        .status(status)
+    );
+
+    // ---- PE array: index = dump order 0=(2,2) 1=(2,1) 2=(1,2) 3=(1,1) ------
+    // Lane 1 (high nibble) is row/column 2; lane 0 (low nibble) is 1.
+    wire [95:0] psum_all, sum_all;
+    wire [31:0] mul_all;
+
+    genvar g;
+    generate
+        for (g = 0; g < 4; g = g + 1) begin : g_pe
+            localparam bit ROW2 = (g < 2);             // PE rows 2,2,1,1
+            localparam bit COL2 = (g % 2 == 0);        // PE cols 2,1,2,1
+            wire signed [23:0] ps;
+            wire signed [7:0]  mu;
+            polite_pe u_pe (
+                .clk(clk), .rst_n(rst_n), .en(en),
+                .a(ROW2 ? inbuf[7:4]  : inbuf[3:0]),
+                .b(COL2 ? in_d_q[7:4] : in_d_q[3:0]),
+                .run_now(run_now), .acc_en(acc_en), .clr(clr_psum),
+                .psum(ps), .mul(mu),
+                .sum(sum_all[24*g +: 24]), .ovf(pe_ovf[g])
+            );
+            assign psum_all[24*g +: 24] = ps;
+            assign mul_all [8*g  +: 8]  = mu;
+        end
+    endgenerate
+
+    // ---- output buffer: phase-2 DUMP_LOAD captures the pending add --------
+    wire [95:0] cap = acc_en ? sum_all : psum_all;
+
+    polite_outbuf u_outbuf (
+        .clk(clk), .rst_n(rst_n), .en(en),
+        .phase(phase), .hold(ofz),
+        .load(dump_load), .abort(dump_abort), .clr(clr_outbuf),
+        .cap(cap), .busy(dump_busy), .nib(dump_nib)
+    );
+
+    // ---- debug unit --------------------------------------------------------
+    polite_dbg u_dbg (
+        .clk(clk), .rst_n(rst_n), .en(en),
+        .phase(phase), .start(dbg_start), .op(dbg_op), .pe(dbg_pe),
+        .run_busy(run_busy), .status(status), .inbuf(inbuf), .d(in_d_q),
+        .psum_all(psum_all), .mul_all(mul_all), .sum_all(sum_all),
+        .open(fz_open), .ofz(ofz), .dbg_tick(dbg_tick), .dbg_nib(dbg_nib)
+    );
+
+    // ---- output mux --------------------------------------------------------
+    polite_outmux u_outmux (
+        .dbg_tick(dbg_tick), .dbg_nib(dbg_nib),
+        .dump_busy(dump_busy), .dump_nib(dump_nib),
+        .illegal(illegal_d), .ovf(ovf_d),
+        .core_uo(core_uo)
+    );
+
+    wire _unused = &{1'b0, illegal, ovf};
+endmodule
+`default_nettype wire
