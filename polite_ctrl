@@ -10,7 +10,9 @@
 //
 // illegal_d / ovf_d are the values after this tick; they drive uo[5]/uo[4]
 // of this tick's core output, exactly like the C return value.
-module polite_ctrl (
+module polite_ctrl #(
+    parameter bit HAS_OUTBUF = 1'b1   // chip_reset(c, has_outbuf, ...)
+) (
     input  wire       clk,
     input  wire       rst_n,
     input  wire       en,
@@ -55,8 +57,13 @@ module polite_ctrl (
     wire bad_bank = (op == OP_DFLAG) && (a != 4'h0);      // FLAGS bank != 0
     wire dbg_req  = is_dbg && !bad_bank;                  // would freeze
 
+    // Without an output buffer, DUMP_LOAD / DUMP_ABORT / CLEAR bit 2 are
+    // illegal (chip.c: !c->has_outbuf).
+    wire no_ob    = !HAS_OUTBUF;
+    wire is_dabrt = (op == OP_DABRT);
+
     // CLEAR collisions: whole CLEAR ignored, illegal set.
-    wire clr_coll = (a[3] && run_busy) || (a[2] && dump_busy);
+    wire clr_coll = (a[3] && run_busy) || (a[2] && (dump_busy || no_ob));
     wire clr_ok   = is_clear && !clr_coll;
     wire clr_flg  = clr_ok && a[0];
 
@@ -64,14 +71,15 @@ module polite_ctrl (
     assign acc_en     = run_busy;
     assign clr_psum   = clr_ok && a[3];
     assign clr_outbuf = clr_ok && a[2];
-    assign dump_load  = is_dload && !dump_busy;
-    assign dump_abort = (op == OP_DABRT);
+    assign dump_load  = is_dload && !dump_busy && !no_ob;
+    assign dump_abort = is_dabrt && !no_ob;
     assign dbg_start  = dbg_req && !fz_open;
     assign dbg_op     = op;
     assign dbg_pe     = a[1:0];
 
     wire ill_set = (is_run   && fz_open)
-                 | (is_dload && dump_busy)
+                 | (is_dload && (dump_busy || no_ob))
+                 | (is_dabrt && no_ob)
                  | (is_clear && clr_coll)
                  | bad_bank
                  | (dbg_req  && fz_open)
