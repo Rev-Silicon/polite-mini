@@ -10,7 +10,12 @@
 //   uo_out    : loads uo_q only on the edge after an output tick (33 MHz).
 //
 // uio is input-only: uio_oe = 0, uio_out = 0.
-module tt_um_polite_mini (
+module tt_um_polite_mini #(
+    // golden chip_reset(c, has_outbuf, op_place). op_place is never read by
+    // chip.c, so it has no RTL parameter. HAS_OUTBUF = 0 builds without the
+    // output buffer: DUMP_LOAD, DUMP_ABORT and CLEAR bit 2 are then illegal.
+    parameter bit HAS_OUTBUF = 1'b1
+) (
     input  wire [7:0] ui_in,
     output wire [7:0] uo_out,
     input  wire [7:0] uio_in,
@@ -62,7 +67,7 @@ module tt_um_polite_mini (
     wire [7:0] inbuf, status;
     wire [3:0] pe_ovf;
 
-    polite_ctrl u_ctrl (
+    polite_ctrl #(.HAS_OUTBUF(HAS_OUTBUF)) u_ctrl (
         .clk(clk), .rst_n(rst_n), .en(en),
         .d(in_d_q), .ins(in_i_q),
         .dump_busy(dump_busy), .fz_open(fz_open), .pe_ovf_any(|pe_ovf),
@@ -103,12 +108,21 @@ module tt_um_polite_mini (
     // ---- output buffer: phase-2 DUMP_LOAD captures the pending add --------
     wire [95:0] cap = acc_en ? sum_all : psum_all;
 
-    polite_outbuf u_outbuf (
-        .clk(clk), .rst_n(rst_n), .en(en),
-        .phase(phase), .hold(ofz),
-        .load(dump_load), .abort(dump_abort), .clr(clr_outbuf),
-        .cap(cap), .busy(dump_busy), .nib(dump_nib)
-    );
+    generate
+        if (HAS_OUTBUF) begin : g_outbuf
+            polite_outbuf u_outbuf (
+                .clk(clk), .rst_n(rst_n), .en(en),
+                .phase(phase), .hold(ofz),
+                .load(dump_load), .abort(dump_abort), .clr(clr_outbuf),
+                .cap(cap), .busy(dump_busy), .nib(dump_nib)
+            );
+        end else begin : g_no_outbuf
+            // No buffer: never busy, idle nibble 0 (ctrl blocks every dump op).
+            assign dump_busy = 1'b0;
+            assign dump_nib  = 4'h0;
+            wire _unused_ob = &{1'b0, cap, dump_load, dump_abort, clr_outbuf, ofz};
+        end
+    endgenerate
 
     // ---- debug unit --------------------------------------------------------
     polite_dbg u_dbg (
