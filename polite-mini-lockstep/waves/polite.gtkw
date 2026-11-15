@@ -1,0 +1,54 @@
+[*] POLITE Mini - use with either output-buffer configuration
+[timestart] 0
+@200
+-Pins
+@28
+TOP.clk
+TOP.rst_n
+TOP.ena
+TOP.ena_q
+@22
+TOP.uio_in[7:0]
+TOP.ui_in[7:0]
+TOP.in_i_q[7:0]
+TOP.in_d_q[7:0]
+TOP.inbuf[7:0]
+@200
+-RUN and accumulators
+@28
+TOP.sim_top.dut.run_now
+TOP.run_busy
+TOP.sim_top.dut.acc_en
+@22
+TOP.product[0][7:0]
+TOP.product[1][7:0]
+TOP.product[2][7:0]
+TOP.product[3][7:0]
+TOP.psum[0][23:0]
+TOP.psum[1][23:0]
+TOP.psum[2][23:0]
+TOP.psum[3][23:0]
+@200
+-Dump and debug
+@28
+TOP.sim_top.dut.dump_load
+TOP.dump_busy
+TOP.sim_top.dut.dump_abort
+TOP.sim_top.dut.dbg_start
+TOP.fz_open
+TOP.sim_top.dut.ofz
+TOP.sim_top.dut.dbg_tick
+@22
+TOP.sim_top.dut.dump_nib[3:0]
+TOP.sim_top.dut.dbg_nib[3:0]
+@200
+-Pad timing and flags
+@28
+TOP.illegal
+TOP.ovf
+TOP.phase
+TOP.otick_q
+@22
+TOP.core_uo[7:0]
+TOP.uo_q[7:0]
+TOP.uo_out[7:0]

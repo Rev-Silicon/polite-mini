@@ -1,0 +1,6 @@
+FAIL CONFIG=1 scenario=asynchronous reset, input/pad latency, registered enable edge=1 time_ps=74184 seed=1347374153
+phase: got 0x0, expected 0x1
+edge 1 pins d=0x11 ins=0x10 ena=0 executes=0x0 enabled=1 phase=0
+model: ena_q=0 phase=1 queued=0x10 run=0 dump=0 idx=0 freeze_left=0
+ERROR: lockstep/requirement failure
+make: *** [Makefile:44: directed] Error 1

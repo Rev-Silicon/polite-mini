@@ -1,0 +1,89 @@
+build/example/buf1/chip_test
+BUFBUS ok
+PIPELINE ok
+FREEZE ok
+FLAGS occ ok
+ENA ok
+== cfg A place0
+PE(2,2)=30
+PE(2,1)=15
+PE(1,2)=-10
+PE(1,1)=-5
+DBG_FLAGS=0x80 phase0
+DUMP ok
+PIN cfg A place0 ok
+PIPE cfg A place0 ok
+== cfg A place1
+PE(2,2)=30
+PE(2,1)=15
+PE(1,2)=-10
+PE(1,1)=-5
+DBG_FLAGS=0x80 phase0
+DUMP ok
+PIN cfg A place1 ok
+PIPE cfg A place1 ok
+== cfg B place0
+PE(2,2)=30
+PE(2,1)=15
+PE(1,2)=-10
+PE(1,1)=-5
+DBG_FLAGS=0x80 phase0
+PIN cfg B place0 ok
+PIPE cfg B place0 ok
+== cfg B place1
+PE(2,2)=30
+PE(2,1)=15
+PE(1,2)=-10
+PE(1,1)=-5
+DBG_FLAGS=0x80 phase0
+PIN cfg B place1 ok
+PIPE cfg B place1 ok
+ALL PASS
+make --no-print-directory check CONFIG=1
+python3 -m verilator --cc --exe --build -j 2 --trace --coverage --assert \
+  --timescale 1ps/1ps --top-module sim_top -GHAS_OUTBUF="1'b1" \
+  --Mdir build/example/buf1 -I/workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl -MAKEFLAGS CFG_CXXFLAGS_PCH_I=-include \
+  -CFLAGS '-std=c++17 -O2 -DHAS_BUFFER=1 -I/workspace/scratch/a306d492060b/polite-mini-lockstep/golden' \
+  /workspace/scratch/a306d492060b/polite-mini-lockstep/rtl/tt_um_polite_mini.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_ctrl.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_pe.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_outbuf.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_dbg.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_outmux.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/tb/sim_top.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/tb/testbench.cpp /workspace/scratch/a306d492060b/polite-mini-lockstep/build/example/buf1/chip.o
+c++ --std=c++20 -DVL_TIME_CONTEXT -I.  -MMD -I/workspace/scratch/a306d492060b/tooling/verilator/include -I/workspace/scratch/a306d492060b/tooling/verilator/include/vltstd -DVM_COVERAGE=1 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -DVM_TRACE_SAIF=0     -std=c++17 -O2 -DHAS_BUFFER=1 -I/workspace/scratch/a306d492060b/polite-mini-lockstep/golden   -Os  -c -o testbench.o /workspace/scratch/a306d492060b/polite-mini-lockstep/tb/testbench.cpp
+c++    testbench.o verilated.o verilated_cov.o verilated_vcd_c.o verilated_threads.o Vsim_top__ALL.a   /workspace/scratch/a306d492060b/polite-mini-lockstep/build/example/buf1/chip.o     -o Vsim_top
+- V e r i l a t i o n   R e p o r t:  rev UNKNOWN.REV
+- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 2.776 s (elab=0.000, cvt=0.000, bld=2.775); cpu 0.001 s on 2 threads; alloced 8.059 MB
+Sources: /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl ; top: /workspace/scratch/a306d492060b/polite-mini-lockstep/rtl/tt_um_polite_mini.sv
+build/example/buf1/Vsim_top --suite all --seed 1347374153 --cycles 20000 --stats build/example/buf1/stats.csv --coverage build/example/buf1/coverage.dat 
+[RUN] asynchronous reset, input/pad latency, registered enable
+[RUN] signed PE order, pipelined RUN, LOAD overlap, sticky products
+[RUN] all debug selectors/aliases, pre-add PSUM versus pending ADD
+[RUN] DEBUG_FLAGS pending RUN and busy-at-start dump bits
+[RUN] freeze length, first legal edge, blocked RUN and nested debug
+[RUN] complete instruction-byte and CLEAR mask sweeps in both phases
+[RUN] post-add snapshot, 24-nibble dump, concurrent compute, debug pause
+[RUN] dump last-nibble collisions, abort, reload and debug on final beat
+[RUN] all 65,536 packed operand-byte pairs, all four lanes
+[RUN] real pin traffic through positive and negative 24-bit wraps
+[RUN] seeded arbitrary pins, stalls, resets and compute-heavy traffic
+PASS CONFIG=1 suite=all seed=1347374153 edges=559041 checks=39522648
+make --no-print-directory check CONFIG=0
+python3 -m verilator --cc --exe --build -j 2 --trace --coverage --assert \
+  --timescale 1ps/1ps --top-module sim_top -GHAS_OUTBUF="1'b0" \
+  --Mdir build/example/buf0 -I/workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl -MAKEFLAGS CFG_CXXFLAGS_PCH_I=-include \
+  -CFLAGS '-std=c++17 -O2 -DHAS_BUFFER=0 -I/workspace/scratch/a306d492060b/polite-mini-lockstep/golden' \
+  /workspace/scratch/a306d492060b/polite-mini-lockstep/rtl/tt_um_polite_mini.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_ctrl.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_pe.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_outbuf.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_dbg.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl/polite_outmux.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/tb/sim_top.sv /workspace/scratch/a306d492060b/polite-mini-lockstep/tb/testbench.cpp /workspace/scratch/a306d492060b/polite-mini-lockstep/build/example/buf0/chip.o
+c++ --std=c++20 -DVL_TIME_CONTEXT -I.  -MMD -I/workspace/scratch/a306d492060b/tooling/verilator/include -I/workspace/scratch/a306d492060b/tooling/verilator/include/vltstd -DVM_COVERAGE=1 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -DVM_TRACE_SAIF=0     -std=c++17 -O2 -DHAS_BUFFER=0 -I/workspace/scratch/a306d492060b/polite-mini-lockstep/golden   -Os  -c -o testbench.o /workspace/scratch/a306d492060b/polite-mini-lockstep/tb/testbench.cpp
+c++    testbench.o verilated.o verilated_cov.o verilated_vcd_c.o verilated_threads.o Vsim_top__ALL.a   /workspace/scratch/a306d492060b/polite-mini-lockstep/build/example/buf0/chip.o     -o Vsim_top
+- V e r i l a t i o n   R e p o r t:  rev UNKNOWN.REV
+- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 2.420 s (elab=0.000, cvt=0.000, bld=2.419); cpu 0.001 s on 2 threads; alloced 8.059 MB
+Sources: /workspace/scratch/a306d492060b/polite-mini-lockstep/example_rtl ; top: /workspace/scratch/a306d492060b/polite-mini-lockstep/rtl/tt_um_polite_mini.sv
+build/example/buf0/Vsim_top --suite all --seed 1347374153 --cycles 20000 --stats build/example/buf0/stats.csv --coverage build/example/buf0/coverage.dat 
+[RUN] asynchronous reset, input/pad latency, registered enable
+[RUN] signed PE order, pipelined RUN, LOAD overlap, sticky products
+[RUN] all debug selectors/aliases, pre-add PSUM versus pending ADD
+[RUN] DEBUG_FLAGS pending RUN and busy-at-start dump bits
+[RUN] freeze length, first legal edge, blocked RUN and nested debug
+[RUN] complete instruction-byte and CLEAR mask sweeps in both phases
+[RUN] all 65,536 packed operand-byte pairs, all four lanes
+[RUN] real pin traffic through positive and negative 24-bit wraps
+[RUN] seeded arbitrary pins, stalls, resets and compute-heavy traffic
+PASS CONFIG=0 suite=all seed=1347374153 edges=556189 checks=39317823

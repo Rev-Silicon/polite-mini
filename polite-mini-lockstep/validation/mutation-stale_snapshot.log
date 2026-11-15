@@ -1,0 +1,11 @@
+FAIL CONFIG=1 scenario=post-add snapshot, 24-nibble dump, concurrent compute, debug pause edge=59111 time_ps=920786816 seed=1347374153
+uo_q: got 0x40, expected 0x46
+edge 59106 pins d=0x3f ins=0x10 ena=1 executes=0x0 enabled=1 phase=0
+edge 59107 pins d=0x0 ins=0x0 ena=1 executes=0x10 enabled=1 phase=1
+edge 59108 pins d=0x21 ins=0x20 ena=1 executes=0x0 enabled=1 phase=0
+edge 59109 pins d=0x0 ins=0x30 ena=1 executes=0x20 enabled=1 phase=1
+edge 59110 pins d=0x77 ins=0x20 ena=1 executes=0x30 enabled=1 phase=0
+edge 59111 pins d=0x0 ins=0x0 ena=1 executes=0x20 enabled=1 phase=1
+model: ena_q=1 phase=0 queued=0x0 run=1 dump=1 idx=1 freeze_left=0
+ERROR: lockstep/requirement failure
+make: *** [Makefile:44: directed] Error 1

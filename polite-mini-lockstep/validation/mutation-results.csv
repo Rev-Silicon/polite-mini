@@ -1,0 +1,5 @@
+mutation,outcome,failure
+stale_snapshot,DETECTED,"FAIL CONFIG=1 scenario=post-add snapshot, 24-nibble dump, concurrent compute, debug pause edge=59111 time_ps=920786816 seed=1347374153"
+early_enable,DETECTED,"FAIL CONFIG=1 scenario=asynchronous reset, input/pad latency, registered enable edge=1 time_ps=74184 seed=1347374153"
+swapped_rows,DETECTED,"FAIL CONFIG=1 scenario=asynchronous reset, input/pad latency, registered enable edge=46 time_ps=789328 seed=1347374153"
+short_debug_window,DETECTED,"FAIL CONFIG=1 scenario=asynchronous reset, input/pad latency, registered enable edge=227 time_ps=3731664 seed=1347374153"

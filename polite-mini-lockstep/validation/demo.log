@@ -1,0 +1,2 @@
+[RUN] replayed pin stimulus
+PASS CONFIG=1 suite=replay seed=1347374153 edges=116 checks=8450

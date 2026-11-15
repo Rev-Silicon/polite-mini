@@ -1,0 +1,2 @@
+[RUN] seeded arbitrary pins, stalls, resets and compute-heavy traffic
+PASS CONFIG=1 suite=random seed=42 edges=10240 checks=722638

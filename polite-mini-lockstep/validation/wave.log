@@ -1,0 +1,2 @@
+PASS: 36 saved signals resolve; expected clock half periods observed
+PASS: public pin waveforms match after VCD/FST/VCD round trip

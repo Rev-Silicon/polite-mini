@@ -1,0 +1,9 @@
+[RUN] asynchronous reset, input/pad latency, registered enable
+[RUN] signed PE order, pipelined RUN, LOAD overlap, sticky products
+[RUN] all debug selectors/aliases, pre-add PSUM versus pending ADD
+[RUN] DEBUG_FLAGS pending RUN and busy-at-start dump bits
+[RUN] freeze length, first legal edge, blocked RUN and nested debug
+[RUN] complete instruction-byte and CLEAR mask sweeps in both phases
+[RUN] post-add snapshot, 24-nibble dump, concurrent compute, debug pause
+[RUN] dump last-nibble collisions, abort, reload and debug on final beat
+PASS CONFIG=1 suite=directed seed=1347374153 edges=60708 checks=652647
