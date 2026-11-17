@@ -1,0 +1,141 @@
+polite_ctrl HAS_OUTBUF=1 seed=10 iterations=5000
+Functional bins across the full suite; not RTL code coverage. Single tests may leave bins uncovered.
+opcode 0 : 538  HIT
+opcode 1 : 465  HIT
+opcode 2 : 564  HIT
+opcode 3 : 409  HIT
+opcode 4 : 408  HIT
+opcode 5 : 673  HIT
+opcode 6 : 385  HIT
+opcode 7 : 339  HIT
+opcode 8 : 366  HIT
+opcode 9 : 333  HIT
+opcode a : 322  HIT
+opcode b : 349  HIT
+opcode c : 390  HIT
+opcode d : 324  HIT
+opcode e : 305  HIT
+opcode f : 320  HIT
+CLEAR mask 0 : 20  HIT
+CLEAR mask=0 run=0 dump=0 : 13  HIT
+CLEAR mask=0 run=0 dump=1 : 5  HIT
+CLEAR mask=0 run=1 dump=0 : 1  HIT
+CLEAR mask=0 run=1 dump=1 : 1  HIT
+CLEAR mask 1 : 214  HIT
+CLEAR mask=1 run=0 dump=0 : 203  HIT
+CLEAR mask=1 run=0 dump=1 : 8  HIT
+CLEAR mask=1 run=1 dump=0 : 2  HIT
+CLEAR mask=1 run=1 dump=1 : 1  HIT
+CLEAR mask 2 : 123  HIT
+CLEAR mask=2 run=0 dump=0 : 113  HIT
+CLEAR mask=2 run=0 dump=1 : 7  HIT
+CLEAR mask=2 run=1 dump=0 : 1  HIT
+CLEAR mask=2 run=1 dump=1 : 2  HIT
+CLEAR mask 3 : 29  HIT
+CLEAR mask=3 run=0 dump=0 : 21  HIT
+CLEAR mask=3 run=0 dump=1 : 6  HIT
+CLEAR mask=3 run=1 dump=0 : 1  HIT
+CLEAR mask=3 run=1 dump=1 : 1  HIT
+CLEAR mask 4 : 23  HIT
+CLEAR mask=4 run=0 dump=0 : 13  HIT
+CLEAR mask=4 run=0 dump=1 : 8  HIT
+CLEAR mask=4 run=1 dump=0 : 1  HIT
+CLEAR mask=4 run=1 dump=1 : 1  HIT
+CLEAR mask 5 : 26  HIT
+CLEAR mask=5 run=0 dump=0 : 20  HIT
+CLEAR mask=5 run=0 dump=1 : 4  HIT
+CLEAR mask=5 run=1 dump=0 : 1  HIT
+CLEAR mask=5 run=1 dump=1 : 1  HIT
+CLEAR mask 6 : 26  HIT
+CLEAR mask=6 run=0 dump=0 : 21  HIT
+CLEAR mask=6 run=0 dump=1 : 2  HIT
+CLEAR mask=6 run=1 dump=0 : 2  HIT
+CLEAR mask=6 run=1 dump=1 : 1  HIT
+CLEAR mask 7 : 22  HIT
+CLEAR mask=7 run=0 dump=0 : 13  HIT
+CLEAR mask=7 run=0 dump=1 : 6  HIT
+CLEAR mask=7 run=1 dump=0 : 2  HIT
+CLEAR mask=7 run=1 dump=1 : 1  HIT
+CLEAR mask 8 : 23  HIT
+CLEAR mask=8 run=0 dump=0 : 17  HIT
+CLEAR mask=8 run=0 dump=1 : 3  HIT
+CLEAR mask=8 run=1 dump=0 : 2  HIT
+CLEAR mask=8 run=1 dump=1 : 1  HIT
+CLEAR mask 9 : 31  HIT
+CLEAR mask=9 run=0 dump=0 : 22  HIT
+CLEAR mask=9 run=0 dump=1 : 7  HIT
+CLEAR mask=9 run=1 dump=0 : 1  HIT
+CLEAR mask=9 run=1 dump=1 : 1  HIT
+CLEAR mask a : 29  HIT
+CLEAR mask=a run=0 dump=0 : 18  HIT
+CLEAR mask=a run=0 dump=1 : 8  HIT
+CLEAR mask=a run=1 dump=0 : 2  HIT
+CLEAR mask=a run=1 dump=1 : 1  HIT
+CLEAR mask b : 26  HIT
+CLEAR mask=b run=0 dump=0 : 19  HIT
+CLEAR mask=b run=0 dump=1 : 5  HIT
+CLEAR mask=b run=1 dump=0 : 1  HIT
+CLEAR mask=b run=1 dump=1 : 1  HIT
+CLEAR mask c : 21  HIT
+CLEAR mask=c run=0 dump=0 : 12  HIT
+CLEAR mask=c run=0 dump=1 : 6  HIT
+CLEAR mask=c run=1 dump=0 : 2  HIT
+CLEAR mask=c run=1 dump=1 : 1  HIT
+CLEAR mask d : 20  HIT
+CLEAR mask=d run=0 dump=0 : 15  HIT
+CLEAR mask=d run=0 dump=1 : 3  HIT
+CLEAR mask=d run=1 dump=0 : 1  HIT
+CLEAR mask=d run=1 dump=1 : 1  HIT
+CLEAR mask e : 26  HIT
+CLEAR mask=e run=0 dump=0 : 18  HIT
+CLEAR mask=e run=0 dump=1 : 6  HIT
+CLEAR mask=e run=1 dump=0 : 1  HIT
+CLEAR mask=e run=1 dump=1 : 1  HIT
+CLEAR mask f : 14  HIT
+CLEAR mask=f run=0 dump=0 : 9  HIT
+CLEAR mask=f run=0 dump=1 : 3  HIT
+CLEAR mask=f run=1 dump=0 : 1  HIT
+CLEAR mask=f run=1 dump=1 : 1  HIT
+overflow en=0 run=0 raw=0 : 1  HIT
+overflow en=0 run=0 raw=1 : 1  HIT
+overflow en=0 run=1 raw=0 : 17  HIT
+overflow en=0 run=1 raw=1 : 2  HIT
+overflow en=1 run=0 raw=0 : 5056  HIT
+overflow en=1 run=0 raw=1 : 1178  HIT
+overflow en=1 run=1 raw=0 : 176  HIT
+overflow en=1 run=1 raw=1 : 80  HIT
+debug op=6 freeze=0 : 143  HIT
+debug op=6 freeze=1 : 242  HIT
+debug op=7 freeze=0 : 121  HIT
+debug op=7 freeze=1 : 218  HIT
+debug op=8 freeze=0 : 123  HIT
+debug op=8 freeze=1 : 243  HIT
+debug op=9 freeze=0 : 129  HIT
+debug op=9 freeze=1 : 204  HIT
+debug op=a freeze=0 : 117  HIT
+debug op=a freeze=1 : 205  HIT
+debug op=b freeze=0 : 127  HIT
+debug op=b freeze=1 : 222  HIT
+status phase=0 : 3248  HIT
+async reset en=0 : 1  HIT
+status phase=1 : 3263  HIT
+async reset en=1 : 11  HIT
+rejected opcode 0 : 0 (informational)
+rejected opcode 1 : 0 (informational)
+rejected opcode 2 : 307 (informational)
+rejected opcode 3 : 83 (informational)
+rejected opcode 4 : 0 (informational)
+rejected opcode 5 : 61 (informational)
+rejected opcode 6 : 348 (informational)
+rejected opcode 7 : 218 (informational)
+rejected opcode 8 : 243 (informational)
+rejected opcode 9 : 204 (informational)
+rejected opcode a : 205 (informational)
+rejected opcode b : 222 (informational)
+rejected opcode c : 390 (informational)
+rejected opcode d : 324 (informational)
+rejected opcode e : 305 (informational)
+rejected opcode f : 320 (informational)
+TEST=ALL tests=11 passed=11 failed=0
+Functional coverage: 120/120 = 100.00%
+Checks=150992 failed_checks=0 coverage_failures=0

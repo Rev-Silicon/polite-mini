@@ -1,0 +1,109 @@
+polite_ctrl HAS_OUTBUF=0 seed=40 iterations=5000
+Functional bins across the full suite; not RTL code coverage. Single tests may leave bins uncovered.
+opcode 0 : 514  HIT
+opcode 1 : 477  HIT
+opcode 2 : 561  HIT
+opcode 3 : 408  HIT
+opcode 4 : 413  HIT
+opcode 5 : 668  HIT
+opcode 6 : 391  HIT
+opcode 7 : 366  HIT
+opcode 8 : 339  HIT
+opcode 9 : 319  HIT
+opcode a : 308  HIT
+opcode b : 339  HIT
+opcode c : 421  HIT
+opcode d : 335  HIT
+opcode e : 318  HIT
+opcode f : 313  HIT
+CLEAR mask 0 : 30  HIT
+CLEAR mask=0 run=0 dump=0 : 28  HIT
+CLEAR mask=0 run=1 dump=0 : 2  HIT
+CLEAR mask 1 : 213  HIT
+CLEAR mask=1 run=0 dump=0 : 209  HIT
+CLEAR mask=1 run=1 dump=0 : 4  HIT
+CLEAR mask 2 : 118  HIT
+CLEAR mask=2 run=0 dump=0 : 115  HIT
+CLEAR mask=2 run=1 dump=0 : 3  HIT
+CLEAR mask 3 : 29  HIT
+CLEAR mask=3 run=0 dump=0 : 27  HIT
+CLEAR mask=3 run=1 dump=0 : 2  HIT
+CLEAR mask 4 : 20  HIT
+CLEAR mask=4 run=0 dump=0 : 18  HIT
+CLEAR mask=4 run=1 dump=0 : 2  HIT
+CLEAR mask 5 : 26  HIT
+CLEAR mask=5 run=0 dump=0 : 24  HIT
+CLEAR mask=5 run=1 dump=0 : 2  HIT
+CLEAR mask 6 : 24  HIT
+CLEAR mask=6 run=0 dump=0 : 22  HIT
+CLEAR mask=6 run=1 dump=0 : 2  HIT
+CLEAR mask 7 : 22  HIT
+CLEAR mask=7 run=0 dump=0 : 18  HIT
+CLEAR mask=7 run=1 dump=0 : 4  HIT
+CLEAR mask 8 : 22  HIT
+CLEAR mask=8 run=0 dump=0 : 19  HIT
+CLEAR mask=8 run=1 dump=0 : 3  HIT
+CLEAR mask 9 : 20  HIT
+CLEAR mask=9 run=0 dump=0 : 18  HIT
+CLEAR mask=9 run=1 dump=0 : 2  HIT
+CLEAR mask a : 27  HIT
+CLEAR mask=a run=0 dump=0 : 24  HIT
+CLEAR mask=a run=1 dump=0 : 3  HIT
+CLEAR mask b : 22  HIT
+CLEAR mask=b run=0 dump=0 : 20  HIT
+CLEAR mask=b run=1 dump=0 : 2  HIT
+CLEAR mask c : 27  HIT
+CLEAR mask=c run=0 dump=0 : 25  HIT
+CLEAR mask=c run=1 dump=0 : 2  HIT
+CLEAR mask d : 19  HIT
+CLEAR mask=d run=0 dump=0 : 17  HIT
+CLEAR mask=d run=1 dump=0 : 2  HIT
+CLEAR mask e : 25  HIT
+CLEAR mask=e run=0 dump=0 : 21  HIT
+CLEAR mask=e run=1 dump=0 : 4  HIT
+CLEAR mask f : 24  HIT
+CLEAR mask=f run=0 dump=0 : 21  HIT
+CLEAR mask=f run=1 dump=0 : 3  HIT
+overflow en=0 run=0 raw=0 : 1  HIT
+overflow en=0 run=0 raw=1 : 1  HIT
+overflow en=0 run=1 raw=0 : 17  HIT
+overflow en=0 run=1 raw=1 : 2  HIT
+overflow en=1 run=0 raw=0 : 5010  HIT
+overflow en=1 run=0 raw=1 : 1208  HIT
+overflow en=1 run=1 raw=0 : 181  HIT
+overflow en=1 run=1 raw=1 : 91  HIT
+debug op=6 freeze=0 : 164  HIT
+debug op=6 freeze=1 : 227  HIT
+debug op=7 freeze=0 : 130  HIT
+debug op=7 freeze=1 : 236  HIT
+debug op=8 freeze=0 : 116  HIT
+debug op=8 freeze=1 : 223  HIT
+debug op=9 freeze=0 : 121  HIT
+debug op=9 freeze=1 : 198  HIT
+debug op=a freeze=0 : 119  HIT
+debug op=a freeze=1 : 189  HIT
+debug op=b freeze=0 : 127  HIT
+debug op=b freeze=1 : 212  HIT
+status phase=0 : 3248  HIT
+async reset en=0 : 1  HIT
+status phase=1 : 3263  HIT
+async reset en=1 : 11  HIT
+rejected opcode 0 : 0 (informational)
+rejected opcode 1 : 0 (informational)
+rejected opcode 2 : 288 (informational)
+rejected opcode 3 : 408 (informational)
+rejected opcode 4 : 413 (informational)
+rejected opcode 5 : 197 (informational)
+rejected opcode 6 : 353 (informational)
+rejected opcode 7 : 236 (informational)
+rejected opcode 8 : 223 (informational)
+rejected opcode 9 : 198 (informational)
+rejected opcode a : 189 (informational)
+rejected opcode b : 212 (informational)
+rejected opcode c : 421 (informational)
+rejected opcode d : 335 (informational)
+rejected opcode e : 318 (informational)
+rejected opcode f : 313 (informational)
+TEST=ALL tests=11 passed=11 failed=0
+Functional coverage: 88/88 = 100.00%
+Checks=150986 failed_checks=0 coverage_failures=0

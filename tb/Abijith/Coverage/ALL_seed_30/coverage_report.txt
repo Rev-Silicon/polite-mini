@@ -1,0 +1,2 @@
+Total coverage (392/433) 90.00%
+See lines with '%00' in results/ALL_seed_30/logs

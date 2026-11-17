@@ -1,0 +1,9 @@
+
+================ COVERAGE SUMMARY ================
+Functional HAS_OUTBUF=0: 88/88 = 100.00%
+Functional HAS_OUTBUF=1: 120/120 = 100.00%
+Functional combined: 208/208 = 100.00%
+DUT code (line/basic-block): 4/4 = 100.00%
+DUT toggle: 168/176 = 95.45%
+Hit threshold: counter > 0. Functional coverage does not prove correctness.
+==================================================
