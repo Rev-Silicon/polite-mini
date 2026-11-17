@@ -14,11 +14,14 @@ Options:
   -t, --top-module NAME  Top module name (default: testbench filename)
       --waves             Pass +WAVES to the testbench
       --keep-build        Keep the generated Verilator build directory
+      --coverage FILE     Write Verilator line coverage data to FILE
+      --coverage-toggle FILE  Write Verilator toggle coverage data to FILE
   -h, --help              Show this help
 
 Examples:
   ./run_verilator.sh polite_outmux_tb.sv ../../../rtl/polite_outmux.sv
   ./run_verilator.sh --waves polite_outbuf_tb.sv ../../../rtl/polite_outbuf.sv
+  ./run_verilator.sh --coverage outmux.dat polite_outmux_tb.sv ../../../rtl/polite_outmux.sv
   ./run_verilator.sh -t my_tb my_tb.sv rtl_a.sv rtl_b.sv -- +SEED=7
 EOF
 }
@@ -26,6 +29,8 @@ EOF
 top_module=
 keep_build=0
 waves=0
+coverage_file=
+coverage_option=
 testbench=
 sources=()
 plusargs=()
@@ -58,6 +63,23 @@ while (($#)); do
         --keep-build)
             keep_build=1
             shift
+            ;;
+        --coverage|--coverage-toggle)
+            if (($# < 2)) || [[ -z "$2" || "$2" == -* ]]; then
+                echo "error: $1 requires an output filename" >&2
+                exit 2
+            fi
+            if [[ -n "$coverage_option" ]]; then
+                echo "error: specify only one coverage option" >&2
+                exit 2
+            fi
+            if [[ "$1" == "--coverage" ]]; then
+                coverage_option=--coverage-line
+            else
+                coverage_option=--coverage-toggle
+            fi
+            coverage_file="$2"
+            shift 2
             ;;
         -h|--help)
             usage
@@ -125,6 +147,9 @@ verilator_options=(--binary --timing --assert)
 if ((waves)); then
     verilator_options+=(--trace)
 fi
+if [[ -n "$coverage_file" ]]; then
+    verilator_options+=("$coverage_option")
+fi
 
 verilator "${verilator_options[@]}" \
     --Mdir "$build_dir" \
@@ -134,6 +159,9 @@ verilator "${verilator_options[@]}" \
 run_args=()
 if ((waves)); then
     run_args+=("+WAVES")
+fi
+if [[ -n "$coverage_file" ]]; then
+    run_args+=("+verilator+coverage+file+$coverage_file")
 fi
 run_args+=("${plusargs[@]}")
 

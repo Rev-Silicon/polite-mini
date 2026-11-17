@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - rtl.info - rtl/polite_pe.sv</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory rtl">rtl</a> - polite_pe.sv</td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">rtl.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">11</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-11-17 10:59:08</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : `default_nettype none</span>
+<span id="L2"><span class="lineNum">       2</span>              : // POLITE Mini processing element (one of four).</span>
+<span id="L3"><span class="lineNum">       3</span>              : //</span>
+<span id="L4"><span class="lineNum">       4</span>              : // golden/chip.c chip_core_step:</span>
+<span id="L5"><span class="lineNum">       5</span>              : //   phase 1 (RUN tick)  : mul &lt;= buf_lane * bus_lane      (run_now)</span>
+<span id="L6"><span class="lineNum">       6</span>              : //   phase 2 (next tick) : psum &lt;= wrap24(psum + mul)       (acc_en = run_busy)</span>
+<span id="L7"><span class="lineNum">       7</span>              : // Products are sticky: mul only changes on a legal RUN.</span>
+<span id="L8"><span class="lineNum">       8</span>              : // CLEAR bit 3 (clr) never coincides with acc_en (ctrl rejects that collision).</span>
+<span id="L9"><span class="lineNum">       9</span>              : //</span>
+<span id="L10"><span class="lineNum">      10</span>              : // sum / ovf are the combinational wrap24(psum + mul) and its wrap flag.</span>
+<span id="L11"><span class="lineNum">      11</span>              : // They feed the accumulate, the DUMP_LOAD phase-2 capture, DEBUG_ADD and</span>
+<span id="L12"><span class="lineNum">      12</span>              : // the DEBUG_FLAGS pending-OVF bit; consumers gate them with run_busy.</span>
+<span id="L13"><span class="lineNum">      13</span>              : module polite_pe (</span>
+<span id="L14"><span class="lineNum">      14</span>              :     input  wire               clk,</span>
+<span id="L15"><span class="lineNum">      15</span>              :     input  wire               rst_n,</span>
+<span id="L16"><span class="lineNum">      16</span>              :     input  wire               en,       // registered ena (hold = 0)</span>
+<span id="L17"><span class="lineNum">      17</span>              :     input  wire signed [3:0]  a,        // input-buffer lane (row)</span>
+<span id="L18"><span class="lineNum">      18</span>              :     input  wire signed [3:0]  b,        // bus lane (column)</span>
+<span id="L19"><span class="lineNum">      19</span>              :     input  wire               run_now,  // legal RUN this tick: latch product</span>
+<span id="L20"><span class="lineNum">      20</span>              :     input  wire               acc_en,   // phase 2 in flight: accumulate</span>
+<span id="L21"><span class="lineNum">      21</span>              :     input  wire               clr,      // CLEAR bit 3 accepted</span>
+<span id="L22"><span class="lineNum">      22</span>              :     output reg  signed [23:0] psum,</span>
+<span id="L23"><span class="lineNum">      23</span>              :     output reg  signed [7:0]  mul,</span>
+<span id="L24"><span class="lineNum">      24</span>              :     output wire        [23:0] sum,      // wrap24(psum + mul)</span>
+<span id="L25"><span class="lineNum">      25</span>              :     output wire               ovf       // psum + mul did not fit in 24 bits</span>
+<span id="L26"><span class="lineNum">      26</span>              : );</span>
+<span id="L27"><span class="lineNum">      27</span>              :     wire signed [7:0]  prod = $signed({{4{a[3]}}, a}) * $signed({{4{b[3]}}, b});</span>
+<span id="L28"><span class="lineNum">      28</span>              :     wire signed [24:0] full = {psum[23], psum} + {{17{mul[7]}}, mul};</span>
+<span id="L29"><span class="lineNum">      29</span>              : </span>
+<span id="L30"><span class="lineNum">      30</span>              :     assign sum = full[23:0];</span>
+<span id="L31"><span class="lineNum">      31</span>              :     assign ovf = full[24] ^ full[23];</span>
+<span id="L32"><span class="lineNum">      32</span>              : </span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">      565549 :     always @(posedge clk or negedge rst_n) begin</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           5 :         if (!rst_n) begin</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">           5 :             psum &lt;= 24'sd0;</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           5 :             mul  &lt;= 8'sd0;</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">      559602 :         end else if (en) begin</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">      555017 :             if (acc_en)</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">      555017 :                 psum &lt;= sum;</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">        4331 :             else if (clr)</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         254 :                 psum &lt;= 24'sd0;</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">      551297 :             if (run_now)</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">      551297 :                 mul &lt;= prod;</span></span>
+<span id="L44"><span class="lineNum">      44</span>              :         end</span>
+<span id="L45"><span class="lineNum">      45</span>              :     end</span>
+<span id="L46"><span class="lineNum">      46</span>              : endmodule</span>
+<span id="L47"><span class="lineNum">      47</span>              : `default_nettype wire</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

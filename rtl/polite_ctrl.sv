@@ -67,13 +67,17 @@ module polite_ctrl #(
     wire clr_ok   = is_clear && !clr_coll;
     wire clr_flg  = clr_ok && a[0];
 
-    assign run_now    = is_run && !fz_open;
-    assign acc_en     = run_busy;
-    assign clr_psum   = clr_ok && a[3];
-    assign clr_outbuf = clr_ok && a[2];
-    assign dump_load  = is_dload && !dump_busy && !no_ob;
-    assign dump_abort = is_dabrt && !no_ob;
-    assign dbg_start  = dbg_req && !fz_open;
+    // Command strobes are gated with en: on a hold edge (en = 0) no command
+    // fires (SPEC 2, Enable). Consumers are en-gated too, so this does not
+    // change behavior; it makes every strobe 0 on hold ticks so the rule is
+    // explicit and checkable (polite_ctrl_tb check_hold_quiet / a_hold_quiet).
+    assign run_now    = en && is_run && !fz_open;
+    assign acc_en     = en && run_busy;
+    assign clr_psum   = en && clr_ok && a[3];
+    assign clr_outbuf = en && clr_ok && a[2];
+    assign dump_load  = en && is_dload && !dump_busy && !no_ob;
+    assign dump_abort = en && is_dabrt && !no_ob;
+    assign dbg_start  = en && dbg_req && !fz_open;
     assign dbg_op     = op;
     assign dbg_pe     = a[1:0];
 
@@ -86,7 +90,9 @@ module polite_ctrl #(
                  | is_rsvd;
 
     // OVF raised by this tick's phase-2 add survives a same-tick CLEAR flags.
-    wire acc_ovf = acc_en && pe_ovf_any;
+    // Uses run_busy, not the en-gated acc_en: a hold must not hide a pending
+    // OVF from ovf_d (uo_out[4]) or status bit 4.
+    wire acc_ovf = run_busy && pe_ovf_any;
 
     assign illegal_d = ill_set | (illegal & ~clr_flg);
     assign ovf_d     = acc_ovf | (ovf & ~clr_flg);
