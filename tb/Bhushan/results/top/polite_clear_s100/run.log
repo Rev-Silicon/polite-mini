@@ -1,0 +1,8 @@
+[46000] TEST polite_clear
+------------------------------------------------
+ polite_clear: 2010 checks, 0 errors -> PASS
+------------------------------------------------
+- tb/tb_polite_mini.sv:749: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 27us; walltime 0.022 s; speed 1.206 ms/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 91 MB

@@ -1,0 +1,8 @@
+%Warning-SYMRSVDWORD: ../design/polite_outbuf.sv:19:24: Symbol matches C++ common word: 'abort'
+   19 |     input  wire        abort,       
+      |                        ^~~~~
+                      ... For warning description see https://verilator.org/warn/SYMRSVDWORD?v=5.032
+                      ... Use "/* verilator lint_off SYMRSVDWORD */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.022 MB sources in 2 modules, into 0.030 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.015 s (elab=0.001, cvt=0.007, bld=0.000); cpu 0.015 s on 1 threads; alloced 7.996 MB

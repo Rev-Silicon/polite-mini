@@ -1,0 +1,4 @@
+Vtb_polite_dbg__Syms.o: Vtb_polite_dbg__Syms.cpp Vtb_polite_dbg__pch.h \
+ Vtb_polite_dbg.h Vtb_polite_dbg___024root.h Vtb_polite_dbg___024unit.h \
+ Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg.h \
+ Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg.h

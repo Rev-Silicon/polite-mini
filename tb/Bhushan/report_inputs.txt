@@ -1,0 +1,687 @@
+
+
+######## TOOLS ########
+Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+lcov: LCOV version 2.0-1
+
+
+######## TREE ########
+./SV_TB/Makefile
+./SV_TB/Makefile.bak
+./SV_TB/obj_ctrl/Vtb_polite_ctrl
+./SV_TB/obj_ctrl/Vtb_polite_ctrl.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl.h
+./SV_TB/obj_ctrl/Vtb_polite_ctrl.mk
+./SV_TB/obj_ctrl/Vtb_polite_ctrl.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__ALL.a
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Syms.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Syms.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Syms.h
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Syms.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__TraceDecls__0__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__TraceDecls__0__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__TraceDecls__0__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Trace__0.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Trace__0.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Trace__0.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Trace__0__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Trace__0__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__Trace__0__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root.h
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0b98f4c8__0.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0b98f4c8__0.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0b98f4c8__0.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0b98f4c8__0__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0b98f4c8__0__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0b98f4c8__0__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__0.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__0.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__0.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__0__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__0__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__0__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__1.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__1.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__1.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__2.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__2.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_h0c6ca7f4__2.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_hc541ab1a__0.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_hc541ab1a__0.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__DepSet_hc541ab1a__0.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024root__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit.h
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg.h
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_haae7e5f1__0.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_haae7e5f1__0.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_haae7e5f1__0.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_haae7e5f1__0__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_haae7e5f1__0__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_haae7e5f1__0__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_hed3db4ab__0.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_hed3db4ab__0.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_hed3db4ab__0.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_hed3db4ab__0__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_hed3db4ab__0__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__DepSet_hed3db4ab__0__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__03a__03actrl_txn__Vclpkg__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__DepSet_he3c5969f__0__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__DepSet_he3c5969f__0__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__DepSet_he3c5969f__0__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__Slow.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__Slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl___024unit__Slow.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__main.cpp
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__main.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__main.o
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__pch.h
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__pch.h.fast.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__pch.h.fast.gch
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__pch.h.slow.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__pch.h.slow.gch
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__ver.d
+./SV_TB/obj_ctrl/Vtb_polite_ctrl__verFiles.dat
+./SV_TB/obj_ctrl/Vtb_polite_ctrl_classes.mk
+./SV_TB/obj_ctrl/verilated.d
+./SV_TB/obj_ctrl/verilated.o
+./SV_TB/obj_ctrl/verilated_cov.d
+./SV_TB/obj_ctrl/verilated_cov.o
+./SV_TB/obj_ctrl/verilated_random.d
+./SV_TB/obj_ctrl/verilated_random.o
+./SV_TB/obj_ctrl/verilated_threads.d
+./SV_TB/obj_ctrl/verilated_threads.o
+./SV_TB/obj_ctrl/verilated_timing.d
+./SV_TB/obj_ctrl/verilated_timing.o
+./SV_TB/obj_ctrl/verilated_vcd_c.d
+./SV_TB/obj_ctrl/verilated_vcd_c.o
+./SV_TB/obj_dbg/Vtb_polite_dbg
+./SV_TB/obj_dbg/Vtb_polite_dbg.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg.d
+./SV_TB/obj_dbg/Vtb_polite_dbg.h
+./SV_TB/obj_dbg/Vtb_polite_dbg.mk
+./SV_TB/obj_dbg/Vtb_polite_dbg.o
+./SV_TB/obj_dbg/Vtb_polite_dbg__ALL.a
+./SV_TB/obj_dbg/Vtb_polite_dbg__Syms.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg__Syms.d
+./SV_TB/obj_dbg/Vtb_polite_dbg__Syms.h
+./SV_TB/obj_dbg/Vtb_polite_dbg__Syms.o
+./SV_TB/obj_dbg/Vtb_polite_dbg__TraceDecls__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg__TraceDecls__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg__TraceDecls__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg__Trace__0.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg__Trace__0.d
+./SV_TB/obj_dbg/Vtb_polite_dbg__Trace__0.o
+./SV_TB/obj_dbg/Vtb_polite_dbg__Trace__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg__Trace__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg__Trace__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root.h
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__0.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__0.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__0.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__1.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__1.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_h73b5d67a__1.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hbece5060__0.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hbece5060__0.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hbece5060__0.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hbece5060__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hbece5060__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hbece5060__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hc8ea9ef5__0.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hc8ea9ef5__0.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__DepSet_hc8ea9ef5__0.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024root__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit.h
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg.h
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_h49832ca7__0.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_h49832ca7__0.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_h49832ca7__0.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_h49832ca7__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_h49832ca7__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_h49832ca7__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_hc89feab3__0.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_hc89feab3__0.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_hc89feab3__0.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_hc89feab3__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_hc89feab3__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__DepSet_hc89feab3__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_read_txn__Vclpkg__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg.h
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h1265c174__0.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h1265c174__0.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h1265c174__0.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h1265c174__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h1265c174__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h1265c174__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h9fdd4566__0.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h9fdd4566__0.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h9fdd4566__0.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h9fdd4566__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h9fdd4566__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h9fdd4566__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__DepSet_h09634f53__0__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__DepSet_h09634f53__0__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__DepSet_h09634f53__0__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__Slow.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__Slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg___024unit__Slow.o
+./SV_TB/obj_dbg/Vtb_polite_dbg__main.cpp
+./SV_TB/obj_dbg/Vtb_polite_dbg__main.d
+./SV_TB/obj_dbg/Vtb_polite_dbg__main.o
+./SV_TB/obj_dbg/Vtb_polite_dbg__pch.h
+./SV_TB/obj_dbg/Vtb_polite_dbg__pch.h.fast.d
+./SV_TB/obj_dbg/Vtb_polite_dbg__pch.h.fast.gch
+./SV_TB/obj_dbg/Vtb_polite_dbg__pch.h.slow.d
+./SV_TB/obj_dbg/Vtb_polite_dbg__pch.h.slow.gch
+./SV_TB/obj_dbg/Vtb_polite_dbg__ver.d
+./SV_TB/obj_dbg/Vtb_polite_dbg__verFiles.dat
+./SV_TB/obj_dbg/Vtb_polite_dbg_classes.mk
+./SV_TB/obj_dbg/verilated.d
+./SV_TB/obj_dbg/verilated.o
+./SV_TB/obj_dbg/verilated_cov.d
+./SV_TB/obj_dbg/verilated_cov.o
+./SV_TB/obj_dbg/verilated_random.d
+./SV_TB/obj_dbg/verilated_random.o
+./SV_TB/obj_dbg/verilated_threads.d
+./SV_TB/obj_dbg/verilated_threads.o
+./SV_TB/obj_dbg/verilated_timing.d
+./SV_TB/obj_dbg/verilated_timing.o
+./SV_TB/obj_dbg/verilated_vcd_c.d
+./SV_TB/obj_dbg/verilated_vcd_c.o
+./SV_TB/polite_ctrl_tb.sv
+./SV_TB/polite_dbg_tb.sv
+./SV_TB/sva/polite_sva.sv
+./design/polite_ctrl.sv
+./design/polite_ctrl_bak.sv
+./design/polite_dbg.sv
+./design/polite_outbuf.sv
+./design/polite_outmux.sv
+./design/polite_pe.sv
+./design/tt_um_polite_mini.sv
+./design_verification/Makefile
+./design_verification/tb/polite_top_sva.sv
+./design_verification/tb/tb_polite_mini.sv
+./design_verification/tb/tb_polite_mini.sv.bak
+./design_verification/tb/tb_polite_mini_backup.sv
+./design_verification/verification_plan/polite_mini_sim_cfg.hjson
+./report_inputs.txt
+./results/coverage/coverage_ctrl/annotated/polite_ctrl.sv
+./results/coverage/coverage_ctrl/annotated/polite_ctrl_tb.sv
+./results/coverage/coverage_ctrl/coverage_summary.log
+./results/coverage/coverage_ctrl/ctrl.dat
+./results/coverage/coverage_ctrl/ctrl.info
+./results/coverage/coverage_ctrl/ctrl_rtl.info
+./results/coverage/coverage_ctrl/html/amber.png
+./results/coverage/coverage_ctrl/html/cmd_line
+./results/coverage/coverage_ctrl/html/design/index.html
+./results/coverage/coverage_ctrl/html/design/polite_ctrl.sv.gcov.html
+./results/coverage/coverage_ctrl/html/emerald.png
+./results/coverage/coverage_ctrl/html/gcov.css
+./results/coverage/coverage_ctrl/html/glass.png
+./results/coverage/coverage_ctrl/html/index.html
+./results/coverage/coverage_ctrl/html/ruby.png
+./results/coverage/coverage_ctrl/html/snow.png
+./results/coverage/coverage_ctrl/html/updown.png
+./results/coverage/coverage_ctrl/tb_polite_ctrl.log
+./results/coverage/coverage_dbg/annotated/polite_dbg.sv
+./results/coverage/coverage_dbg/annotated/polite_dbg_tb.sv
+./results/coverage/coverage_dbg/coverage_summary.log
+./results/coverage/coverage_dbg/dbg.dat
+./results/coverage/coverage_dbg/dbg.info
+./results/coverage/coverage_dbg/dbg_rtl.info
+./results/coverage/coverage_dbg/html/amber.png
+./results/coverage/coverage_dbg/html/cmd_line
+./results/coverage/coverage_dbg/html/design/index.html
+./results/coverage/coverage_dbg/html/design/polite_dbg.sv.gcov.html
+./results/coverage/coverage_dbg/html/emerald.png
+./results/coverage/coverage_dbg/html/gcov.css
+./results/coverage/coverage_dbg/html/glass.png
+./results/coverage/coverage_dbg/html/index.html
+./results/coverage/coverage_dbg/html/ruby.png
+./results/coverage/coverage_dbg/html/snow.png
+./results/coverage/coverage_dbg/html/updown.png
+./results/coverage/coverage_dbg/tb_polite_dbg.log
+./results/coverage/ctrl_error_logs/tb_polite_ctrl.log
+./results/coverage/ctrl_pass_logs/tb_polite_ctrl.log
+./results/coverage/dbg_pass_logs/tb_polite_dbg.log
+./results/coverage/tests/tb_polite_ctrl.log
+./results/coverage/tests/tb_polite_dbg.log
+./results/lint/lint_polite_ctrl.log
+./results/lint/lint_polite_dbg.log
+./results/lint/lint_polite_outbuf.log
+./results/lint/lint_polite_outmux.log
+./results/lint/lint_polite_pe.log
+./results/lint/lint_tt_um_polite_mini.log
+./results/top/coverage/all.dat
+./results/top/coverage/all.info
+./results/top/coverage/html/amber.png
+./results/top/coverage/html/cmd_line
+./results/top/coverage/html/design/index-sort-f.html
+./results/top/coverage/html/design/index-sort-l.html
+./results/top/coverage/html/design/index.html
+./results/top/coverage/html/design/polite_ctrl.sv.gcov.html
+./results/top/coverage/html/design/polite_dbg.sv.gcov.html
+./results/top/coverage/html/design/polite_outbuf.sv.gcov.html
+./results/top/coverage/html/design/polite_outmux.sv.gcov.html
+./results/top/coverage/html/design/polite_pe.sv.gcov.html
+./results/top/coverage/html/design/tt_um_polite_mini.sv.gcov.html
+./results/top/coverage/html/emerald.png
+./results/top/coverage/html/gcov.css
+./results/top/coverage/html/glass.png
+./results/top/coverage/html/index.html
+./results/top/coverage/html/ruby.png
+./results/top/coverage/html/snow.png
+./results/top/coverage/html/updown.png
+./results/top/coverage/rtl.info
+./results/top/coverage/summary.log
+./results/top/regress_summary.txt
+./verification_plan/polite_mini_testplan.hjson
+./verification_plan/polite_mini_testplan.md
+
+
+######## LINT polite_ctrl ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.024 MB sources in 2 modules, into 0.026 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.017 s (elab=0.001, cvt=0.005, bld=0.000); cpu 0.015 s on 1 threads; alloced 8.078 MB
+exit=0
+
+
+######## LINT polite_dbg ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.023 MB sources in 2 modules, into 0.041 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.008 s (elab=0.001, cvt=0.003, bld=0.000); cpu 0.008 s on 1 threads; alloced 7.945 MB
+exit=0
+
+
+######## LINT polite_outbuf ########
+%Warning-SYMRSVDWORD: design/polite_outbuf.sv:19:24: Symbol matches C++ common word: 'abort'
+   19 |     input  wire        abort,       
+      |                        ^~~~~
+                      ... For warning description see https://verilator.org/warn/SYMRSVDWORD?v=5.032
+                      ... Use "/* verilator lint_off SYMRSVDWORD */" and lint_on around source to disable this message.
+%Error: Exiting due to 1 warning(s)
+        ... See the manual at https://verilator.org/verilator_doc.html for more assistance.
+exit=1
+
+
+######## LINT polite_outmux ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.021 MB sources in 2 modules, into 0.017 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.005 s (elab=0.000, cvt=0.001, bld=0.000); cpu 0.005 s on 1 threads; alloced 7.859 MB
+exit=0
+
+
+######## LINT polite_pe ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.021 MB sources in 2 modules, into 0.017 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.006 s (elab=0.000, cvt=0.002, bld=0.000); cpu 0.006 s on 1 threads; alloced 7.773 MB
+exit=0
+
+
+######## LINT tt_um_polite_mini ########
+%Warning-MODDUP: design/polite_ctrl_bak.sv:13:8: Duplicate declaration of module: 'polite_ctrl'
+   13 | module polite_ctrl #(
+      |        ^~~~~~~~~~~
+                 design/polite_ctrl.sv:13:8: ... Location of original declaration
+   13 | module polite_ctrl #(
+      |        ^~~~~~~~~~~
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.032
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Error: Exiting due to 1 warning(s)
+exit=1
+
+
+######## FILE ./results/top/coverage/summary.log ########
+Reading tracefile ../results/top/coverage/rtl.info.
+Summary coverage rate:
+  source files: 6
+  lines.......: 98.7% (230 of 233 lines)
+  functions...: no data found
+Message summary:
+  no messages were reported
+
+
+######## FILE ./results/lint/lint_polite_pe.log ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.021 MB sources in 2 modules, into 0.017 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.016 s (elab=0.000, cvt=0.004, bld=0.000); cpu 0.016 s on 1 threads; alloced 7.773 MB
+
+
+######## FILE ./results/lint/lint_polite_dbg.log ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.023 MB sources in 2 modules, into 0.041 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.014 s (elab=0.001, cvt=0.005, bld=0.000); cpu 0.014 s on 1 threads; alloced 7.945 MB
+
+
+######## FILE ./results/lint/lint_tt_um_polite_mini.log ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.131 MB sources in 7 modules, into 0.093 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.033 s (elab=0.004, cvt=0.016, bld=0.000); cpu 0.033 s on 1 threads; alloced 8.879 MB
+
+
+######## FILE ./results/lint/lint_polite_ctrl.log ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.024 MB sources in 2 modules, into 0.026 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.048 s (elab=0.005, cvt=0.019, bld=0.000); cpu 0.048 s on 1 threads; alloced 8.082 MB
+
+
+######## FILE ./results/lint/lint_polite_outmux.log ########
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.021 MB sources in 2 modules, into 0.017 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.005 s (elab=0.000, cvt=0.001, bld=0.000); cpu 0.005 s on 1 threads; alloced 7.855 MB
+
+
+######## FILE ./results/lint/lint_polite_outbuf.log ########
+%Warning-SYMRSVDWORD: ../design/polite_outbuf.sv:19:24: Symbol matches C++ common word: 'abort'
+   19 |     input  wire        abort,       
+      |                        ^~~~~
+                      ... For warning description see https://verilator.org/warn/SYMRSVDWORD?v=5.032
+                      ... Use "/* verilator lint_off SYMRSVDWORD */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.022 MB sources in 2 modules, into 0.030 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.015 s (elab=0.001, cvt=0.007, bld=0.000); cpu 0.015 s on 1 threads; alloced 7.996 MB
+
+
+######## FILE ./results/coverage/ctrl_pass_logs/tb_polite_ctrl.log ########
+[45000] Hold-gating test
+[750000] Directed tests
+[917000] Random tests: 2000 ticks
+------------------------------------------------
+ polite_ctrl_tb (hold gating): 36178 checks, 0 errors -> PASS
+------------------------------------------------
+- polite_ctrl_tb.sv:393: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 31us; walltime 19.023 s; speed 22.723 us/s
+- Verilator: cpu 1.379 s on 1 threads; alloced 89 MB
+
+
+######## FILE ./results/coverage/coverage_ctrl/coverage_summary.log ########
+Reading tracefile ../results/coverage/coverage_ctrl/ctrl_rtl.info.
+Summary coverage rate:
+  source files: 1
+  lines.......: 98.2% (55 of 56 lines)
+  functions...: no data found
+Message summary:
+  no messages were reported
+
+
+######## FILE ./results/coverage/coverage_ctrl/tb_polite_ctrl.log ########
+[45000] Hold-gating test
+[750000] Directed tests
+[917000] Random tests: 2000 ticks
+------------------------------------------------
+ polite_ctrl_tb (hold gating): 36178 checks, 0 errors -> PASS
+------------------------------------------------
+- polite_ctrl_tb.sv:393: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 31us; walltime 19.155 s; speed 19.888 us/s
+- Verilator: cpu 1.575 s on 1 threads; alloced 89 MB
+
+
+######## FILE ./results/coverage/tests/tb_polite_dbg.log ########
+[45000] Directed tests
+[3780000] Random reads: 625
+[242940000] Random noise: 5000 ticks
+------------------------------------------------
+ Coverage (reads started)       phase0  phase1
+   DEBUG_FLAGS                  67      72    
+   DEBUG_BUFFER                 93      104   
+   DEBUG_PARTIAL_SUM            78      59    
+   DEBUG_MULTIPLY               71      70    
+   DEBUG_ADD                    71      70    
+   DEBUG_INPUT                  73      82    
+   DEBUG_ADD run_busy=0/1           75      66
+   24-bit reads PE0..PE3        86 66 72 54
+   hold ticks inside a freeze     2456
+   reads at minimum spacing        130
+   coverage holes                    0
+------------------------------------------------
+ polite_dbg_tb: 910 reads, 131457 checks, 0 errors -> PASS
+------------------------------------------------
+- polite_dbg_tb.sv:444: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 319us; walltime 113.574 s; speed 74.150 us/s
+- Verilator: cpu 4.303 s on 1 threads; alloced 90 MB
+
+
+######## FILE ./results/coverage/tests/tb_polite_ctrl.log ########
+[45000] Hold-gating test
+[750000] Directed tests
+[917000] Random tests: 2000 ticks
+------------------------------------------------
+ polite_ctrl_tb (hold gating): 36178 checks, 0 errors -> PASS
+------------------------------------------------
+- polite_ctrl_tb.sv:393: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 31us; walltime 19.111 s; speed 22.374 us/s
+- Verilator: cpu 1.400 s on 1 threads; alloced 89 MB
+
+
+######## FILE ./results/coverage/coverage_dbg/coverage_summary.log ########
+Reading tracefile ../results/coverage/coverage_dbg/dbg_rtl.info.
+Summary coverage rate:
+  source files: 1
+  lines.......: 100.0% (58 of 58 lines)
+  functions...: no data found
+Message summary:
+  no messages were reported
+
+
+######## FILE ./results/coverage/coverage_dbg/tb_polite_dbg.log ########
+[45000] Directed tests
+[3780000] Random reads: 625
+[240091000] Random noise: 5000 ticks
+------------------------------------------------
+ Coverage (reads started)       phase0  phase1
+   DEBUG_FLAGS                  74      70    
+   DEBUG_BUFFER                 88      103   
+   DEBUG_PARTIAL_SUM            58      53    
+   DEBUG_MULTIPLY               89      86    
+   DEBUG_ADD                    84      85    
+   DEBUG_INPUT                  52      65    
+   DEBUG_ADD run_busy=0/1           79      90
+   24-bit reads PE0..PE3        52 86 71 71
+   hold ticks inside a freeze     2471
+   reads at minimum spacing        126
+   coverage holes                    0
+------------------------------------------------
+ polite_dbg_tb: 907 reads, 130316 checks, 0 errors -> PASS
+------------------------------------------------
+- polite_dbg_tb.sv:444: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 316us; walltime 111.464 s; speed 75.779 us/s
+- Verilator: cpu 4.172 s on 1 threads; alloced 90 MB
+
+
+######## FILE ./results/coverage/ctrl_error_logs/tb_polite_ctrl.log ########
+[22199000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22199000] step 0: command output asserted on a hold edge (ins=8f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22244000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22244000] dbg_start mismatch: got 1 exp 0 (ins=83 d=7e)
+[22244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22244000] step 0: command output asserted on a hold edge (ins=83): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22251000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22350000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22350000] dbg_start mismatch: got 1 exp 0 (ins=a4 d=e9)
+[22350000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22350000] step 0: command output asserted on a hold edge (ins=a4): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22357000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22396000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22396000] dbg_start mismatch: got 1 exp 0 (ins=8b d=79)
+[22396000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22396000] step 0: command output asserted on a hold edge (ins=8b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22532000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22532000] dbg_start mismatch: got 1 exp 0 (ins=89 d=8e)
+[22532000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22532000] step 0: command output asserted on a hold edge (ins=89): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22539000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22744000] dbg_start mismatch: got 1 exp 0 (ins=85 d=a2)
+[22744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22744000] step 0: command output asserted on a hold edge (ins=85): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22774000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [22774000] dump_abort mismatch: got 1 exp 0 (ins=4d d=fc)
+[22774000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22774000] step 0: command output asserted on a hold edge (ins=4d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[22781000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22805000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22805000] dbg_start mismatch: got 1 exp 0 (ins=a6 d=e4)
+[22805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22805000] step 0: command output asserted on a hold edge (ins=a6): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23002000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [23002000] acc_en mismatch: got 1 exp 0 (ins=41 d=2b)
+[23002000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [23002000] dump_abort mismatch: got 1 exp 0 (ins=41 d=2b)
+[23002000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23002000] step 0: command output asserted on a hold edge (ins=41): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[23008000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23017000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [23017000] acc_en mismatch: got 1 exp 0 (ins=86 d=b5)
+[23017000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23017000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23023000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23032000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [23032000] acc_en mismatch: got 1 exp 0 (ins=05 d=83)
+[23032000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23032000] step 0: command output asserted on a hold edge (ins=05): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23039000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23199000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [23199000] dump_load mismatch: got 1 exp 0 (ins=3f d=f3)
+[23199000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23199000] step 0: command output asserted on a hold edge (ins=3f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[23205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23305000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [23305000] dbg_start mismatch: got 1 exp 0 (ins=9a d=37)
+[23305000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23305000] step 0: command output asserted on a hold edge (ins=9a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[23311000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23471000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [23471000] run_now mismatch: got 1 exp 0 (ins=2d d=ee)
+[23471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23471000] step 0: command output asserted on a hold edge (ins=2d): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23478000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23487000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [23487000] dump_abort mismatch: got 1 exp 0 (ins=45 d=ba)
+[23487000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23487000] step 0: command output asserted on a hold edge (ins=45): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[23493000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23502000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [23502000] run_now mismatch: got 1 exp 0 (ins=29 d=6e)
+[23502000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23502000] step 0: command output asserted on a hold edge (ins=29): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23508000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23653000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [23653000] run_now mismatch: got 1 exp 0 (ins=2c d=e3)
+[23653000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23653000] step 0: command output asserted on a hold edge (ins=2c): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23660000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23805000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [23805000] run_now mismatch: got 1 exp 0 (ins=2c d=5d)
+[23805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23805000] step 0: command output asserted on a hold edge (ins=2c): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23911000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [23911000] dbg_start mismatch: got 1 exp 0 (ins=8d d=98)
+[23911000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23911000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[23917000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24168000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [24168000] dbg_start mismatch: got 1 exp 0 (ins=97 d=47)
+[24168000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24168000] step 0: command output asserted on a hold edge (ins=97): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[24175000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24244000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [24244000] dump_load mismatch: got 1 exp 0 (ins=3c d=f4)
+[24244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24244000] step 0: command output asserted on a hold edge (ins=3c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[24251000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24456000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [24456000] dump_abort mismatch: got 1 exp 0 (ins=44 d=c2)
+[24456000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24456000] step 0: command output asserted on a hold edge (ins=44): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[24463000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24578000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [24578000] acc_en mismatch: got 1 exp 0 (ins=0b d=f1)
+[24578000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24578000] step 0: command output asserted on a hold edge (ins=0b): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[24584000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24593000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [24593000] acc_en mismatch: got 1 exp 0 (ins=8b d=a7)
+[24593000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24593000] step 0: command output asserted on a hold edge (ins=8b): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[24599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24608000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [24608000] acc_en mismatch: got 1 exp 0 (ins=08 d=fa)
+[24608000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24608000] step 0: command output asserted on a hold edge (ins=08): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[24614000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24729000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [24729000] dump_abort mismatch: got 1 exp 0 (ins=49 d=4a)
+[24729000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24729000] step 0: command output asserted on a hold edge (ins=49): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[24736000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24820000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [24820000] dbg_start mismatch: got 1 exp 0 (ins=8d d=76)
+[24820000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24820000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[24827000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24896000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [24896000] dbg_start mismatch: got 1 exp 0 (ins=a9 d=76)
+[24896000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24896000] step 0: command output asserted on a hold edge (ins=a9): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[24902000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25184000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [25184000] acc_en mismatch: got 1 exp 0 (ins=6c d=32)
+[25184000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25184000] step 0: command output asserted on a hold edge (ins=6c): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[25190000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25199000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [25199000] acc_en mismatch: got 1 exp 0 (ins=1f d=fd)
+[25199000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25199000] step 0: command output asserted on a hold edge (ins=1f): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[25205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25290000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [25290000] dbg_start mismatch: got 1 exp 0 (ins=8e d=42)
+[25290000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25290000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[25296000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25517000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [25517000] dbg_start mismatch: got 1 exp 0 (ins=b6 d=3b)
+[25517000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25517000] step 0: command output asserted on a hold edge (ins=b6): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[25524000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25562000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [25562000] dbg_start mismatch: got 1 exp 0 (ins=97 d=26)
+[25562000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25562000] step 0: command output asserted on a hold edge (ins=97): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[25569000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25593000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [25593000] dump_load mismatch: got 1 exp 0 (ins=37 d=9f)
+[25593000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25593000] step 0: command output asserted on a hold edge (ins=37): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[25599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25638000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [25638000] dump_load mismatch: got 1 exp 0 (ins=39 d=2c)
+[25638000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25638000] step 0: command output asserted on a hold edge (ins=39): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[25645000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25653000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [25653000] dump_load mismatch: got 1 exp 0 (ins=39 d=b1)
+[25653000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25653000] step 0: command output asserted on a hold edge (ins=39): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[25660000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [25744000] dbg_start mismatch: got 1 exp 0 (ins=8a d=12)
+[25744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25744000] step 0: command output asserted on a hold edge (ins=8a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[25751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26093000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26093000] dbg_start mismatch: got 1 exp 0 (ins=8c d=c8)
+[26093000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26093000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26099000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26229000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [26229000] dump_abort mismatch: got 1 exp 0 (ins=45 d=a6)
+[26229000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26229000] step 0: command output asserted on a hold edge (ins=45): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[26236000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26259000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [26259000] dump_load mismatch: got 1 exp 0 (ins=37 d=05)
+[26259000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26259000] step 0: command output asserted on a hold edge (ins=37): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[26266000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26305000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26305000] dbg_start mismatch: got 1 exp 0 (ins=a4 d=82)
+[26305000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26305000] step 0: command output asserted on a hold edge (ins=a4): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26311000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26396000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26396000] dbg_start mismatch: got 1 exp 0 (ins=ac d=06)
+[26396000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26396000] step 0: command output asserted on a hold edge (ins=ac): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26411000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26411000] dbg_start mismatch: got 1 exp 0 (ins=9d d=b1)
+[26411000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26411000] step 0: command output asserted on a hold edge (ins=9d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26418000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26426000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26426000] dbg_start mismatch: got 1 exp 0 (ins=80 d=c2)
+[26426000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26426000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26433000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26487000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26487000] dbg_start mismatch: got 1 exp 0 (ins=8e d=aa)
+[26487000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26487000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26493000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26805000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [26805000] dump_load mismatch: got 1 exp 0 (ins=37 d=df)
+[26805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26805000] step 0: command output asserted on a hold edge (ins=37): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[26811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26881000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26881000] dbg_start mismatch: got 1 exp 0 (ins=8f d=dd)
+[26881000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26881000] step 0: command output asserted on a hold edge (ins=8f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26887000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26911000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26911000] dbg_start mismatch: got 1 exp 0 (ins=81 d=00)
+[26911000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26911000] step 0: command output asserted on a hold edge (ins=81): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26918000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26987000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [26987000] run_now mismatch: got 1 exp 0 (ins=2c d=a7)
+[26987000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26987000] step 0: command output asserted on a hold edge (ins=2c): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[26993000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[27017000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [27017000] dbg_start mismatch: got 1 exp 0 (ins=86 d=82)
+%Error: polite_ctrl_tb.sv:217: Verilog $stop
+Aborting...
+
+
+######## FILE ./results/coverage/dbg_pass_logs/tb_polite_dbg.log ########
+[45000] Directed tests
+[3780000] Random reads: 2500
+[964584000] Random noise: 20000 ticks
+------------------------------------------------
+ Coverage (reads started)       phase0  phase1
+   DEBUG_FLAGS                  263     257   
+   DEBUG_BUFFER                 376     369   
+   DEBUG_PARTIAL_SUM            248     235   
+   DEBUG_MULTIPLY               319     321   
+   DEBUG_ADD                    289     295   
+   DEBUG_INPUT                  294     263   
+   DEBUG_ADD run_busy=0/1          298     286
+   24-bit reads PE0..PE3        262 266 285 254
+   hold ticks inside a freeze     9777
+   reads at minimum spacing        461
+   coverage holes                    0
+------------------------------------------------
+ polite_dbg_tb: 3529 reads, 522511 checks, 0 errors -> PASS
+------------------------------------------------
+- polite_dbg_tb.sv:444: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 1ms; walltime 426.829 s; speed 86.147 us/s
+- Verilator: cpu 14.719 s on 1 threads; alloced 89 MB

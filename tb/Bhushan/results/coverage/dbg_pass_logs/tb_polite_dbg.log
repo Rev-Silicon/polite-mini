@@ -1,0 +1,23 @@
+[45000] Directed tests
+[3780000] Random reads: 2500
+[964584000] Random noise: 20000 ticks
+------------------------------------------------
+ Coverage (reads started)       phase0  phase1
+   DEBUG_FLAGS                  263     257   
+   DEBUG_BUFFER                 376     369   
+   DEBUG_PARTIAL_SUM            248     235   
+   DEBUG_MULTIPLY               319     321   
+   DEBUG_ADD                    289     295   
+   DEBUG_INPUT                  294     263   
+   DEBUG_ADD run_busy=0/1          298     286
+   24-bit reads PE0..PE3        262 266 285 254
+   hold ticks inside a freeze     9777
+   reads at minimum spacing        461
+   coverage holes                    0
+------------------------------------------------
+ polite_dbg_tb: 3529 reads, 522511 checks, 0 errors -> PASS
+------------------------------------------------
+- polite_dbg_tb.sv:444: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 1ms; walltime 426.829 s; speed 86.147 us/s
+- Verilator: cpu 14.719 s on 1 threads; alloced 89 MB

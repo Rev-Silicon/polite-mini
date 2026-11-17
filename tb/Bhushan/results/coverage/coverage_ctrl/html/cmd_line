@@ -1,0 +1,1 @@
+genhtml --quiet ../results/coverage/coverage_ctrl/ctrl_rtl.info -o ../results/coverage/coverage_ctrl/html

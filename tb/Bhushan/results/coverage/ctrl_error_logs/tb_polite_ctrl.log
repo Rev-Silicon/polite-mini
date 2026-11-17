@@ -1,0 +1,1006 @@
+[45000] Hold-gating test
+[92000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [92000] run_now mismatch: got 1 exp 0 (ins=20 d=11)
+-Info: polite_ctrl_tb.sv:211: Verilog $stop, ignored due to +verilator+error+limit
+[92000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [92000] acc_en mismatch: got 1 exp 0 (ins=20 d=11)
+[92000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [92000] step 1: command output asserted on a hold edge (ins=20): run_now=1 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[98000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[107000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [107000] run_now mismatch: got 1 exp 0 (ins=20 d=11)
+[107000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [107000] acc_en mismatch: got 1 exp 0 (ins=20 d=11)
+[107000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [107000] step 1: command output asserted on a hold edge (ins=20): run_now=1 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[114000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[122000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [122000] run_now mismatch: got 1 exp 0 (ins=20 d=11)
+[122000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [122000] acc_en mismatch: got 1 exp 0 (ins=20 d=11)
+[122000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [122000] step 1: command output asserted on a hold edge (ins=20): run_now=1 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[129000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[137000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [137000] run_now mismatch: got 1 exp 0 (ins=20 d=11)
+[137000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [137000] acc_en mismatch: got 1 exp 0 (ins=20 d=11)
+[137000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [137000] step 1: command output asserted on a hold edge (ins=20): run_now=1 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[144000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[183000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [183000] clr_psum mismatch: got 1 exp 0 (ins=5f d=00)
+[183000] %Error: polite_ctrl_tb.sv:214: Assertion failed in tb_polite_ctrl.check_comb: [183000] clr_outbuf mismatch: got 1 exp 0 (ins=5f d=00)
+[183000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [183000] step 2: command output asserted on a hold edge (ins=5f): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=1 dump_load=0 dump_abort=0 dbg_start=0
+[189000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[198000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [198000] clr_psum mismatch: got 1 exp 0 (ins=5f d=00)
+[198000] %Error: polite_ctrl_tb.sv:214: Assertion failed in tb_polite_ctrl.check_comb: [198000] clr_outbuf mismatch: got 1 exp 0 (ins=5f d=00)
+[198000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [198000] step 2: command output asserted on a hold edge (ins=5f): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=1 dump_load=0 dump_abort=0 dbg_start=0
+[205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[213000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [213000] clr_psum mismatch: got 1 exp 0 (ins=5f d=00)
+[213000] %Error: polite_ctrl_tb.sv:214: Assertion failed in tb_polite_ctrl.check_comb: [213000] clr_outbuf mismatch: got 1 exp 0 (ins=5f d=00)
+[213000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [213000] step 2: command output asserted on a hold edge (ins=5f): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=1 dump_load=0 dump_abort=0 dbg_start=0
+[220000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[259000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [259000] dump_load mismatch: got 1 exp 0 (ins=30 d=00)
+[259000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [259000] step 3: command output asserted on a hold edge (ins=30): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[265000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[274000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [274000] dump_load mismatch: got 1 exp 0 (ins=30 d=00)
+[274000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [274000] step 3: command output asserted on a hold edge (ins=30): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[280000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[289000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [289000] dump_load mismatch: got 1 exp 0 (ins=30 d=00)
+[289000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [289000] step 3: command output asserted on a hold edge (ins=30): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[295000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[334000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [334000] dump_abort mismatch: got 1 exp 0 (ins=40 d=00)
+[334000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [334000] step 4: command output asserted on a hold edge (ins=40): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[341000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[349000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [349000] dump_abort mismatch: got 1 exp 0 (ins=40 d=00)
+[349000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [349000] step 4: command output asserted on a hold edge (ins=40): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[356000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[365000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [365000] dump_abort mismatch: got 1 exp 0 (ins=40 d=00)
+[365000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [365000] step 4: command output asserted on a hold edge (ins=40): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[371000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[410000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [410000] dbg_start mismatch: got 1 exp 0 (ins=60 d=00)
+[410000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [410000] step 5: command output asserted on a hold edge (ins=60): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[417000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[425000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [425000] dbg_start mismatch: got 1 exp 0 (ins=60 d=00)
+[425000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [425000] step 5: command output asserted on a hold edge (ins=60): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[432000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[440000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [440000] dbg_start mismatch: got 1 exp 0 (ins=60 d=00)
+[440000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [440000] step 5: command output asserted on a hold edge (ins=60): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[447000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[486000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [486000] dbg_start mismatch: got 1 exp 0 (ins=82 d=00)
+[486000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [486000] step 5: command output asserted on a hold edge (ins=82): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[492000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[501000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [501000] dbg_start mismatch: got 1 exp 0 (ins=82 d=00)
+[501000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [501000] step 5: command output asserted on a hold edge (ins=82): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[508000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[516000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [516000] dbg_start mismatch: got 1 exp 0 (ins=82 d=00)
+[516000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [516000] step 5: command output asserted on a hold edge (ins=82): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[523000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[577000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [577000] run_now mismatch: got 1 exp 0 (ins=20 d=21)
+[577000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [577000] acc_en mismatch: got 1 exp 0 (ins=20 d=21)
+[577000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [577000] step 6: command output asserted on a hold edge (ins=20): run_now=1 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[583000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[592000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [592000] run_now mismatch: got 1 exp 0 (ins=20 d=21)
+[592000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [592000] acc_en mismatch: got 1 exp 0 (ins=20 d=21)
+[592000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [592000] step 6: command output asserted on a hold edge (ins=20): run_now=1 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[683000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [683000] acc_en mismatch: got 1 exp 0 (ins=00 d=00)
+[683000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [683000] step 7: command output asserted on a hold edge (ins=00): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[689000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[698000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [698000] acc_en mismatch: got 1 exp 0 (ins=00 d=00)
+[698000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [698000] step 7: command output asserted on a hold edge (ins=00): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[705000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[713000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [713000] acc_en mismatch: got 1 exp 0 (ins=00 d=00)
+[713000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [713000] step 7: command output asserted on a hold edge (ins=00): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[720000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[750000] Directed tests
+[917000] Random tests: 2000 ticks
+[1016000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [1016000] dbg_start mismatch: got 1 exp 0 (ins=9b d=ef)
+[1016000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [1016000] step 0: command output asserted on a hold edge (ins=9b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[1023000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[1198000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [1198000] dbg_start mismatch: got 1 exp 0 (ins=87 d=a6)
+[1198000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [1198000] step 0: command output asserted on a hold edge (ins=87): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[1205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[1213000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [1213000] dbg_start mismatch: got 1 exp 0 (ins=87 d=34)
+[1213000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [1213000] step 0: command output asserted on a hold edge (ins=87): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[1220000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[1410000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [1410000] run_now mismatch: got 1 exp 0 (ins=2e d=c6)
+[1410000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [1410000] step 0: command output asserted on a hold edge (ins=2e): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[1417000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[1440000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [1440000] dump_abort mismatch: got 1 exp 0 (ins=4b d=c2)
+[1440000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [1440000] step 0: command output asserted on a hold edge (ins=4b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[1447000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[1486000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [1486000] run_now mismatch: got 1 exp 0 (ins=25 d=3f)
+[1486000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [1486000] step 0: command output asserted on a hold edge (ins=25): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[1492000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[1698000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [1698000] dbg_start mismatch: got 1 exp 0 (ins=92 d=73)
+[1698000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [1698000] step 0: command output asserted on a hold edge (ins=92): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[1705000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[1759000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [1759000] run_now mismatch: got 1 exp 0 (ins=2d d=90)
+[1759000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [1759000] step 0: command output asserted on a hold edge (ins=2d): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[1765000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2092000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [2092000] dbg_start mismatch: got 1 exp 0 (ins=8d d=53)
+[2092000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2092000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[2099000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2183000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [2183000] dbg_start mismatch: got 1 exp 0 (ins=9c d=5a)
+[2183000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2183000] step 0: command output asserted on a hold edge (ins=9c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[2189000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2365000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [2365000] dbg_start mismatch: got 1 exp 0 (ins=b1 d=2d)
+[2365000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2365000] step 0: command output asserted on a hold edge (ins=b1): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[2371000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2456000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [2456000] dbg_start mismatch: got 1 exp 0 (ins=88 d=9c)
+[2456000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2456000] step 0: command output asserted on a hold edge (ins=88): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[2462000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2471000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [2471000] dbg_start mismatch: got 1 exp 0 (ins=9d d=fd)
+[2471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2471000] step 0: command output asserted on a hold edge (ins=9d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[2477000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2486000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [2486000] dbg_start mismatch: got 1 exp 0 (ins=a5 d=4a)
+[2486000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2486000] step 0: command output asserted on a hold edge (ins=a5): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[2493000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2516000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [2516000] dbg_start mismatch: got 1 exp 0 (ins=b5 d=83)
+[2516000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2516000] step 0: command output asserted on a hold edge (ins=b5): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[2523000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2683000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [2683000] dump_abort mismatch: got 1 exp 0 (ins=44 d=51)
+[2683000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2683000] step 0: command output asserted on a hold edge (ins=44): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[2689000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2759000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [2759000] dbg_start mismatch: got 1 exp 0 (ins=83 d=ab)
+[2759000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2759000] step 0: command output asserted on a hold edge (ins=83): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[2765000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2834000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [2834000] dump_abort mismatch: got 1 exp 0 (ins=4b d=1d)
+[2834000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2834000] step 0: command output asserted on a hold edge (ins=4b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[2841000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[2850000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [2850000] dump_abort mismatch: got 1 exp 0 (ins=45 d=50)
+[2850000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [2850000] step 0: command output asserted on a hold edge (ins=45): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[2856000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[3107000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [3107000] dbg_start mismatch: got 1 exp 0 (ins=83 d=27)
+[3107000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [3107000] step 0: command output asserted on a hold edge (ins=83): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[3114000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[3168000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [3168000] dbg_start mismatch: got 1 exp 0 (ins=80 d=ec)
+[3168000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [3168000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[3174000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[3501000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [3501000] dbg_start mismatch: got 1 exp 0 (ins=81 d=3b)
+[3501000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [3501000] step 0: command output asserted on a hold edge (ins=81): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[3508000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[3562000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [3562000] run_now mismatch: got 1 exp 0 (ins=2d d=f5)
+[3562000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [3562000] step 0: command output asserted on a hold edge (ins=2d): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[3568000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[3653000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [3653000] dbg_start mismatch: got 1 exp 0 (ins=9b d=34)
+[3653000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [3653000] step 0: command output asserted on a hold edge (ins=9b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[3659000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[3728000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [3728000] run_now mismatch: got 1 exp 0 (ins=29 d=52)
+[3728000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [3728000] step 0: command output asserted on a hold edge (ins=29): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[3735000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[3850000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [3850000] dbg_start mismatch: got 1 exp 0 (ins=84 d=91)
+[3850000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [3850000] step 0: command output asserted on a hold edge (ins=84): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[3856000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4031000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [4031000] run_now mismatch: got 1 exp 0 (ins=22 d=40)
+[4031000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4031000] step 0: command output asserted on a hold edge (ins=22): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[4038000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4062000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [4062000] dump_load mismatch: got 1 exp 0 (ins=3f d=37)
+[4062000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4062000] step 0: command output asserted on a hold edge (ins=3f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[4068000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4077000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [4077000] dbg_start mismatch: got 1 exp 0 (ins=85 d=b7)
+[4077000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4077000] step 0: command output asserted on a hold edge (ins=85): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[4083000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4168000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [4168000] dbg_start mismatch: got 1 exp 0 (ins=8c d=fb)
+[4168000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4168000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[4174000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4244000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [4244000] dbg_start mismatch: got 1 exp 0 (ins=8c d=c2)
+[4244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4244000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[4250000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4350000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [4350000] dump_abort mismatch: got 1 exp 0 (ins=46 d=36)
+[4350000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4350000] step 0: command output asserted on a hold edge (ins=46): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[4356000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4425000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [4425000] dump_load mismatch: got 1 exp 0 (ins=31 d=a8)
+[4425000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4425000] step 0: command output asserted on a hold edge (ins=31): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[4432000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4456000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [4456000] dbg_start mismatch: got 1 exp 0 (ins=92 d=33)
+[4456000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4456000] step 0: command output asserted on a hold edge (ins=92): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[4462000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4562000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [4562000] run_now mismatch: got 1 exp 0 (ins=23 d=f5)
+[4562000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4562000] step 0: command output asserted on a hold edge (ins=23): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[4568000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4789000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [4789000] dbg_start mismatch: got 1 exp 0 (ins=8c d=52)
+[4789000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4789000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[4796000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4880000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [4880000] dump_load mismatch: got 1 exp 0 (ins=3b d=3f)
+[4880000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4880000] step 0: command output asserted on a hold edge (ins=3b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[4887000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4895000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [4895000] dbg_start mismatch: got 1 exp 0 (ins=9e d=3f)
+[4895000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4895000] step 0: command output asserted on a hold edge (ins=9e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[4902000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4925000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [4925000] acc_en mismatch: got 1 exp 0 (ins=6f d=56)
+[4925000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4925000] step 0: command output asserted on a hold edge (ins=6f): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[4932000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4941000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [4941000] acc_en mismatch: got 1 exp 0 (ins=85 d=67)
+[4941000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [4941000] dbg_start mismatch: got 1 exp 0 (ins=85 d=67)
+[4941000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4941000] step 0: command output asserted on a hold edge (ins=85): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[4947000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[4971000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [4971000] run_now mismatch: got 1 exp 0 (ins=25 d=c1)
+[4971000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [4971000] step 0: command output asserted on a hold edge (ins=25): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[4977000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5153000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5153000] dbg_start mismatch: got 1 exp 0 (ins=b2 d=15)
+[5153000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5153000] step 0: command output asserted on a hold edge (ins=b2): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5159000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5244000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5244000] dbg_start mismatch: got 1 exp 0 (ins=98 d=f0)
+[5244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5244000] step 0: command output asserted on a hold edge (ins=98): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5250000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5274000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5274000] dbg_start mismatch: got 1 exp 0 (ins=89 d=0c)
+[5274000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5274000] step 0: command output asserted on a hold edge (ins=89): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5280000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5365000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5365000] dbg_start mismatch: got 1 exp 0 (ins=74 d=94)
+[5365000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5365000] step 0: command output asserted on a hold edge (ins=74): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5371000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5380000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5380000] dbg_start mismatch: got 1 exp 0 (ins=bd d=38)
+[5380000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5380000] step 0: command output asserted on a hold edge (ins=bd): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5387000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5501000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5501000] dbg_start mismatch: got 1 exp 0 (ins=b1 d=15)
+[5501000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5501000] step 0: command output asserted on a hold edge (ins=b1): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5508000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5622000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [5622000] dump_abort mismatch: got 1 exp 0 (ins=4d d=a7)
+[5622000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5622000] step 0: command output asserted on a hold edge (ins=4d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[5629000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5728000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5728000] dbg_start mismatch: got 1 exp 0 (ins=bd d=2d)
+[5728000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5728000] step 0: command output asserted on a hold edge (ins=bd): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5735000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5835000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5835000] dbg_start mismatch: got 1 exp 0 (ins=88 d=fb)
+[5835000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5835000] step 0: command output asserted on a hold edge (ins=88): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5841000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5910000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5910000] dbg_start mismatch: got 1 exp 0 (ins=82 d=60)
+[5910000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5910000] step 0: command output asserted on a hold edge (ins=82): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5917000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5925000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5925000] dbg_start mismatch: got 1 exp 0 (ins=b1 d=60)
+[5925000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5925000] step 0: command output asserted on a hold edge (ins=b1): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5932000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[5956000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [5956000] dbg_start mismatch: got 1 exp 0 (ins=80 d=4e)
+[5956000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [5956000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[5962000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6168000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [6168000] dump_abort mismatch: got 1 exp 0 (ins=4e d=86)
+[6168000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6168000] step 0: command output asserted on a hold edge (ins=4e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[6174000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6289000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [6289000] dbg_start mismatch: got 1 exp 0 (ins=a2 d=6b)
+[6289000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6289000] step 0: command output asserted on a hold edge (ins=a2): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[6296000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6335000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [6335000] run_now mismatch: got 1 exp 0 (ins=2d d=b4)
+[6335000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6335000] step 0: command output asserted on a hold edge (ins=2d): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[6341000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6456000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [6456000] dump_abort mismatch: got 1 exp 0 (ins=4b d=1c)
+[6456000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6456000] step 0: command output asserted on a hold edge (ins=4b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[6462000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6471000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [6471000] dbg_start mismatch: got 1 exp 0 (ins=bd d=95)
+[6471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6471000] step 0: command output asserted on a hold edge (ins=bd): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[6477000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6516000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [6516000] dbg_start mismatch: got 1 exp 0 (ins=9f d=bc)
+[6516000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6516000] step 0: command output asserted on a hold edge (ins=9f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[6523000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6607000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [6607000] dbg_start mismatch: got 1 exp 0 (ins=97 d=b0)
+[6607000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6607000] step 0: command output asserted on a hold edge (ins=97): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[6614000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [6744000] dbg_start mismatch: got 1 exp 0 (ins=9a d=17)
+[6744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6744000] step 0: command output asserted on a hold edge (ins=9a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[6750000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6835000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [6835000] clr_psum mismatch: got 1 exp 0 (ins=5a d=b1)
+[6835000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6835000] step 0: command output asserted on a hold edge (ins=5a): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[6841000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6865000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [6865000] dump_abort mismatch: got 1 exp 0 (ins=4e d=96)
+[6865000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6865000] step 0: command output asserted on a hold edge (ins=4e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[6871000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[6910000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [6910000] dbg_start mismatch: got 1 exp 0 (ins=89 d=7a)
+[6910000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [6910000] step 0: command output asserted on a hold edge (ins=89): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[6917000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7016000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7016000] dbg_start mismatch: got 1 exp 0 (ins=88 d=f3)
+[7016000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7016000] step 0: command output asserted on a hold edge (ins=88): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7023000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7153000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7153000] dbg_start mismatch: got 1 exp 0 (ins=71 d=66)
+[7153000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7153000] step 0: command output asserted on a hold edge (ins=71): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7159000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7198000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [7198000] dump_abort mismatch: got 1 exp 0 (ins=45 d=fe)
+[7198000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7198000] step 0: command output asserted on a hold edge (ins=45): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[7205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7365000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7365000] dbg_start mismatch: got 1 exp 0 (ins=83 d=64)
+[7365000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7365000] step 0: command output asserted on a hold edge (ins=83): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7371000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7380000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7380000] dbg_start mismatch: got 1 exp 0 (ins=af d=9d)
+[7380000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7380000] step 0: command output asserted on a hold edge (ins=af): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7387000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7425000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [7425000] dump_abort mismatch: got 1 exp 0 (ins=42 d=ae)
+[7425000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7425000] step 0: command output asserted on a hold edge (ins=42): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[7432000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7441000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7441000] dbg_start mismatch: got 1 exp 0 (ins=88 d=24)
+[7441000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7441000] step 0: command output asserted on a hold edge (ins=88): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7447000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7471000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7471000] dbg_start mismatch: got 1 exp 0 (ins=a2 d=51)
+[7471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7471000] step 0: command output asserted on a hold edge (ins=a2): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7478000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7622000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7622000] dbg_start mismatch: got 1 exp 0 (ins=9a d=17)
+[7622000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7622000] step 0: command output asserted on a hold edge (ins=9a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7629000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7638000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7638000] dbg_start mismatch: got 1 exp 0 (ins=9a d=82)
+[7638000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7638000] step 0: command output asserted on a hold edge (ins=9a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7644000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7744000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [7744000] run_now mismatch: got 1 exp 0 (ins=2f d=c6)
+[7744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7744000] step 0: command output asserted on a hold edge (ins=2f): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[7750000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7804000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [7804000] dump_load mismatch: got 1 exp 0 (ins=3a d=fb)
+[7804000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7804000] step 0: command output asserted on a hold edge (ins=3a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[7811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7910000] %Error: polite_ctrl_tb.sv:214: Assertion failed in tb_polite_ctrl.check_comb: [7910000] clr_outbuf mismatch: got 1 exp 0 (ins=57 d=9a)
+[7910000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7910000] step 0: command output asserted on a hold edge (ins=57): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=1 dump_load=0 dump_abort=0 dbg_start=0
+[7917000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[7986000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [7986000] dbg_start mismatch: got 1 exp 0 (ins=8f d=0d)
+[7986000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [7986000] step 0: command output asserted on a hold edge (ins=8f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[7993000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8001000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [8001000] run_now mismatch: got 1 exp 0 (ins=22 d=b7)
+[8001000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8001000] step 0: command output asserted on a hold edge (ins=22): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8008000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8092000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [8092000] dump_abort mismatch: got 1 exp 0 (ins=4d d=36)
+[8092000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8092000] step 0: command output asserted on a hold edge (ins=4d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[8099000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8380000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [8380000] dbg_start mismatch: got 1 exp 0 (ins=9a d=4d)
+[8380000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8380000] step 0: command output asserted on a hold edge (ins=9a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[8387000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8395000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [8395000] dbg_start mismatch: got 1 exp 0 (ins=b1 d=43)
+[8395000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8395000] step 0: command output asserted on a hold edge (ins=b1): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[8402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8486000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [8486000] dbg_start mismatch: got 1 exp 0 (ins=b1 d=30)
+[8486000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8486000] step 0: command output asserted on a hold edge (ins=b1): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[8493000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8516000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8516000] acc_en mismatch: got 1 exp 0 (ins=02 d=f0)
+[8516000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8516000] step 0: command output asserted on a hold edge (ins=02): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8523000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8532000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8532000] acc_en mismatch: got 1 exp 0 (ins=82 d=1a)
+[8532000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8532000] step 0: command output asserted on a hold edge (ins=82): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8538000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8547000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8547000] acc_en mismatch: got 1 exp 0 (ins=ca d=d4)
+[8547000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8547000] step 0: command output asserted on a hold edge (ins=ca): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8553000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8562000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8562000] acc_en mismatch: got 1 exp 0 (ins=00 d=56)
+[8562000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8562000] step 0: command output asserted on a hold edge (ins=00): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8568000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8577000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8577000] acc_en mismatch: got 1 exp 0 (ins=6e d=e2)
+[8577000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8577000] step 0: command output asserted on a hold edge (ins=6e): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8584000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8592000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8592000] acc_en mismatch: got 1 exp 0 (ins=91 d=cc)
+[8592000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8592000] step 0: command output asserted on a hold edge (ins=91): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8668000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8668000] acc_en mismatch: got 1 exp 0 (ins=1b d=3d)
+[8668000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8668000] step 0: command output asserted on a hold edge (ins=1b): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8675000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8683000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8683000] acc_en mismatch: got 1 exp 0 (ins=86 d=11)
+[8683000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8683000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8690000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8698000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [8698000] acc_en mismatch: got 1 exp 0 (ins=02 d=75)
+[8698000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8698000] step 0: command output asserted on a hold edge (ins=02): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[8705000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[8956000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [8956000] dbg_start mismatch: got 1 exp 0 (ins=90 d=c9)
+[8956000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [8956000] step 0: command output asserted on a hold edge (ins=90): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[8962000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9047000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [9047000] dump_abort mismatch: got 1 exp 0 (ins=48 d=31)
+[9047000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9047000] step 0: command output asserted on a hold edge (ins=48): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[9053000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9153000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [9153000] dbg_start mismatch: got 1 exp 0 (ins=af d=fa)
+[9153000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9153000] step 0: command output asserted on a hold edge (ins=af): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[9159000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9259000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [9259000] dbg_start mismatch: got 1 exp 0 (ins=99 d=2d)
+[9259000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9259000] step 0: command output asserted on a hold edge (ins=99): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[9265000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9350000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [9350000] dbg_start mismatch: got 1 exp 0 (ins=9a d=f8)
+[9350000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9350000] step 0: command output asserted on a hold edge (ins=9a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[9356000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9380000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [9380000] dbg_start mismatch: got 1 exp 0 (ins=8a d=aa)
+[9380000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9380000] step 0: command output asserted on a hold edge (ins=8a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[9387000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9471000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [9471000] dbg_start mismatch: got 1 exp 0 (ins=9b d=4c)
+[9471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9471000] step 0: command output asserted on a hold edge (ins=9b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[9478000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9668000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [9668000] dump_load mismatch: got 1 exp 0 (ins=3f d=12)
+[9668000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9668000] step 0: command output asserted on a hold edge (ins=3f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[9675000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9713000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [9713000] dbg_start mismatch: got 1 exp 0 (ins=81 d=88)
+[9713000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9713000] step 0: command output asserted on a hold edge (ins=81): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[9720000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9729000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [9729000] dump_abort mismatch: got 1 exp 0 (ins=41 d=4b)
+[9729000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9729000] step 0: command output asserted on a hold edge (ins=41): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[9735000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9789000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [9789000] dbg_start mismatch: got 1 exp 0 (ins=8c d=f8)
+[9789000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9789000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[9796000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9819000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [9819000] dump_load mismatch: got 1 exp 0 (ins=39 d=76)
+[9819000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9819000] step 0: command output asserted on a hold edge (ins=39): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[9826000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9880000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [9880000] dbg_start mismatch: got 1 exp 0 (ins=92 d=66)
+[9880000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9880000] step 0: command output asserted on a hold edge (ins=92): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[9887000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[9926000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [9926000] dump_load mismatch: got 1 exp 0 (ins=30 d=b3)
+[9926000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [9926000] step 0: command output asserted on a hold edge (ins=30): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[9932000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10047000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10047000] dbg_start mismatch: got 1 exp 0 (ins=8b d=0a)
+[10047000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10047000] step 0: command output asserted on a hold edge (ins=8b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10053000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10062000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [10062000] dump_abort mismatch: got 1 exp 0 (ins=46 d=ee)
+[10062000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10062000] step 0: command output asserted on a hold edge (ins=46): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[10069000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10320000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [10320000] dump_abort mismatch: got 1 exp 0 (ins=47 d=0e)
+[10320000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10320000] step 0: command output asserted on a hold edge (ins=47): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[10326000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10335000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10335000] dbg_start mismatch: got 1 exp 0 (ins=8b d=fe)
+[10335000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10335000] step 0: command output asserted on a hold edge (ins=8b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10341000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10547000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10547000] dbg_start mismatch: got 1 exp 0 (ins=8d d=da)
+[10547000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10547000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10553000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10592000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10592000] dbg_start mismatch: got 1 exp 0 (ins=97 d=7b)
+[10592000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10592000] step 0: command output asserted on a hold edge (ins=97): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10638000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10638000] dbg_start mismatch: got 1 exp 0 (ins=98 d=ed)
+[10638000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10638000] step 0: command output asserted on a hold edge (ins=98): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10644000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10729000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10729000] dbg_start mismatch: got 1 exp 0 (ins=90 d=a0)
+[10729000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10729000] step 0: command output asserted on a hold edge (ins=90): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10735000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10744000] dbg_start mismatch: got 1 exp 0 (ins=a9 d=02)
+[10744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10744000] step 0: command output asserted on a hold edge (ins=a9): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10750000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10774000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10774000] dbg_start mismatch: got 1 exp 0 (ins=8e d=93)
+[10774000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10774000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10781000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10804000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [10804000] run_now mismatch: got 1 exp 0 (ins=26 d=61)
+[10804000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10804000] step 0: command output asserted on a hold edge (ins=26): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[10811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10910000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [10910000] dbg_start mismatch: got 1 exp 0 (ins=87 d=63)
+[10910000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10910000] step 0: command output asserted on a hold edge (ins=87): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[10917000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[10926000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [10926000] run_now mismatch: got 1 exp 0 (ins=2c d=a4)
+[10926000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [10926000] step 0: command output asserted on a hold edge (ins=2c): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[10932000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11107000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [11107000] dbg_start mismatch: got 1 exp 0 (ins=98 d=24)
+[11107000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11107000] step 0: command output asserted on a hold edge (ins=98): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[11114000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11123000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [11123000] dbg_start mismatch: got 1 exp 0 (ins=b8 d=b2)
+[11123000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11123000] step 0: command output asserted on a hold edge (ins=b8): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[11129000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11168000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [11168000] dbg_start mismatch: got 1 exp 0 (ins=8e d=70)
+[11168000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11168000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[11175000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11426000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [11426000] dbg_start mismatch: got 1 exp 0 (ins=98 d=87)
+[11426000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11426000] step 0: command output asserted on a hold edge (ins=98): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[11432000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11486000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [11486000] dump_abort mismatch: got 1 exp 0 (ins=4a d=24)
+[11486000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11486000] step 0: command output asserted on a hold edge (ins=4a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[11493000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11501000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [11501000] dbg_start mismatch: got 1 exp 0 (ins=b7 d=9c)
+[11501000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11501000] step 0: command output asserted on a hold edge (ins=b7): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[11508000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11653000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [11653000] dump_abort mismatch: got 1 exp 0 (ins=45 d=b1)
+[11653000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11653000] step 0: command output asserted on a hold edge (ins=45): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[11659000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11759000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [11759000] dbg_start mismatch: got 1 exp 0 (ins=83 d=d1)
+[11759000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11759000] step 0: command output asserted on a hold edge (ins=83): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[11766000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[11820000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [11820000] dbg_start mismatch: got 1 exp 0 (ins=80 d=5c)
+[11820000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [11820000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[11826000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12032000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [12032000] dbg_start mismatch: got 1 exp 0 (ins=bb d=13)
+[12032000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12032000] step 0: command output asserted on a hold edge (ins=bb): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[12038000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12062000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [12062000] dump_load mismatch: got 1 exp 0 (ins=36 d=28)
+[12062000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12062000] step 0: command output asserted on a hold edge (ins=36): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[12069000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12168000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [12168000] dbg_start mismatch: got 1 exp 0 (ins=87 d=a5)
+[12168000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12168000] step 0: command output asserted on a hold edge (ins=87): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[12175000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12183000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [12183000] clr_psum mismatch: got 1 exp 0 (ins=5a d=9d)
+[12183000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12183000] step 0: command output asserted on a hold edge (ins=5a): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[12190000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12365000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [12365000] dbg_start mismatch: got 1 exp 0 (ins=b0 d=93)
+[12365000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12365000] step 0: command output asserted on a hold edge (ins=b0): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[12372000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12410000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [12410000] dbg_start mismatch: got 1 exp 0 (ins=80 d=2f)
+[12410000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12410000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[12417000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12426000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [12426000] dump_abort mismatch: got 1 exp 0 (ins=42 d=80)
+[12426000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12426000] step 0: command output asserted on a hold edge (ins=42): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[12432000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12562000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [12562000] dbg_start mismatch: got 1 exp 0 (ins=87 d=19)
+[12562000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12562000] step 0: command output asserted on a hold edge (ins=87): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[12569000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12607000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [12607000] dbg_start mismatch: got 1 exp 0 (ins=8a d=49)
+[12607000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12607000] step 0: command output asserted on a hold edge (ins=8a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[12614000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12744000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [12744000] dump_load mismatch: got 1 exp 0 (ins=33 d=7d)
+[12744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12744000] step 0: command output asserted on a hold edge (ins=33): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[12750000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12926000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [12926000] dump_abort mismatch: got 1 exp 0 (ins=42 d=8d)
+[12926000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12926000] step 0: command output asserted on a hold edge (ins=42): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[12932000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12941000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [12941000] dbg_start mismatch: got 1 exp 0 (ins=8e d=1b)
+[12941000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12941000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[12947000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12971000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [12971000] acc_en mismatch: got 1 exp 0 (ins=1f d=85)
+[12971000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12971000] step 0: command output asserted on a hold edge (ins=1f): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[12978000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[12986000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [12986000] acc_en mismatch: got 1 exp 0 (ins=97 d=19)
+[12986000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [12986000] step 0: command output asserted on a hold edge (ins=97): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[12993000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[13047000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [13047000] run_now mismatch: got 1 exp 0 (ins=2a d=76)
+[13047000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [13047000] step 0: command output asserted on a hold edge (ins=2a): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[13053000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[13395000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [13395000] dbg_start mismatch: got 1 exp 0 (ins=7d d=50)
+[13395000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [13395000] step 0: command output asserted on a hold edge (ins=7d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[13402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[13411000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [13411000] dump_abort mismatch: got 1 exp 0 (ins=45 d=99)
+[13411000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [13411000] step 0: command output asserted on a hold edge (ins=45): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[13417000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[13426000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [13426000] dbg_start mismatch: got 1 exp 0 (ins=86 d=67)
+[13426000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [13426000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[13432000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[13471000] %Error: polite_ctrl_tb.sv:214: Assertion failed in tb_polite_ctrl.check_comb: [13471000] clr_outbuf mismatch: got 1 exp 0 (ins=57 d=e5)
+[13471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [13471000] step 0: command output asserted on a hold edge (ins=57): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=1 dump_load=0 dump_abort=0 dbg_start=0
+[13478000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[13698000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [13698000] dump_abort mismatch: got 1 exp 0 (ins=48 d=60)
+[13698000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [13698000] step 0: command output asserted on a hold edge (ins=48): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[13705000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[13804000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [13804000] dbg_start mismatch: got 1 exp 0 (ins=bf d=4f)
+[13804000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [13804000] step 0: command output asserted on a hold edge (ins=bf): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[13811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[13880000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [13880000] dbg_start mismatch: got 1 exp 0 (ins=80 d=85)
+[13880000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [13880000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[13887000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14047000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [14047000] dump_abort mismatch: got 1 exp 0 (ins=47 d=87)
+[14047000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14047000] step 0: command output asserted on a hold edge (ins=47): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[14053000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14077000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14077000] dbg_start mismatch: got 1 exp 0 (ins=95 d=23)
+[14077000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14077000] step 0: command output asserted on a hold edge (ins=95): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14084000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14108000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [14108000] run_now mismatch: got 1 exp 0 (ins=2c d=e8)
+[14108000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14108000] step 0: command output asserted on a hold edge (ins=2c): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[14114000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14183000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [14183000] dump_load mismatch: got 1 exp 0 (ins=39 d=60)
+[14183000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14183000] step 0: command output asserted on a hold edge (ins=39): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[14190000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14214000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [14214000] dump_abort mismatch: got 1 exp 0 (ins=49 d=33)
+[14214000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14214000] step 0: command output asserted on a hold edge (ins=49): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[14220000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14244000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14244000] dbg_start mismatch: got 1 exp 0 (ins=84 d=67)
+[14244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14244000] step 0: command output asserted on a hold edge (ins=84): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14250000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14259000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [14259000] run_now mismatch: got 1 exp 0 (ins=2d d=07)
+[14259000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14259000] step 0: command output asserted on a hold edge (ins=2d): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[14266000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14304000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14304000] dbg_start mismatch: got 1 exp 0 (ins=bd d=24)
+[14304000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14304000] step 0: command output asserted on a hold edge (ins=bd): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14311000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14471000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14471000] dbg_start mismatch: got 1 exp 0 (ins=80 d=73)
+[14471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14471000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14478000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14547000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14547000] dbg_start mismatch: got 1 exp 0 (ins=84 d=43)
+[14547000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14547000] step 0: command output asserted on a hold edge (ins=84): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14553000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14562000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14562000] dbg_start mismatch: got 1 exp 0 (ins=86 d=b5)
+[14562000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14562000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14569000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14592000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14592000] dbg_start mismatch: got 1 exp 0 (ins=8c d=16)
+[14592000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14592000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14729000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14729000] dbg_start mismatch: got 1 exp 0 (ins=a6 d=76)
+[14729000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14729000] step 0: command output asserted on a hold edge (ins=a6): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14735000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14774000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [14774000] dump_abort mismatch: got 1 exp 0 (ins=4b d=76)
+[14774000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14774000] step 0: command output asserted on a hold edge (ins=4b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[14781000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14789000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [14789000] dbg_start mismatch: got 1 exp 0 (ins=9d d=80)
+[14789000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14789000] step 0: command output asserted on a hold edge (ins=9d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[14796000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[14895000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [14895000] dump_abort mismatch: got 1 exp 0 (ins=4d d=54)
+[14895000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [14895000] step 0: command output asserted on a hold edge (ins=4d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[14902000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15001000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15001000] dbg_start mismatch: got 1 exp 0 (ins=8f d=e1)
+[15001000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15001000] step 0: command output asserted on a hold edge (ins=8f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15008000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15032000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15032000] dbg_start mismatch: got 1 exp 0 (ins=90 d=ca)
+[15032000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15032000] step 0: command output asserted on a hold edge (ins=90): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15038000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15077000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [15077000] dump_abort mismatch: got 1 exp 0 (ins=42 d=4d)
+[15077000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15077000] step 0: command output asserted on a hold edge (ins=42): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[15084000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15108000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15108000] dbg_start mismatch: got 1 exp 0 (ins=85 d=9f)
+[15108000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15108000] step 0: command output asserted on a hold edge (ins=85): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15114000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15153000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [15153000] run_now mismatch: got 1 exp 0 (ins=29 d=78)
+[15153000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15153000] step 0: command output asserted on a hold edge (ins=29): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[15160000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15198000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15198000] dbg_start mismatch: got 1 exp 0 (ins=9d d=a4)
+[15198000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15198000] step 0: command output asserted on a hold edge (ins=9d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15244000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15244000] dbg_start mismatch: got 1 exp 0 (ins=87 d=78)
+[15244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15244000] step 0: command output asserted on a hold edge (ins=87): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15250000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15289000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15289000] dbg_start mismatch: got 1 exp 0 (ins=86 d=52)
+[15289000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15289000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15296000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15441000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [15441000] clr_psum mismatch: got 1 exp 0 (ins=5a d=14)
+[15441000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15441000] step 0: command output asserted on a hold edge (ins=5a): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[15447000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15456000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [15456000] clr_psum mismatch: got 1 exp 0 (ins=59 d=b5)
+[15456000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15456000] step 0: command output asserted on a hold edge (ins=59): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[15463000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15471000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15471000] dbg_start mismatch: got 1 exp 0 (ins=84 d=93)
+[15471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15471000] step 0: command output asserted on a hold edge (ins=84): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15478000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15577000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15577000] dbg_start mismatch: got 1 exp 0 (ins=96 d=b9)
+[15577000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15577000] step 0: command output asserted on a hold edge (ins=96): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15584000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15653000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15653000] dbg_start mismatch: got 1 exp 0 (ins=77 d=e3)
+[15653000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15653000] step 0: command output asserted on a hold edge (ins=77): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15660000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [15744000] dbg_start mismatch: got 1 exp 0 (ins=86 d=c9)
+[15744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15744000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[15751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15805000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [15805000] dump_abort mismatch: got 1 exp 0 (ins=4d d=2f)
+[15805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15805000] step 0: command output asserted on a hold edge (ins=4d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[15811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[15941000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [15941000] dump_abort mismatch: got 1 exp 0 (ins=48 d=c5)
+[15941000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [15941000] step 0: command output asserted on a hold edge (ins=48): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[15947000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16077000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [16077000] dbg_start mismatch: got 1 exp 0 (ins=8e d=b2)
+[16077000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16077000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[16084000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16153000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [16153000] dbg_start mismatch: got 1 exp 0 (ins=9f d=4b)
+[16153000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16153000] step 0: command output asserted on a hold edge (ins=9f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[16160000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16168000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [16168000] dbg_start mismatch: got 1 exp 0 (ins=91 d=28)
+[16168000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16168000] step 0: command output asserted on a hold edge (ins=91): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[16175000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16244000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [16244000] clr_psum mismatch: got 1 exp 0 (ins=59 d=53)
+[16244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16244000] step 0: command output asserted on a hold edge (ins=59): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[16251000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16335000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [16335000] dbg_start mismatch: got 1 exp 0 (ins=94 d=1b)
+[16335000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16335000] step 0: command output asserted on a hold edge (ins=94): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[16341000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16395000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [16395000] dbg_start mismatch: got 1 exp 0 (ins=8b d=fb)
+[16395000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16395000] step 0: command output asserted on a hold edge (ins=8b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[16402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16471000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [16471000] dump_load mismatch: got 1 exp 0 (ins=30 d=22)
+[16471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16471000] step 0: command output asserted on a hold edge (ins=30): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[16478000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16608000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [16608000] dump_abort mismatch: got 1 exp 0 (ins=48 d=11)
+[16608000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16608000] step 0: command output asserted on a hold edge (ins=48): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[16614000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [16744000] dbg_start mismatch: got 1 exp 0 (ins=95 d=74)
+[16744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16744000] step 0: command output asserted on a hold edge (ins=95): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[16751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16789000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [16789000] dbg_start mismatch: got 1 exp 0 (ins=91 d=d1)
+[16789000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16789000] step 0: command output asserted on a hold edge (ins=91): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[16796000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[16926000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [16926000] dump_abort mismatch: got 1 exp 0 (ins=44 d=ff)
+[16926000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [16926000] step 0: command output asserted on a hold edge (ins=44): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[16932000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17002000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17002000] dbg_start mismatch: got 1 exp 0 (ins=8d d=1a)
+[17002000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17002000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17008000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17047000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17047000] dbg_start mismatch: got 1 exp 0 (ins=86 d=a0)
+[17047000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17047000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17054000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17138000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17138000] dbg_start mismatch: got 1 exp 0 (ins=82 d=78)
+[17138000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17138000] step 0: command output asserted on a hold edge (ins=82): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17144000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17153000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17153000] dbg_start mismatch: got 1 exp 0 (ins=99 d=d5)
+[17153000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17153000] step 0: command output asserted on a hold edge (ins=99): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17160000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17183000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [17183000] acc_en mismatch: got 1 exp 0 (ins=01 d=7f)
+[17183000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17183000] step 0: command output asserted on a hold edge (ins=01): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[17190000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17199000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [17199000] acc_en mismatch: got 1 exp 0 (ins=88 d=1d)
+[17199000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17199000] dbg_start mismatch: got 1 exp 0 (ins=88 d=1d)
+[17199000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17199000] step 0: command output asserted on a hold edge (ins=88): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17229000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [17229000] dump_abort mismatch: got 1 exp 0 (ins=49 d=45)
+[17229000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17229000] step 0: command output asserted on a hold edge (ins=49): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[17235000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17244000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17244000] dbg_start mismatch: got 1 exp 0 (ins=ae d=ff)
+[17244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17244000] step 0: command output asserted on a hold edge (ins=ae): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17251000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17395000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [17395000] run_now mismatch: got 1 exp 0 (ins=22 d=26)
+[17395000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17395000] step 0: command output asserted on a hold edge (ins=22): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[17402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17441000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17441000] dbg_start mismatch: got 1 exp 0 (ins=9e d=da)
+[17441000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17441000] step 0: command output asserted on a hold edge (ins=9e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17448000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17714000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17714000] dbg_start mismatch: got 1 exp 0 (ins=9a d=f6)
+[17714000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17714000] step 0: command output asserted on a hold edge (ins=9a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17720000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [17744000] dbg_start mismatch: got 1 exp 0 (ins=aa d=12)
+[17744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17744000] step 0: command output asserted on a hold edge (ins=aa): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[17751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[17759000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [17759000] clr_psum mismatch: got 1 exp 0 (ins=59 d=a8)
+[17759000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [17759000] step 0: command output asserted on a hold edge (ins=59): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[17766000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18062000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [18062000] acc_en mismatch: got 1 exp 0 (ins=c0 d=25)
+[18062000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18062000] step 0: command output asserted on a hold edge (ins=c0): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[18069000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18108000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [18108000] dbg_start mismatch: got 1 exp 0 (ins=92 d=ea)
+[18108000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18108000] step 0: command output asserted on a hold edge (ins=92): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[18114000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18214000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [18214000] dump_load mismatch: got 1 exp 0 (ins=35 d=f1)
+[18214000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18214000] step 0: command output asserted on a hold edge (ins=35): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[18220000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18305000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [18305000] dump_load mismatch: got 1 exp 0 (ins=38 d=23)
+[18305000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18305000] step 0: command output asserted on a hold edge (ins=38): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[18311000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18396000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [18396000] dbg_start mismatch: got 1 exp 0 (ins=8c d=63)
+[18396000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18396000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[18402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18441000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [18441000] dbg_start mismatch: got 1 exp 0 (ins=89 d=c3)
+[18441000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18441000] step 0: command output asserted on a hold edge (ins=89): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[18448000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18593000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [18593000] run_now mismatch: got 1 exp 0 (ins=29 d=14)
+[18593000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18593000] step 0: command output asserted on a hold edge (ins=29): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[18599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18714000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [18714000] dbg_start mismatch: got 1 exp 0 (ins=88 d=e6)
+[18714000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18714000] step 0: command output asserted on a hold edge (ins=88): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[18720000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18744000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [18744000] dump_abort mismatch: got 1 exp 0 (ins=49 d=3b)
+[18744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18744000] step 0: command output asserted on a hold edge (ins=49): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[18751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[18835000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [18835000] dump_abort mismatch: got 1 exp 0 (ins=40 d=e6)
+[18835000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [18835000] step 0: command output asserted on a hold edge (ins=40): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[18842000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19017000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19017000] dbg_start mismatch: got 1 exp 0 (ins=8d d=03)
+[19017000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19017000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19023000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19062000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [19062000] run_now mismatch: got 1 exp 0 (ins=27 d=4b)
+[19062000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19062000] step 0: command output asserted on a hold edge (ins=27): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[19069000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19108000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19108000] dbg_start mismatch: got 1 exp 0 (ins=b9 d=b2)
+[19108000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19108000] step 0: command output asserted on a hold edge (ins=b9): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19114000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19138000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19138000] dbg_start mismatch: got 1 exp 0 (ins=8a d=30)
+[19138000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19138000] step 0: command output asserted on a hold edge (ins=8a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19145000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19244000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19244000] dbg_start mismatch: got 1 exp 0 (ins=8a d=f7)
+[19244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19244000] step 0: command output asserted on a hold edge (ins=8a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19251000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19517000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19517000] dbg_start mismatch: got 1 exp 0 (ins=80 d=c1)
+[19517000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19517000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19523000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19593000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19593000] dbg_start mismatch: got 1 exp 0 (ins=95 d=01)
+[19593000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19593000] step 0: command output asserted on a hold edge (ins=95): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19608000] %Error: polite_ctrl_tb.sv:213: Assertion failed in tb_polite_ctrl.check_comb: [19608000] clr_psum mismatch: got 1 exp 0 (ins=5c d=90)
+[19608000] %Error: polite_ctrl_tb.sv:214: Assertion failed in tb_polite_ctrl.check_comb: [19608000] clr_outbuf mismatch: got 1 exp 0 (ins=5c d=90)
+[19608000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19608000] step 0: command output asserted on a hold edge (ins=5c): run_now=0 acc_en=0 clr_psum=1 clr_outbuf=1 dump_load=0 dump_abort=0 dbg_start=0
+[19614000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19638000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19638000] dbg_start mismatch: got 1 exp 0 (ins=89 d=27)
+[19638000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19638000] step 0: command output asserted on a hold edge (ins=89): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19645000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19714000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [19714000] dump_abort mismatch: got 1 exp 0 (ins=4a d=57)
+[19714000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19714000] step 0: command output asserted on a hold edge (ins=4a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[19720000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19880000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19880000] dbg_start mismatch: got 1 exp 0 (ins=85 d=8c)
+[19880000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19880000] step 0: command output asserted on a hold edge (ins=85): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19887000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19941000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19941000] dbg_start mismatch: got 1 exp 0 (ins=86 d=ca)
+[19941000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19941000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19948000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[19986000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [19986000] dbg_start mismatch: got 1 exp 0 (ins=89 d=19)
+[19986000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [19986000] step 0: command output asserted on a hold edge (ins=89): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[19993000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20017000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [20017000] dbg_start mismatch: got 1 exp 0 (ins=bf d=10)
+[20017000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20017000] step 0: command output asserted on a hold edge (ins=bf): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[20023000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20108000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [20108000] dump_abort mismatch: got 1 exp 0 (ins=4b d=11)
+[20108000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20108000] step 0: command output asserted on a hold edge (ins=4b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[20114000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20214000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [20214000] dbg_start mismatch: got 1 exp 0 (ins=a1 d=5b)
+[20214000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20214000] step 0: command output asserted on a hold edge (ins=a1): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[20220000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20290000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [20290000] dbg_start mismatch: got 1 exp 0 (ins=9e d=13)
+[20290000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20290000] step 0: command output asserted on a hold edge (ins=9e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[20296000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20335000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [20335000] run_now mismatch: got 1 exp 0 (ins=27 d=a8)
+[20335000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20335000] step 0: command output asserted on a hold edge (ins=27): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[20342000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20365000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [20365000] dbg_start mismatch: got 1 exp 0 (ins=8c d=ed)
+[20365000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20365000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[20372000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20411000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [20411000] dbg_start mismatch: got 1 exp 0 (ins=75 d=38)
+[20411000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20411000] step 0: command output asserted on a hold edge (ins=75): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[20417000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20668000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [20668000] dbg_start mismatch: got 1 exp 0 (ins=88 d=e2)
+[20668000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20668000] step 0: command output asserted on a hold edge (ins=88): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[20675000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20744000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [20744000] run_now mismatch: got 1 exp 0 (ins=29 d=0c)
+[20744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20744000] step 0: command output asserted on a hold edge (ins=29): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[20751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[20805000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [20805000] dbg_start mismatch: got 1 exp 0 (ins=8d d=5f)
+[20805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [20805000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[20811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21047000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [21047000] dump_load mismatch: got 1 exp 0 (ins=3b d=33)
+[21047000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21047000] step 0: command output asserted on a hold edge (ins=3b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[21054000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21153000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [21153000] dbg_start mismatch: got 1 exp 0 (ins=8b d=5e)
+[21153000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21153000] step 0: command output asserted on a hold edge (ins=8b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[21160000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21214000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [21214000] dump_abort mismatch: got 1 exp 0 (ins=43 d=9c)
+[21214000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21214000] step 0: command output asserted on a hold edge (ins=43): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[21220000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21259000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [21259000] dbg_start mismatch: got 1 exp 0 (ins=8e d=ed)
+[21259000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21259000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[21266000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21290000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [21290000] dbg_start mismatch: got 1 exp 0 (ins=85 d=f1)
+[21290000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21290000] step 0: command output asserted on a hold edge (ins=85): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[21296000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21320000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [21320000] acc_en mismatch: got 1 exp 0 (ins=8f d=81)
+[21320000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [21320000] dbg_start mismatch: got 1 exp 0 (ins=8f d=81)
+[21320000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21320000] step 0: command output asserted on a hold edge (ins=8f): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[21326000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21335000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [21335000] acc_en mismatch: got 1 exp 0 (ins=19 d=88)
+[21335000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21335000] step 0: command output asserted on a hold edge (ins=19): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[21342000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21350000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [21350000] acc_en mismatch: got 1 exp 0 (ins=00 d=37)
+[21350000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21350000] step 0: command output asserted on a hold edge (ins=00): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[21357000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21365000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [21365000] acc_en mismatch: got 1 exp 0 (ins=54 d=20)
+[21365000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21365000] step 0: command output asserted on a hold edge (ins=54): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[21372000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21380000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [21380000] acc_en mismatch: got 1 exp 0 (ins=9f d=79)
+[21380000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [21380000] dbg_start mismatch: got 1 exp 0 (ins=9f d=79)
+[21380000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21380000] step 0: command output asserted on a hold edge (ins=9f): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[21387000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21577000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [21577000] dbg_start mismatch: got 1 exp 0 (ins=87 d=1a)
+[21577000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21577000] step 0: command output asserted on a hold edge (ins=87): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[21584000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21653000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [21653000] dbg_start mismatch: got 1 exp 0 (ins=8a d=fc)
+[21653000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21653000] step 0: command output asserted on a hold edge (ins=8a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[21660000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[21805000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [21805000] dbg_start mismatch: got 1 exp 0 (ins=81 d=0e)
+[21805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [21805000] step 0: command output asserted on a hold edge (ins=81): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[21811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22032000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22032000] dbg_start mismatch: got 1 exp 0 (ins=b6 d=64)
+[22032000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22032000] step 0: command output asserted on a hold edge (ins=b6): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22039000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22062000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22062000] dbg_start mismatch: got 1 exp 0 (ins=95 d=d4)
+[22062000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22062000] step 0: command output asserted on a hold edge (ins=95): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22069000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22077000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22077000] dbg_start mismatch: got 1 exp 0 (ins=a6 d=5b)
+[22077000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22077000] step 0: command output asserted on a hold edge (ins=a6): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22084000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22199000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22199000] dbg_start mismatch: got 1 exp 0 (ins=8f d=58)
+[22199000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22199000] step 0: command output asserted on a hold edge (ins=8f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22244000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22244000] dbg_start mismatch: got 1 exp 0 (ins=83 d=7e)
+[22244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22244000] step 0: command output asserted on a hold edge (ins=83): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22251000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22350000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22350000] dbg_start mismatch: got 1 exp 0 (ins=a4 d=e9)
+[22350000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22350000] step 0: command output asserted on a hold edge (ins=a4): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22357000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22396000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22396000] dbg_start mismatch: got 1 exp 0 (ins=8b d=79)
+[22396000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22396000] step 0: command output asserted on a hold edge (ins=8b): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22532000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22532000] dbg_start mismatch: got 1 exp 0 (ins=89 d=8e)
+[22532000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22532000] step 0: command output asserted on a hold edge (ins=89): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22539000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22744000] dbg_start mismatch: got 1 exp 0 (ins=85 d=a2)
+[22744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22744000] step 0: command output asserted on a hold edge (ins=85): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22774000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [22774000] dump_abort mismatch: got 1 exp 0 (ins=4d d=fc)
+[22774000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22774000] step 0: command output asserted on a hold edge (ins=4d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[22781000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[22805000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [22805000] dbg_start mismatch: got 1 exp 0 (ins=a6 d=e4)
+[22805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [22805000] step 0: command output asserted on a hold edge (ins=a6): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[22811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23002000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [23002000] acc_en mismatch: got 1 exp 0 (ins=41 d=2b)
+[23002000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [23002000] dump_abort mismatch: got 1 exp 0 (ins=41 d=2b)
+[23002000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23002000] step 0: command output asserted on a hold edge (ins=41): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[23008000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23017000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [23017000] acc_en mismatch: got 1 exp 0 (ins=86 d=b5)
+[23017000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23017000] step 0: command output asserted on a hold edge (ins=86): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23023000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23032000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [23032000] acc_en mismatch: got 1 exp 0 (ins=05 d=83)
+[23032000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23032000] step 0: command output asserted on a hold edge (ins=05): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23039000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23199000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [23199000] dump_load mismatch: got 1 exp 0 (ins=3f d=f3)
+[23199000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23199000] step 0: command output asserted on a hold edge (ins=3f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[23205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23305000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [23305000] dbg_start mismatch: got 1 exp 0 (ins=9a d=37)
+[23305000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23305000] step 0: command output asserted on a hold edge (ins=9a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[23311000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23471000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [23471000] run_now mismatch: got 1 exp 0 (ins=2d d=ee)
+[23471000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23471000] step 0: command output asserted on a hold edge (ins=2d): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23478000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23487000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [23487000] dump_abort mismatch: got 1 exp 0 (ins=45 d=ba)
+[23487000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23487000] step 0: command output asserted on a hold edge (ins=45): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[23493000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23502000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [23502000] run_now mismatch: got 1 exp 0 (ins=29 d=6e)
+[23502000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23502000] step 0: command output asserted on a hold edge (ins=29): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23508000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23653000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [23653000] run_now mismatch: got 1 exp 0 (ins=2c d=e3)
+[23653000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23653000] step 0: command output asserted on a hold edge (ins=2c): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23660000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23805000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [23805000] run_now mismatch: got 1 exp 0 (ins=2c d=5d)
+[23805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23805000] step 0: command output asserted on a hold edge (ins=2c): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[23811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[23911000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [23911000] dbg_start mismatch: got 1 exp 0 (ins=8d d=98)
+[23911000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [23911000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[23917000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24168000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [24168000] dbg_start mismatch: got 1 exp 0 (ins=97 d=47)
+[24168000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24168000] step 0: command output asserted on a hold edge (ins=97): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[24175000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24244000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [24244000] dump_load mismatch: got 1 exp 0 (ins=3c d=f4)
+[24244000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24244000] step 0: command output asserted on a hold edge (ins=3c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[24251000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24456000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [24456000] dump_abort mismatch: got 1 exp 0 (ins=44 d=c2)
+[24456000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24456000] step 0: command output asserted on a hold edge (ins=44): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[24463000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24578000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [24578000] acc_en mismatch: got 1 exp 0 (ins=0b d=f1)
+[24578000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24578000] step 0: command output asserted on a hold edge (ins=0b): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[24584000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24593000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [24593000] acc_en mismatch: got 1 exp 0 (ins=8b d=a7)
+[24593000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24593000] step 0: command output asserted on a hold edge (ins=8b): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[24599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24608000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [24608000] acc_en mismatch: got 1 exp 0 (ins=08 d=fa)
+[24608000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24608000] step 0: command output asserted on a hold edge (ins=08): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[24614000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24729000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [24729000] dump_abort mismatch: got 1 exp 0 (ins=49 d=4a)
+[24729000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24729000] step 0: command output asserted on a hold edge (ins=49): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[24736000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24820000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [24820000] dbg_start mismatch: got 1 exp 0 (ins=8d d=76)
+[24820000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24820000] step 0: command output asserted on a hold edge (ins=8d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[24827000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[24896000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [24896000] dbg_start mismatch: got 1 exp 0 (ins=a9 d=76)
+[24896000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [24896000] step 0: command output asserted on a hold edge (ins=a9): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[24902000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25184000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [25184000] acc_en mismatch: got 1 exp 0 (ins=6c d=32)
+[25184000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25184000] step 0: command output asserted on a hold edge (ins=6c): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[25190000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25199000] %Error: polite_ctrl_tb.sv:212: Assertion failed in tb_polite_ctrl.check_comb: [25199000] acc_en mismatch: got 1 exp 0 (ins=1f d=fd)
+[25199000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25199000] step 0: command output asserted on a hold edge (ins=1f): run_now=0 acc_en=1 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[25205000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25290000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [25290000] dbg_start mismatch: got 1 exp 0 (ins=8e d=42)
+[25290000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25290000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[25296000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25517000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [25517000] dbg_start mismatch: got 1 exp 0 (ins=b6 d=3b)
+[25517000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25517000] step 0: command output asserted on a hold edge (ins=b6): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[25524000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25562000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [25562000] dbg_start mismatch: got 1 exp 0 (ins=97 d=26)
+[25562000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25562000] step 0: command output asserted on a hold edge (ins=97): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[25569000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25593000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [25593000] dump_load mismatch: got 1 exp 0 (ins=37 d=9f)
+[25593000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25593000] step 0: command output asserted on a hold edge (ins=37): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[25599000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25638000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [25638000] dump_load mismatch: got 1 exp 0 (ins=39 d=2c)
+[25638000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25638000] step 0: command output asserted on a hold edge (ins=39): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[25645000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25653000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [25653000] dump_load mismatch: got 1 exp 0 (ins=39 d=b1)
+[25653000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25653000] step 0: command output asserted on a hold edge (ins=39): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[25660000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[25744000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [25744000] dbg_start mismatch: got 1 exp 0 (ins=8a d=12)
+[25744000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [25744000] step 0: command output asserted on a hold edge (ins=8a): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[25751000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26093000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26093000] dbg_start mismatch: got 1 exp 0 (ins=8c d=c8)
+[26093000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26093000] step 0: command output asserted on a hold edge (ins=8c): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26099000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26229000] %Error: polite_ctrl_tb.sv:216: Assertion failed in tb_polite_ctrl.check_comb: [26229000] dump_abort mismatch: got 1 exp 0 (ins=45 d=a6)
+[26229000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26229000] step 0: command output asserted on a hold edge (ins=45): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=1 dbg_start=0
+[26236000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26259000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [26259000] dump_load mismatch: got 1 exp 0 (ins=37 d=05)
+[26259000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26259000] step 0: command output asserted on a hold edge (ins=37): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[26266000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26305000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26305000] dbg_start mismatch: got 1 exp 0 (ins=a4 d=82)
+[26305000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26305000] step 0: command output asserted on a hold edge (ins=a4): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26311000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26396000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26396000] dbg_start mismatch: got 1 exp 0 (ins=ac d=06)
+[26396000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26396000] step 0: command output asserted on a hold edge (ins=ac): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26402000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26411000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26411000] dbg_start mismatch: got 1 exp 0 (ins=9d d=b1)
+[26411000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26411000] step 0: command output asserted on a hold edge (ins=9d): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26418000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26426000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26426000] dbg_start mismatch: got 1 exp 0 (ins=80 d=c2)
+[26426000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26426000] step 0: command output asserted on a hold edge (ins=80): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26433000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26487000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26487000] dbg_start mismatch: got 1 exp 0 (ins=8e d=aa)
+[26487000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26487000] step 0: command output asserted on a hold edge (ins=8e): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26493000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26805000] %Error: polite_ctrl_tb.sv:215: Assertion failed in tb_polite_ctrl.check_comb: [26805000] dump_load mismatch: got 1 exp 0 (ins=37 d=df)
+[26805000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26805000] step 0: command output asserted on a hold edge (ins=37): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=1 dump_abort=0 dbg_start=0
+[26811000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26881000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26881000] dbg_start mismatch: got 1 exp 0 (ins=8f d=dd)
+[26881000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26881000] step 0: command output asserted on a hold edge (ins=8f): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26887000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26911000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [26911000] dbg_start mismatch: got 1 exp 0 (ins=81 d=00)
+[26911000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26911000] step 0: command output asserted on a hold edge (ins=81): run_now=0 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=1
+[26918000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[26987000] %Error: polite_ctrl_tb.sv:211: Assertion failed in tb_polite_ctrl.check_comb: [26987000] run_now mismatch: got 1 exp 0 (ins=2c d=a7)
+[26987000] %Error: polite_ctrl_tb.sv:229: Assertion failed in tb_polite_ctrl.check_hold_quiet: [26987000] step 0: command output asserted on a hold edge (ins=2c): run_now=1 acc_en=0 clr_psum=0 clr_outbuf=0 dump_load=0 dump_abort=0 dbg_start=0
+[26993000] %Error: polite_sva.sv:7: Assertion failed in tb_polite_ctrl.dut.u_sva.a_hold_quiet: 'assert' failed.
+[27017000] %Error: polite_ctrl_tb.sv:217: Assertion failed in tb_polite_ctrl.check_comb: [27017000] dbg_start mismatch: got 1 exp 0 (ins=86 d=82)
+%Error: polite_ctrl_tb.sv:217: Verilog $stop
+Aborting...

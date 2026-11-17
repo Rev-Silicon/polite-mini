@@ -1,0 +1,8 @@
+[46000] TEST polite_mac_pipeline
+------------------------------------------------
+ polite_mac_pipeline: 1666 checks, 0 errors -> PASS
+------------------------------------------------
+- tb/tb_polite_mini.sv:749: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 23us; walltime 0.031 s; speed 722.127 us/s
+- Verilator: cpu 0.032 s on 1 threads; alloced 91 MB

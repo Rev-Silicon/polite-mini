@@ -1,0 +1,55 @@
+// DVSim sim cfg for tt_um_polite_mini (Verilator via dv/Makefile)
+// Run from polite_mini:
+//   dvsim dv/dvsim/polite_mini_sim_cfg.hjson -i smoke --scratch-root scratch
+//   dvsim dv/dvsim/polite_mini_sim_cfg.hjson -i nightly --reseed 3 --scratch-root scratch
+{
+  name:      polite_mini
+  flow:      sim
+  tool:      verilator
+  dut:       tt_um_polite_mini
+  tb:        tb_polite_mini
+  proj_root: "{self_dir}/../.."
+  testplan:  "{proj_root}/verification_plan/polite_mini_testplan.hjson"
+
+  scratch_path: "{scratch_root}/{name}"
+  build_dir:    "{scratch_path}/build"
+  run_dir_name: "{index}.{test}"
+  run_dir:      "{scratch_path}/{run_dir_name}/latest"
+
+  // Build and run both go through the Makefile, so dvsim and `make` stay identical.
+  build_cmd:  "make -C {proj_root}/design_verification build"
+  build_opts: []
+  run_cmd:    "make -C {proj_root}/design_verification run"
+  run_opts:   ["TEST={sw_test}", "SEED={seed}", "WAVES=0", "RESULTS={run_dir}"]
+
+  pass_patterns: ["-> PASS"]
+  fail_patterns: ["-> FAIL", "%Error", "%Fatal", "Assertion failed"]
+
+  reseed: 1
+  build_modes: [{ name: default }]
+  run_modes:   [{ name: default }]
+
+  tests: [
+    { name: polite_smoke,             sw_test: polite_smoke }
+    { name: polite_reset,             sw_test: polite_reset }
+    { name: polite_pad_latency,       sw_test: polite_pad_latency }
+    { name: polite_ena_hold,          sw_test: polite_ena_hold }
+    { name: polite_mac_pipeline,      sw_test: polite_mac_pipeline }
+    { name: polite_overflow,          sw_test: polite_overflow }
+    { name: polite_dump,              sw_test: polite_dump }
+    { name: polite_dump_abort,        sw_test: polite_dump_abort }
+    { name: polite_clear,             sw_test: polite_clear }
+    { name: polite_debug_reads,       sw_test: polite_debug_reads }
+    { name: polite_debug_pipeline,    sw_test: polite_debug_pipeline }
+    { name: polite_freeze_window,     sw_test: polite_freeze_window }
+    { name: polite_debug_during_dump, sw_test: polite_debug_during_dump }
+    { name: polite_illegal_ops,       sw_test: polite_illegal_ops }
+    { name: polite_matmul,            sw_test: polite_matmul,  reseed: 5 }
+    { name: polite_random,            sw_test: polite_random,  reseed: 10 }
+  ]
+
+  regressions: [
+    { name: smoke,   tests: ["polite_smoke", "polite_reset"] }
+    { name: nightly, tests: [] }      // empty = all tests
+  ]
+}

@@ -1,0 +1,8 @@
+[46000] TEST polite_overflow
+------------------------------------------------
+ polite_overflow: 492367 checks, 0 errors -> PASS
+------------------------------------------------
+- tb/tb_polite_mini.sv:749: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 7ms; walltime 1.137 s; speed 6.555 ms/s
+- Verilator: cpu 1.138 s on 1 threads; alloced 91 MB

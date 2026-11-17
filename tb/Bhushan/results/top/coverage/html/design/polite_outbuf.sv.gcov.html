@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - rtl.info - design/polite_outbuf.sv</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory design">design</a> - polite_outbuf.sv</td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">rtl.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntry">46</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-11-16 22:13:02</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : `default_nettype none</span>
+<span id="L2"><span class="lineNum">       2</span>              : // POLITE Mini output buffer and dump sequencer.</span>
+<span id="L3"><span class="lineNum">       3</span>              : //</span>
+<span id="L4"><span class="lineNum">       4</span>              : // DUMP_LOAD copies four 24-bit values (cap) in one edge and starts a</span>
+<span id="L5"><span class="lineNum">       5</span>              : // 24-nibble stream: PE order 0..3 = (2,2)(2,1)(1,2)(1,1), low nibble first.</span>
+<span id="L6"><span class="lineNum">       6</span>              : // The nibble index advances once per output tick (phase = 1), and never</span>
+<span id="L7"><span class="lineNum">       7</span>              : // while the debug unit owns the pins (hold = ofz). Mirrors dump_idx /</span>
+<span id="L8"><span class="lineNum">       8</span>              : // dump_busy in golden/chip.c.</span>
+<span id="L9"><span class="lineNum">       9</span>              : //</span>
+<span id="L10"><span class="lineNum">      10</span>              : // nib is the nibble at the index at the START of the tick (dnib), or 0 when</span>
+<span id="L11"><span class="lineNum">      11</span>              : // no dump is busy.</span>
+<span id="L12"><span class="lineNum">      12</span>              : module polite_outbuf (</span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">     3110688 :     input  wire        clk,</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">          60 :     input  wire        rst_n,</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">        5646 :     input  wire        en,</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">     1552232 :     input  wire        phase,</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">        8246 :     input  wire        hold,       // debug freeze window active this tick</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">        4188 :     input  wire        load,       // legal DUMP_LOAD</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">        5416 :     input  wire        abort,      // DUMP_ABORT</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">        1556 :     input  wire        clr,        // CLEAR bit 2 accepted</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">     1191338 :     input  wire [95:0] cap,        // {pe3, pe2, pe1, pe0} values to capture</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">        4188 :     output reg         busy,</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">        3502 :     output wire [3:0]  nib</span></span>
+<span id="L24"><span class="lineNum">      24</span>              : );</span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">        1004 :     reg [23:0] word [0:3];</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       13639 :     reg [4:0]  idx;                // 0..23</span></span>
+<span id="L27"><span class="lineNum">      27</span>              : </span>
+<span id="L28"><span class="lineNum">      28</span>              :     // Which PE and which nibble inside its 24-bit word.</span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        1892 :     wire [1:0] pe_sel = (idx &gt;= 5'd18) ? 2'd3 :</span></span>
+<span id="L30"><span class="lineNum">      30</span>              :                         (idx &gt;= 5'd12) ? 2'd2 :</span>
+<span id="L31"><span class="lineNum">      31</span>              :                         (idx &gt;= 5'd6)  ? 2'd1 : 2'd0;</span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">       13639 :     wire [4:0] sub    = idx - {2'b00, pe_sel, 1'b0} - {1'b0, pe_sel, 2'b00}; // idx - 6*pe</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">        1417 :     wire [23:0] w     = word[pe_sel];</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">        3204 :     reg  [3:0]  wn;</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">     1555422 :     always @(*) begin</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">     1555422 :         case (sub[2:0])</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">      536380 :             3'd0:    wn = w[3:0];</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">       13627 :             3'd1:    wn = w[7:4];</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">       11535 :             3'd2:    wn = w[11:8];</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">        9658 :             3'd3:    wn = w[15:12];</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">        8414 :             3'd4:    wn = w[19:16];</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">      975808 :             default: wn = w[23:20];</span></span>
+<span id="L43"><span class="lineNum">      43</span>              :         endcase</span>
+<span id="L44"><span class="lineNum">      44</span>              :     end</span>
+<span id="L45"><span class="lineNum">      45</span>              : </span>
+<span id="L46"><span class="lineNum">      46</span>              :     assign nib = busy ? wn : 4'h0;</span>
+<span id="L47"><span class="lineNum">      47</span>              : </span>
+<span id="L48"><span class="lineNum">      48</span>              :     // A legal DUMP_LOAD implies !busy, so step and load never coincide.</span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">       25652 :     wire step = busy &amp;&amp; phase &amp;&amp; !hold;</span></span>
+<span id="L50"><span class="lineNum">      50</span>              : </span>
+<span id="L51"><span class="lineNum">      51</span>              :     integer k;</span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">     1555374 :     always @(posedge clk or negedge rst_n) begin</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         162 :         if (!rst_n) begin</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">         162 :             busy &lt;= 1'b0;</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">         162 :             idx  &lt;= 5'd0;</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">         648 :             for (k = 0; k &lt; 4; k = k + 1)</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         648 :                 word[k] &lt;= 24'd0;</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">     1552229 :         end else if (en) begin</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">     1550135 :             if (load) begin</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">        8376 :                 for (k = 0; k &lt; 4; k = k + 1)</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">        8376 :                     word[k] &lt;= cap[24*k +: 24];</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">        2094 :                 idx  &lt;= 5'd0;</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">        2094 :                 busy &lt;= 1'b1;</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">     1550135 :             end else begin</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">     1549339 :                 if (clr)</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">        3184 :                     for (k = 0; k &lt; 4; k = k + 1)</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">        3184 :                         word[k] &lt;= 24'd0;</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">     1537381 :                 if (step)</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">       12754 :                     idx &lt;= idx + 5'd1;</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">     1547098 :                 if ((step &amp;&amp; idx == 5'd23) || abort)</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">        3037 :                     busy &lt;= 1'b0;</span></span>
+<span id="L72"><span class="lineNum">      72</span>              :             end</span>
+<span id="L73"><span class="lineNum">      73</span>              :         end</span>
+<span id="L74"><span class="lineNum">      74</span>              :     end</span>
+<span id="L75"><span class="lineNum">      75</span>              : </span>
+<span id="L76"><span class="lineNum">      76</span>              :     wire _unused = &amp;{1'b0, sub[4:3]};</span>
+<span id="L77"><span class="lineNum">      77</span>              : endmodule</span>
+<span id="L78"><span class="lineNum">      78</span>              : `default_nettype wire</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

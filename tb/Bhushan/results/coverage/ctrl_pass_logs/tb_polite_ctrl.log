@@ -1,0 +1,10 @@
+[45000] Hold-gating test
+[750000] Directed tests
+[917000] Random tests: 2000 ticks
+------------------------------------------------
+ polite_ctrl_tb (hold gating): 36178 checks, 0 errors -> PASS
+------------------------------------------------
+- polite_ctrl_tb.sv:393: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 31us; walltime 19.023 s; speed 22.723 us/s
+- Verilator: cpu 1.379 s on 1 threads; alloced 89 MB

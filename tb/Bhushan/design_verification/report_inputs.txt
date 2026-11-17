@@ -1,0 +1,85 @@
+
+
+######## TOP per-file coverage ########
+                            |Lines       |Functions  
+Filename                    |Rate     Num|Rate    Num
+=====================================================
+[../design/]
+polite_ctrl.sv              |98.2%     56|    -     0
+polite_dbg.sv               | 100%     58|    -     0
+polite_outbuf.sv            | 100%     46|    -     0
+polite_outmux.sv            | 100%      7|    -     0
+polite_pe.sv                | 100%     25|    -     0
+tt_um_polite_mini.sv        |95.1%     41|    -     0
+=====================================================
+                      Total:|98.7%    233|    -     0
+Message summary:
+  no messages were reported
+
+
+######## TOP uncovered lines ########
+../design/polite_ctrl.sv: line 62
+../design/tt_um_polite_mini.sv: line 22
+../design/tt_um_polite_mini.sv: line 23
+
+
+######## TOP cover points (raw) ########
+c_dbg_nibble_in_dump 22170
+c_dload_after_run 252
+c_dump_paused 21034
+c_en 12256
+c_en 49024
+c_hold_during_dump 1982
+c_hold_during_freeze 1367
+c_hold_phase2 415
+c_illegal_pin 1198
+c_overflow_pin 9
+c_ovf 18
+c_phase 1552178
+
+
+######## TOP regress summary ########
+polite_clear               seed 100    PASS
+polite_debug_during_dump   seed 100    PASS
+polite_debug_pipeline      seed 100    PASS
+polite_debug_reads         seed 100    PASS
+polite_dump                seed 100    PASS
+polite_dump_abort          seed 100    PASS
+polite_ena_hold            seed 100    PASS
+polite_freeze_window       seed 100    PASS
+polite_illegal_ops         seed 100    PASS
+polite_mac_pipeline        seed 100    PASS
+polite_matmul              seed 100    PASS
+polite_overflow            seed 100    PASS
+polite_pad_latency         seed 100    PASS
+polite_random              seed 100    PASS
+polite_reset               seed 100    PASS
+polite_smoke               seed 100    PASS
+
+
+######## TOP per-test checks (seed 10) ########
+ polite_clear: 2010 checks, 0 errors -> PASS
+ polite_debug_during_dump: 163 checks, 0 errors -> PASS
+ polite_debug_pipeline: 403 checks, 0 errors -> PASS
+ polite_debug_reads: 717 checks, 0 errors -> PASS
+ polite_dump_abort: 162 checks, 0 errors -> PASS
+ polite_dump: 257 checks, 0 errors -> PASS
+ polite_ena_hold: 122 checks, 0 errors -> PASS
+ polite_freeze_window: 684 checks, 0 errors -> PASS
+ polite_illegal_ops: 135 checks, 0 errors -> PASS
+ polite_mac_pipeline: 1666 checks, 0 errors -> PASS
+ polite_matmul: 269 checks, 0 errors -> PASS
+ polite_overflow: 492367 checks, 0 errors -> PASS
+ polite_pad_latency: 64 checks, 0 errors -> PASS
+ polite_random: 20042 checks, 0 errors -> PASS
+ polite_reset: 140 checks, 0 errors -> PASS
+ polite_smoke: 81 checks, 0 errors -> PASS
+
+
+######## TOP random/matmul all seeds ########
+../results/top/polite_random_s10/run.log: polite_random: 20042 checks, 0 errors -> PASS
+../results/top/polite_random_s100/run.log: polite_random: 20042 checks, 0 errors -> PASS
+../results/top/polite_random_s20/run.log: polite_random: 20042 checks, 0 errors -> PASS
+../results/top/polite_matmul_s10/run.log: polite_matmul: 269 checks, 0 errors -> PASS
+../results/top/polite_matmul_s100/run.log: polite_matmul: 269 checks, 0 errors -> PASS
+../results/top/polite_matmul_s20/run.log: polite_matmul: 269 checks, 0 errors -> PASS

@@ -1,0 +1,8 @@
+[46000] TEST polite_illegal_ops
+------------------------------------------------
+ polite_illegal_ops: 135 checks, 0 errors -> PASS
+------------------------------------------------
+- tb/tb_polite_mini.sv:749: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.023 s; speed 77.808 us/s
+- Verilator: cpu 0.024 s on 1 threads; alloced 91 MB

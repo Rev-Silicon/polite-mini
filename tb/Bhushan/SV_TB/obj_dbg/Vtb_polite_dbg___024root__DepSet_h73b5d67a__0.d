@@ -1,0 +1,3 @@
+Vtb_polite_dbg___024root__DepSet_h73b5d67a__0.o: \
+ Vtb_polite_dbg___024root__DepSet_h73b5d67a__0.cpp Vtb_polite_dbg__pch.h \
+ Vtb_polite_dbg__Syms.h Vtb_polite_dbg___024root.h

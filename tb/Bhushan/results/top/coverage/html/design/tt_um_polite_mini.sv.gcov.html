@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - rtl.info - design/tt_um_polite_mini.sv</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory design">design</a> - tt_um_polite_mini.sv</td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">rtl.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">95.1&nbsp;%</td>
+            <td class="headerCovTableEntry">41</td>
+            <td class="headerCovTableEntry">39</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-11-16 22:13:02</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : `default_nettype none</span>
+<span id="L2"><span class="lineNum">       2</span>              : // POLITE Mini — Tiny Tapeout top.</span>
+<span id="L3"><span class="lineNum">       3</span>              : //</span>
+<span id="L4"><span class="lineNum">       4</span>              : // Pad pipeline (golden/chip.c chip_step_ena):</span>
+<span id="L5"><span class="lineNum">       5</span>              : //   ena_q     : registered ena, resets to 1; gates every core and pad flop</span>
+<span id="L6"><span class="lineNum">       6</span>              : //               one edge after the pin changes. Sampled on every edge.</span>
+<span id="L7"><span class="lineNum">       7</span>              : //   in_*_q    : ui_in / uio_in sampled on edge k, executed by the core on k+1.</span>
+<span id="L8"><span class="lineNum">       8</span>              : //   otick_q   : phase of the core tick that produced uo_q.</span>
+<span id="L9"><span class="lineNum">       9</span>              : //   uo_q      : core output of the last enabled tick.</span>
+<span id="L10"><span class="lineNum">      10</span>              : //   uo_out    : loads uo_q only on the edge after an output tick (33 MHz).</span>
+<span id="L11"><span class="lineNum">      11</span>              : //</span>
+<span id="L12"><span class="lineNum">      12</span>              : // uio is input-only: uio_oe = 0, uio_out = 0.</span>
+<span id="L13"><span class="lineNum">      13</span>              : module tt_um_polite_mini #(</span>
+<span id="L14"><span class="lineNum">      14</span>              :     // golden chip_reset(c, has_outbuf, op_place). op_place is never read by</span>
+<span id="L15"><span class="lineNum">      15</span>              :     // chip.c, so it has no RTL parameter. HAS_OUTBUF = 0 builds without the</span>
+<span id="L16"><span class="lineNum">      16</span>              :     // output buffer: DUMP_LOAD, DUMP_ABORT and CLEAR bit 2 are then illegal.</span>
+<span id="L17"><span class="lineNum">      17</span>              :     parameter bit HAS_OUTBUF = 1'b1</span>
+<span id="L18"><span class="lineNum">      18</span>              : ) (</span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">       31218 :     input  wire [7:0] ui_in,</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">        8176 :     output wire [7:0] uo_out,</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">       31398 :     input  wire [7:0] uio_in,</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaUNC">           0 :     output wire [7:0] uio_out,</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaUNC">           0 :     output wire [7:0] uio_oe,</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">        5646 :     input  wire       ena,</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">     3110688 :     input  wire       clk,</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          60 :     input  wire       rst_n</span></span>
+<span id="L27"><span class="lineNum">      27</span>              : );</span>
+<span id="L28"><span class="lineNum">      28</span>              :     assign uio_out = 8'h00;</span>
+<span id="L29"><span class="lineNum">      29</span>              :     assign uio_oe  = 8'h00;</span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span>              :     // ---- pad registers ---------------------------------------------------</span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">        5646 :     reg       ena_q;</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">       33670 :     reg [7:0] in_d_q, in_i_q, uo_q, uo_pad;</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">     1552178 :     reg       otick_q;</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">        5646 :     wire      en = ena_q;</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">       33676 :     wire [7:0] core_uo;</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">     1552232 :     wire       phase;</span></span>
+<span id="L38"><span class="lineNum">      38</span>              : </span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">     1555374 :     always @(posedge clk or negedge rst_n) begin</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">     1555212 :         if (!rst_n) begin</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         162 :             ena_q   &lt;= 1'b1;</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">         162 :             in_d_q  &lt;= 8'h00;      // reset reads as NOP</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">         162 :             in_i_q  &lt;= 8'h00;</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         162 :             uo_q    &lt;= 8'h00;</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">         162 :             uo_pad  &lt;= 8'h00;</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         162 :             otick_q &lt;= 1'b0;</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">     1555212 :         end else begin</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">     1555212 :             ena_q &lt;= ena;</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">     1552229 :             if (en) begin</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">      776164 :                 if (otick_q)</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">      776065 :                     uo_pad &lt;= uo_q;</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">     1552229 :                 uo_q    &lt;= core_uo;</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">     1552229 :                 otick_q &lt;= phase;</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">     1552229 :                 in_d_q  &lt;= ui_in;</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">     1552229 :                 in_i_q  &lt;= uio_in;</span></span>
+<span id="L56"><span class="lineNum">      56</span>              :             end</span>
+<span id="L57"><span class="lineNum">      57</span>              :         end</span>
+<span id="L58"><span class="lineNum">      58</span>              :     end</span>
+<span id="L59"><span class="lineNum">      59</span>              :     assign uo_out = uo_pad;</span>
+<span id="L60"><span class="lineNum">      60</span>              : </span>
+<span id="L61"><span class="lineNum">      61</span>              :     // ---- control -----------------------------------------------------------</span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">       12048 :     wire       run_busy, illegal, ovf, illegal_d, ovf_d;</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">       12266 :     wire       run_now, acc_en, clr_psum, clr_outbuf, dump_load, dump_abort;</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">       33676 :     wire       dbg_start, dump_busy, fz_open, ofz, dbg_tick;</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">       29918 :     wire [3:0] dbg_op, dbg_nib, dump_nib;</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">       29018 :     wire [1:0] dbg_pe;</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">     1552232 :     wire [7:0] inbuf, status;</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          18 :     wire [3:0] pe_ovf;</span></span>
+<span id="L69"><span class="lineNum">      69</span>              : </span>
+<span id="L70"><span class="lineNum">      70</span>              :     polite_ctrl #(.HAS_OUTBUF(HAS_OUTBUF)) u_ctrl (</span>
+<span id="L71"><span class="lineNum">      71</span>              :         .clk(clk), .rst_n(rst_n), .en(en),</span>
+<span id="L72"><span class="lineNum">      72</span>              :         .d(in_d_q), .ins(in_i_q),</span>
+<span id="L73"><span class="lineNum">      73</span>              :         .dump_busy(dump_busy), .fz_open(fz_open), .pe_ovf_any(|pe_ovf),</span>
+<span id="L74"><span class="lineNum">      74</span>              :         .phase(phase), .run_busy(run_busy), .inbuf(inbuf),</span>
+<span id="L75"><span class="lineNum">      75</span>              :         .illegal(illegal), .ovf(ovf), .illegal_d(illegal_d), .ovf_d(ovf_d),</span>
+<span id="L76"><span class="lineNum">      76</span>              :         .run_now(run_now), .acc_en(acc_en),</span>
+<span id="L77"><span class="lineNum">      77</span>              :         .clr_psum(clr_psum), .clr_outbuf(clr_outbuf),</span>
+<span id="L78"><span class="lineNum">      78</span>              :         .dump_load(dump_load), .dump_abort(dump_abort),</span>
+<span id="L79"><span class="lineNum">      79</span>              :         .dbg_start(dbg_start), .dbg_op(dbg_op), .dbg_pe(dbg_pe),</span>
+<span id="L80"><span class="lineNum">      80</span>              :         .status(status)</span>
+<span id="L81"><span class="lineNum">      81</span>              :     );</span>
+<span id="L82"><span class="lineNum">      82</span>              : </span>
+<span id="L83"><span class="lineNum">      83</span>              :     // ---- PE array: index = dump order 0=(2,2) 1=(2,1) 2=(1,2) 3=(1,1) ------</span>
+<span id="L84"><span class="lineNum">      84</span>              :     // Lane 1 (high nibble) is row/column 2; lane 0 (low nibble) is 1.</span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">     1193989 :     wire [95:0] psum_all, sum_all;</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">        3680 :     wire [31:0] mul_all;</span></span>
+<span id="L87"><span class="lineNum">      87</span>              : </span>
+<span id="L88"><span class="lineNum">      88</span>              :     genvar g;</span>
+<span id="L89"><span class="lineNum">      89</span>              :     generate</span>
+<span id="L90"><span class="lineNum">      90</span>              :         for (g = 0; g &lt; 4; g = g + 1) begin : g_pe</span>
+<span id="L91"><span class="lineNum">      91</span>              :             localparam bit ROW2 = (g &lt; 2);             // PE rows 2,2,1,1</span>
+<span id="L92"><span class="lineNum">      92</span>              :             localparam bit COL2 = (g % 2 == 0);        // PE cols 2,1,2,1</span>
+<span id="L93"><span class="lineNum">      93</span>              :             wire signed [23:0] ps;</span>
+<span id="L94"><span class="lineNum">      94</span>              :             wire signed [7:0]  mu;</span>
+<span id="L95"><span class="lineNum">      95</span>              :             polite_pe u_pe (</span>
+<span id="L96"><span class="lineNum">      96</span>              :                 .clk(clk), .rst_n(rst_n), .en(en),</span>
+<span id="L97"><span class="lineNum">      97</span>              :                 .a(ROW2 ? inbuf[7:4]  : inbuf[3:0]),</span>
+<span id="L98"><span class="lineNum">      98</span>              :                 .b(COL2 ? in_d_q[7:4] : in_d_q[3:0]),</span>
+<span id="L99"><span class="lineNum">      99</span>              :                 .run_now(run_now), .acc_en(acc_en), .clr(clr_psum),</span>
+<span id="L100"><span class="lineNum">     100</span>              :                 .psum(ps), .mul(mu),</span>
+<span id="L101"><span class="lineNum">     101</span>              :                 .sum(sum_all[24*g +: 24]), .ovf(pe_ovf[g])</span>
+<span id="L102"><span class="lineNum">     102</span>              :             );</span>
+<span id="L103"><span class="lineNum">     103</span>              :             assign psum_all[24*g +: 24] = ps;</span>
+<span id="L104"><span class="lineNum">     104</span>              :             assign mul_all [8*g  +: 8]  = mu;</span>
+<span id="L105"><span class="lineNum">     105</span>              :         end</span>
+<span id="L106"><span class="lineNum">     106</span>              :     endgenerate</span>
+<span id="L107"><span class="lineNum">     107</span>              : </span>
+<span id="L108"><span class="lineNum">     108</span>              :     // ---- output buffer: phase-2 DUMP_LOAD captures the pending add --------</span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">     1191338 :     wire [95:0] cap = acc_en ? sum_all : psum_all;</span></span>
+<span id="L110"><span class="lineNum">     110</span>              : </span>
+<span id="L111"><span class="lineNum">     111</span>              :     generate</span>
+<span id="L112"><span class="lineNum">     112</span>              :         if (HAS_OUTBUF) begin : g_outbuf</span>
+<span id="L113"><span class="lineNum">     113</span>              :             polite_outbuf u_outbuf (</span>
+<span id="L114"><span class="lineNum">     114</span>              :                 .clk(clk), .rst_n(rst_n), .en(en),</span>
+<span id="L115"><span class="lineNum">     115</span>              :                 .phase(phase), .hold(ofz),</span>
+<span id="L116"><span class="lineNum">     116</span>              :                 .load(dump_load), .abort(dump_abort), .clr(clr_outbuf),</span>
+<span id="L117"><span class="lineNum">     117</span>              :                 .cap(cap), .busy(dump_busy), .nib(dump_nib)</span>
+<span id="L118"><span class="lineNum">     118</span>              :             );</span>
+<span id="L119"><span class="lineNum">     119</span>              :         end else begin : g_no_outbuf</span>
+<span id="L120"><span class="lineNum">     120</span>              :             // No buffer: never busy, idle nibble 0 (ctrl blocks every dump op).</span>
+<span id="L121"><span class="lineNum">     121</span>              :             assign dump_busy = 1'b0;</span>
+<span id="L122"><span class="lineNum">     122</span>              :             assign dump_nib  = 4'h0;</span>
+<span id="L123"><span class="lineNum">     123</span>              :             wire _unused_ob = &amp;{1'b0, cap, dump_load, dump_abort, clr_outbuf, ofz};</span>
+<span id="L124"><span class="lineNum">     124</span>              :         end</span>
+<span id="L125"><span class="lineNum">     125</span>              :     endgenerate</span>
+<span id="L126"><span class="lineNum">     126</span>              : </span>
+<span id="L127"><span class="lineNum">     127</span>              :     // ---- debug unit --------------------------------------------------------</span>
+<span id="L128"><span class="lineNum">     128</span>              :     polite_dbg u_dbg (</span>
+<span id="L129"><span class="lineNum">     129</span>              :         .clk(clk), .rst_n(rst_n), .en(en),</span>
+<span id="L130"><span class="lineNum">     130</span>              :         .phase(phase), .start(dbg_start), .op(dbg_op), .pe(dbg_pe),</span>
+<span id="L131"><span class="lineNum">     131</span>              :         .run_busy(run_busy), .status(status), .inbuf(inbuf), .d(in_d_q),</span>
+<span id="L132"><span class="lineNum">     132</span>              :         .psum_all(psum_all), .mul_all(mul_all), .sum_all(sum_all),</span>
+<span id="L133"><span class="lineNum">     133</span>              :         .open(fz_open), .ofz(ofz), .dbg_tick(dbg_tick), .dbg_nib(dbg_nib)</span>
+<span id="L134"><span class="lineNum">     134</span>              :     );</span>
+<span id="L135"><span class="lineNum">     135</span>              : </span>
+<span id="L136"><span class="lineNum">     136</span>              :     // ---- output mux --------------------------------------------------------</span>
+<span id="L137"><span class="lineNum">     137</span>              :     polite_outmux u_outmux (</span>
+<span id="L138"><span class="lineNum">     138</span>              :         .dbg_tick(dbg_tick), .dbg_nib(dbg_nib),</span>
+<span id="L139"><span class="lineNum">     139</span>              :         .dump_busy(dump_busy), .dump_nib(dump_nib),</span>
+<span id="L140"><span class="lineNum">     140</span>              :         .illegal(illegal_d), .ovf(ovf_d),</span>
+<span id="L141"><span class="lineNum">     141</span>              :         .core_uo(core_uo)</span>
+<span id="L142"><span class="lineNum">     142</span>              :     );</span>
+<span id="L143"><span class="lineNum">     143</span>              : </span>
+<span id="L144"><span class="lineNum">     144</span>              :     wire _unused = &amp;{1'b0, illegal, ovf};</span>
+<span id="L145"><span class="lineNum">     145</span>              : endmodule</span>
+<span id="L146"><span class="lineNum">     146</span>              : `default_nettype wire</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

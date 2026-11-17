@@ -1,0 +1,4 @@
+Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h1265c174__0__Slow.o: \
+ Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg__DepSet_h1265c174__0__Slow.cpp \
+ Vtb_polite_dbg__pch.h \
+ Vtb_polite_dbg___024unit__03a__03adbg_txn__Vclpkg.h
