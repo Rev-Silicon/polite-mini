@@ -1,0 +1,6 @@
+CONFIG checking=1 integrated=1 seed=77 num=10 test=stream_order inject=1
+STIMULUS stream_order
+INJECT_ERROR domain=output_path context=post_edge:stream_order
+[54000] %Fatal: polite_outmux_sb_pkg.sv:34: Assertion failed in polite_outmux_sb_pkg.polite_outmux_scoreboard.check: OUTPUT_PATH_MISMATCH t=54000 context=post_edge:stream_order uo=46 expected=47 injected=1
+%Error: ../tb_polite_outmux/polite_outmux_sb_pkg.sv:34: Verilog $stop
+Aborting...

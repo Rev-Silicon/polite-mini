@@ -1,0 +1,3 @@
+[0] %Fatal: tb_polite_outbuf.sv:271: Assertion failed in tb_polite_outbuf.stimulus: STIMULUS_ERROR CHECK/INJECT must be 0 or 1; injection needs checking
+%Error: tb_polite_outbuf.sv:271: Verilog $stop
+Aborting...

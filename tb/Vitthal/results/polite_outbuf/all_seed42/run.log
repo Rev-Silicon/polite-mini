@@ -1,0 +1,50 @@
+CONFIG coverage_only=1 integrated=0 seed=42 num=10000 test=all
+STIMULUS reset_idle
+SCENARIO COMPLETED reset_idle (stimulus completion only)
+STIMULUS load_phases
+SCENARIO COMPLETED load_phases (stimulus completion only)
+STIMULUS stream_order
+SCENARIO COMPLETED stream_order (stimulus completion only)
+STIMULUS capture_change
+SCENARIO COMPLETED capture_change (stimulus completion only)
+STIMULUS nibble_values
+SCENARIO COMPLETED nibble_values (stimulus completion only)
+STIMULUS enable_pause
+SCENARIO COMPLETED enable_pause (stimulus completion only)
+STIMULUS hold_pause
+SCENARIO COMPLETED hold_pause (stimulus completion only)
+STIMULUS load_held
+SCENARIO COMPLETED load_held (stimulus completion only)
+STIMULUS abort
+SCENARIO COMPLETED abort (stimulus completion only)
+STIMULUS clear_idle
+SCENARIO COMPLETED clear_idle (stimulus completion only)
+STIMULUS reset_active
+SCENARIO COMPLETED reset_active (stimulus completion only)
+STIMULUS terminal_hold
+SCENARIO COMPLETED terminal_hold (stimulus completion only)
+STIMULUS terminal_abort
+SCENARIO COMPLETED terminal_abort (stimulus completion only)
+STIMULUS back_to_back
+SCENARIO COMPLETED back_to_back (stimulus completion only)
+STIMULUS random
+SCENARIO COMPLETED random (stimulus completion only)
+COVERAGE BEGIN outbuf
+COVERPOINT scenarios: 15/15 bins (100.00%)
+COVERPOINT stream_position: 24/24 bins (100.00%)
+COVERPOINT stream_nibble_value: 16/16 bins (100.00%)
+COVERPOINT position_x_value: 384/384 bins (100.00%)
+COVERPOINT en_phase_hold_busy: 16/16 bins (100.00%)
+COVERPOINT load_phase_x_hold: 4/4 bins (100.00%)
+COVERPOINT abort_busy_hold_phase: 8/8 bins (100.00%)
+COVERPOINT clear_phase_x_hold: 4/4 bins (100.00%)
+COVERPOINT reset_busy_x_enable: 4/4 bins (100.00%)
+COVERPOINT terminal_hold_abort_outputtick: 3/3 bins (100.00%)
+COVERPOINT observed_busy: 2/2 bins (100.00%)
+OBSERVED samples=11695 output_ticks=1584 busy_falls=3011 abnormal_index=0 idle_nonzero=0
+COVERAGE END outbuf
+STIMULUS COMPLETED: coverage only; no DUT correctness checks were performed.
+- tb_polite_outbuf.sv:253: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.038 2025-07-08
+- Verilator: $finish at 177us; walltime 202.472 s; speed 22.331 us/s
+- Verilator: cpu 7.940 s on 1 threads; alloced 92 MB

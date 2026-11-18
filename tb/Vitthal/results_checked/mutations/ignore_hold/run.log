@@ -1,0 +1,5 @@
+CONFIG checking=1 integrated=0 seed=1 num=1 test=hold_pause inject=0
+STIMULUS hold_pause
+[236000] %Fatal: polite_outbuf_sb_pkg.sv:39: Assertion failed in polite_outbuf_sb_pkg.polite_outbuf_scoreboard.check: OUTBUF_MISMATCH t=236000 context=post_edge:hold_pause busy=1 expected_busy=1 nib=f expected_nib=1 position=5 injected=0
+%Error: polite_outbuf_sb_pkg.sv:39: Verilog $stop
+Aborting...

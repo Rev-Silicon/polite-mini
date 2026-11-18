@@ -1,0 +1,11 @@
+--- original/polite_outbuf.sv
++++ mutant/polite_outbuf.sv
+@@ -46,7 +46,7 @@
+     assign nib = busy ? wn : 4'h0;
+ 
+     // A legal DUMP_LOAD implies !busy, so step and load never coincide.
+-    wire step = busy && phase && !hold;
++    wire step = busy && phase;
+ 
+     integer k;
+     always @(posedge clk or negedge rst_n) begin

@@ -1,0 +1,5 @@
+/bin/bash: line 1: 65798 Aborted                 (core dumped) "/home/vitthalps/polite-mini/tb/Vitthal/build/polite_outbuf/obj_dir/Vtb_polite_outbuf" +TEST=stream_order +SEED=778 +NUM=10 +CHECK=0 +INJECT=1 +verilator+seed+778 +verilator+coverage+file+coverage.dat > run.log 2>&1
+[0] %Fatal: tb_polite_outbuf.sv:271: Assertion failed in tb_polite_outbuf.stimulus: STIMULUS_ERROR CHECK/INJECT must be 0 or 1; injection needs checking
+%Error: tb_polite_outbuf.sv:271: Verilog $stop
+Aborting...
+make: *** [../common.mk:43: run] Error 134

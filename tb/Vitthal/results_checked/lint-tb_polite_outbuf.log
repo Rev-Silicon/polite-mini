@@ -1,0 +1,5 @@
+make: Entering directory '/home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outbuf'
+- V e r i l a t i o n   R e p o r t: Verilator 5.038 2025-07-08 rev UNKNOWN.REV
+- Verilator: Built from 0.181 MB sources in 13 modules, into 5.063 MB in 27 C++ files needing 0.000 MB
+- Verilator: Walltime 0.984 s (elab=0.013, cvt=0.819, bld=0.000); cpu 0.969 s on 1 threads; alloced 60.129 MB
+make: Leaving directory '/home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outbuf'

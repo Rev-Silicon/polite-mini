@@ -1,0 +1,7 @@
+{
+  "mutation": "wrong_debug_nibble",
+  "command": "make run VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator RTL_DIR=/tmp/polite-checked-mutants/wrong_debug_nibble BUILD_DIR=/tmp/polite-checked-mutants/wrong_debug_nibble/build RUN_DIR=/home/vitthalps/polite-mini/tb/Vitthal/results_checked/mutations/wrong_debug_nibble TEST=overlap CHECK=1 INJECT=0 SEED=1 NUM=1 WAVE=0 JOBS=2",
+  "make_exit": 2,
+  "expected": "OUTMUX_MISMATCH",
+  "detected": true
+}

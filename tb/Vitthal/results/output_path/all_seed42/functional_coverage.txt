@@ -1,0 +1,23 @@
+COVERAGE BEGIN outbuf
+COVERPOINT scenarios: 20/20 bins (100.00%)
+COVERPOINT stream_position: 24/24 bins (100.00%)
+COVERPOINT stream_nibble_value: 16/16 bins (100.00%)
+COVERPOINT position_x_value: 384/384 bins (100.00%)
+COVERPOINT en_phase_hold_busy: 16/16 bins (100.00%)
+COVERPOINT load_phase_x_hold: 4/4 bins (100.00%)
+COVERPOINT abort_busy_hold_phase: 8/8 bins (100.00%)
+COVERPOINT clear_phase_x_hold: 4/4 bins (100.00%)
+COVERPOINT reset_busy_x_enable: 4/4 bins (100.00%)
+COVERPOINT terminal_hold_abort_outputtick: 3/3 bins (100.00%)
+COVERPOINT observed_busy: 2/2 bins (100.00%)
+OBSERVED samples=12010 output_ticks=1696 busy_falls=3023 abnormal_index=0 idle_nonzero=0
+COVERAGE END outbuf
+COVERAGE BEGIN integration
+COVERPOINT debug_dump_flags: 16/16 bins (100.00%)
+COVERPOINT observed_live_flags: 4/4 bins (100.00%)
+COVERPOINT observed_data_nibbles: 16/16 bins (100.00%)
+COVERPOINT observed_source_markers: 3/3 bins (100.00%)
+COVERPOINT debug_transitions_x_dump_busy: 4/4 bins (100.00%)
+COVERPOINT requested_debug_lengths_2_6: 2/2 bins (100.00%)
+OBSERVED samples=11191 marker11_samples=0
+COVERAGE END integration

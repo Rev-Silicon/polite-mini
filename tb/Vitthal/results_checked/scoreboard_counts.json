@@ -1,0 +1,608 @@
+{
+  "polite_outbuf/1": {
+    "scoreboards": [
+      "SCOREBOARD PASS outbuf checkpoints=35089 storage_checks=35089 completed_frames=31 checked_nibbles=1573 loads=3082 aborts=3459 resets=10"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 15,
+        "total": 15
+      },
+      {
+        "name": "stream_position",
+        "hit": 24,
+        "total": 24
+      },
+      {
+        "name": "stream_nibble_value",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "position_x_value",
+        "hit": 384,
+        "total": 384
+      },
+      {
+        "name": "en_phase_hold_busy",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "load_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "abort_busy_hold_phase",
+        "hit": 8,
+        "total": 8
+      },
+      {
+        "name": "clear_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "reset_busy_x_enable",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "terminal_hold_abort_outputtick",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "observed_busy",
+        "hit": 2,
+        "total": 2
+      }
+    ]
+  },
+  "polite_outbuf/42": {
+    "scoreboards": [
+      "SCOREBOARD PASS outbuf checkpoints=35089 storage_checks=35089 completed_frames=31 checked_nibbles=1584 loads=3011 aborts=3387 resets=10"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 15,
+        "total": 15
+      },
+      {
+        "name": "stream_position",
+        "hit": 24,
+        "total": 24
+      },
+      {
+        "name": "stream_nibble_value",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "position_x_value",
+        "hit": 384,
+        "total": 384
+      },
+      {
+        "name": "en_phase_hold_busy",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "load_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "abort_busy_hold_phase",
+        "hit": 8,
+        "total": 8
+      },
+      {
+        "name": "clear_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "reset_busy_x_enable",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "terminal_hold_abort_outputtick",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "observed_busy",
+        "hit": 2,
+        "total": 2
+      }
+    ]
+  },
+  "polite_outbuf/123": {
+    "scoreboards": [
+      "SCOREBOARD PASS outbuf checkpoints=35089 storage_checks=35089 completed_frames=31 checked_nibbles=1575 loads=3020 aborts=3395 resets=10"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 15,
+        "total": 15
+      },
+      {
+        "name": "stream_position",
+        "hit": 24,
+        "total": 24
+      },
+      {
+        "name": "stream_nibble_value",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "position_x_value",
+        "hit": 384,
+        "total": 384
+      },
+      {
+        "name": "en_phase_hold_busy",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "load_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "abort_busy_hold_phase",
+        "hit": 8,
+        "total": 8
+      },
+      {
+        "name": "clear_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "reset_busy_x_enable",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "terminal_hold_abort_outputtick",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "observed_busy",
+        "hit": 2,
+        "total": 2
+      }
+    ]
+  },
+  "polite_outmux/1": {
+    "scoreboards": [
+      "SCOREBOARD PASS      outmux checks=14164"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 7,
+        "total": 7
+      },
+      {
+        "name": "independent_input_vectors",
+        "hit": 4096,
+        "total": 4096
+      },
+      {
+        "name": "dbg_dump_illegal_ovf",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "debug_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "dump_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_bits",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_encodings",
+        "hit": 192,
+        "total": 192
+      }
+    ]
+  },
+  "polite_outmux/42": {
+    "scoreboards": [
+      "SCOREBOARD PASS      outmux checks=14164"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 7,
+        "total": 7
+      },
+      {
+        "name": "independent_input_vectors",
+        "hit": 4096,
+        "total": 4096
+      },
+      {
+        "name": "dbg_dump_illegal_ovf",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "debug_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "dump_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_bits",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_encodings",
+        "hit": 192,
+        "total": 192
+      }
+    ]
+  },
+  "polite_outmux/123": {
+    "scoreboards": [
+      "SCOREBOARD PASS      outmux checks=14164"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 7,
+        "total": 7
+      },
+      {
+        "name": "independent_input_vectors",
+        "hit": 4096,
+        "total": 4096
+      },
+      {
+        "name": "dbg_dump_illegal_ovf",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "debug_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "dump_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_bits",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_nibble",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_output_encodings",
+        "hit": 192,
+        "total": 192
+      }
+    ]
+  },
+  "output_path/1": {
+    "scoreboards": [
+      "SCOREBOARD PASS outbuf checkpoints=36034 storage_checks=36034 completed_frames=35 checked_nibbles=1685 loads=3094 aborts=3467 resets=10",
+      "SCOREBOARD PASS output_path checks=36034"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 20,
+        "total": 20
+      },
+      {
+        "name": "stream_position",
+        "hit": 24,
+        "total": 24
+      },
+      {
+        "name": "stream_nibble_value",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "position_x_value",
+        "hit": 384,
+        "total": 384
+      },
+      {
+        "name": "en_phase_hold_busy",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "load_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "abort_busy_hold_phase",
+        "hit": 8,
+        "total": 8
+      },
+      {
+        "name": "clear_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "reset_busy_x_enable",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "terminal_hold_abort_outputtick",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "observed_busy",
+        "hit": 2,
+        "total": 2
+      },
+      {
+        "name": "debug_dump_flags",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_live_flags",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "observed_data_nibbles",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_source_markers",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "debug_transitions_x_dump_busy",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "requested_debug_lengths_2_6",
+        "hit": 2,
+        "total": 2
+      }
+    ]
+  },
+  "output_path/42": {
+    "scoreboards": [
+      "SCOREBOARD PASS outbuf checkpoints=36034 storage_checks=36034 completed_frames=35 checked_nibbles=1696 loads=3023 aborts=3395 resets=10",
+      "SCOREBOARD PASS output_path checks=36034"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 20,
+        "total": 20
+      },
+      {
+        "name": "stream_position",
+        "hit": 24,
+        "total": 24
+      },
+      {
+        "name": "stream_nibble_value",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "position_x_value",
+        "hit": 384,
+        "total": 384
+      },
+      {
+        "name": "en_phase_hold_busy",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "load_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "abort_busy_hold_phase",
+        "hit": 8,
+        "total": 8
+      },
+      {
+        "name": "clear_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "reset_busy_x_enable",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "terminal_hold_abort_outputtick",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "observed_busy",
+        "hit": 2,
+        "total": 2
+      },
+      {
+        "name": "debug_dump_flags",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_live_flags",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "observed_data_nibbles",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_source_markers",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "debug_transitions_x_dump_busy",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "requested_debug_lengths_2_6",
+        "hit": 2,
+        "total": 2
+      }
+    ]
+  },
+  "output_path/123": {
+    "scoreboards": [
+      "SCOREBOARD PASS outbuf checkpoints=36031 storage_checks=36031 completed_frames=35 checked_nibbles=1687 loads=3032 aborts=3403 resets=10",
+      "SCOREBOARD PASS output_path checks=36031"
+    ],
+    "coverpoints": [
+      {
+        "name": "scenarios",
+        "hit": 20,
+        "total": 20
+      },
+      {
+        "name": "stream_position",
+        "hit": 24,
+        "total": 24
+      },
+      {
+        "name": "stream_nibble_value",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "position_x_value",
+        "hit": 384,
+        "total": 384
+      },
+      {
+        "name": "en_phase_hold_busy",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "load_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "abort_busy_hold_phase",
+        "hit": 8,
+        "total": 8
+      },
+      {
+        "name": "clear_phase_x_hold",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "reset_busy_x_enable",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "terminal_hold_abort_outputtick",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "observed_busy",
+        "hit": 2,
+        "total": 2
+      },
+      {
+        "name": "debug_dump_flags",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_live_flags",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "observed_data_nibbles",
+        "hit": 16,
+        "total": 16
+      },
+      {
+        "name": "observed_source_markers",
+        "hit": 3,
+        "total": 3
+      },
+      {
+        "name": "debug_transitions_x_dump_busy",
+        "hit": 4,
+        "total": 4
+      },
+      {
+        "name": "requested_debug_lengths_2_6",
+        "hit": 2,
+        "total": 2
+      }
+    ]
+  }
+}

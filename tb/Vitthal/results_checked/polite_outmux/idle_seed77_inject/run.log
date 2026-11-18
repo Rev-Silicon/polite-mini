@@ -1,0 +1,5 @@
+CONFIG checking=1 seed=77 num=10 test=idle inject=1
+INJECT_ERROR domain=     outmux context=idle
+[1000] %Fatal: polite_outmux_sb_pkg.sv:37: Assertion failed in polite_outmux_sb_pkg.polite_outmux_scoreboard.check: OUTMUX_MISMATCH t=1000 context=idle uo=00 expected=01 injected=1
+%Error: polite_outmux_sb_pkg.sv:37: Verilog $stop
+Aborting...

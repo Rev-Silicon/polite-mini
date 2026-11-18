@@ -1,0 +1,16 @@
+[BUILD] polite_outmux
+%Warning-UNUSEDSIGNAL: /tmp/polite-checked-mutants/wrong_debug_nibble/polite_outmux.sv:10:23: Signal is not used: 'dbg_nib'
+                                                                                            : ... note: In instance 'tb_polite_outmux.dut'
+   10 |     input  wire [3:0] dbg_nib,
+      |                       ^~~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.038
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.038 2025-07-08 rev UNKNOWN.REV
+- Verilator: Built from 0.093 MB sources in 8 modules, into 0.522 MB in 29 C++ files needing 0.009 MB
+- Verilator: Walltime 27.298 s (elab=0.004, cvt=0.184, bld=27.023); cpu 0.308 s on 2 threads; alloced 19.066 MB
+/bin/bash: line 1: 66247 Aborted                 (core dumped) "/tmp/polite-checked-mutants/wrong_debug_nibble/build/obj_dir/Vtb_polite_outmux" +TEST=overlap +SEED=1 +NUM=1 +CHECK=1 +INJECT=0 +verilator+seed+1 +verilator+coverage+file+coverage.dat > run.log 2>&1
+CONFIG checking=1 seed=1 num=1 test=overlap inject=0
+[1000] %Fatal: polite_outmux_sb_pkg.sv:37: Assertion failed in polite_outmux_sb_pkg.polite_outmux_scoreboard.check: OUTMUX_MISMATCH t=1000 context=overlap uo=8f expected=80 injected=0
+%Error: polite_outmux_sb_pkg.sv:37: Verilog $stop
+Aborting...
+make: *** [../common.mk:43: run] Error 134

@@ -1,0 +1,26 @@
+CONFIG checking=1 seed=99 num=100 test=all inject=0
+SCENARIO COMPLETED idle (stimulus completion only)
+SCENARIO COMPLETED dump (stimulus completion only)
+SCENARIO COMPLETED debug (stimulus completion only)
+SCENARIO COMPLETED overlap (stimulus completion only)
+SCENARIO COMPLETED flags (stimulus completion only)
+SCENARIO COMPLETED exhaustive (stimulus completion only)
+SCENARIO COMPLETED random (stimulus completion only)
+COVERAGE BEGIN outmux
+COVERPOINT scenarios: 7/7 bins (100.00%)
+COVERPOINT independent_input_vectors: 4096/4096 bins (100.00%)
+COVERPOINT dbg_dump_illegal_ovf: 16/16 bins (100.00%)
+COVERPOINT debug_nibble: 16/16 bins (100.00%)
+COVERPOINT dump_nibble: 16/16 bins (100.00%)
+COVERPOINT observed_output_bits: 16/16 bins (100.00%)
+COVERPOINT observed_output_nibble: 16/16 bins (100.00%)
+COVERPOINT observed_output_encodings: 192/192 bins (100.00%)
+OBSERVED samples=4264 marker11_samples=0
+EXCLUSION output marker 11 is outside the three documented source encodings; raw marker11 observations are reported without failure.
+COVERAGE END outmux
+SCOREBOARD PASS      outmux checks=4264
+TEST PASS: all enabled checks completed without mismatches.
+- tb_polite_outmux.sv:74: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.038 2025-07-08
+- Verilator: $finish at 20ms; walltime 0.007 s; speed 2.847 s/s
+- Verilator: cpu 0.007 s on 1 threads; alloced 90 MB

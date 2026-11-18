@@ -1,0 +1,17 @@
+[BUILD] polite_outbuf
+%Warning-UNUSEDSIGNAL: /tmp/polite-checked-mutants/ignore_hold/polite_outbuf.sv:17:24: Signal is not used: 'hold'
+                                                                                     : ... note: In instance 'tb_polite_outbuf.u_outbuf'
+   17 |     input  wire        hold,        
+      |                        ^~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.038
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.038 2025-07-08 rev UNKNOWN.REV
+- Verilator: Built from 0.181 MB sources in 13 modules, into 7.003 MB in 43 C++ files needing 0.009 MB
+- Verilator: Walltime 78.093 s (elab=0.014, cvt=2.399, bld=75.330); cpu 3.046 s on 2 threads; alloced 65.441 MB
+/bin/bash: line 1: 66559 Aborted                 (core dumped) "/tmp/polite-checked-mutants/ignore_hold/build/obj_dir/Vtb_polite_outbuf" +TEST=hold_pause +SEED=1 +NUM=1 +CHECK=1 +INJECT=0 +verilator+seed+1 +verilator+coverage+file+coverage.dat > run.log 2>&1
+CONFIG checking=1 integrated=0 seed=1 num=1 test=hold_pause inject=0
+STIMULUS hold_pause
+[236000] %Fatal: polite_outbuf_sb_pkg.sv:39: Assertion failed in polite_outbuf_sb_pkg.polite_outbuf_scoreboard.check: OUTBUF_MISMATCH t=236000 context=post_edge:hold_pause busy=1 expected_busy=1 nib=f expected_nib=1 position=5 injected=0
+%Error: polite_outbuf_sb_pkg.sv:39: Verilog $stop
+Aborting...
+make: *** [../common.mk:43: run] Error 134

@@ -1,0 +1,21 @@
+# SystemC::Coverage-3
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl10n23ttogglepagev_toggle/polite_outmuxodbg_nib[0]htb_polite_outmux.dut' 5093
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl10n23ttogglepagev_toggle/polite_outmuxodbg_nib[1]htb_polite_outmux.dut' 5087
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl10n23ttogglepagev_toggle/polite_outmuxodbg_nib[2]htb_polite_outmux.dut' 5027
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl10n23ttogglepagev_toggle/polite_outmuxodbg_nib[3]htb_polite_outmux.dut' 4930
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl11n23ttogglepagev_toggle/polite_outmuxodump_busyhtb_polite_outmux.dut' 5127
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl12n23ttogglepagev_toggle/polite_outmuxodump_nib[0]htb_polite_outmux.dut' 6130
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl12n23ttogglepagev_toggle/polite_outmuxodump_nib[1]htb_polite_outmux.dut' 5603
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl12n23ttogglepagev_toggle/polite_outmuxodump_nib[2]htb_polite_outmux.dut' 5117
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl12n23ttogglepagev_toggle/polite_outmuxodump_nib[3]htb_polite_outmux.dut' 5148
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl13n23ttogglepagev_toggle/polite_outmuxoillegalhtb_polite_outmux.dut' 7067
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl14n23ttogglepagev_toggle/polite_outmuxoovfhtb_polite_outmux.dut' 9104
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl15n23ttogglepagev_toggle/polite_outmuxocore_uo[0]htb_polite_outmux.dut' 5603
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl15n23ttogglepagev_toggle/polite_outmuxocore_uo[1]htb_polite_outmux.dut' 5395
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl15n23ttogglepagev_toggle/polite_outmuxocore_uo[2]htb_polite_outmux.dut' 5069
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl15n23ttogglepagev_toggle/polite_outmuxocore_uo[3]htb_polite_outmux.dut' 5042
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl15n23ttogglepagev_toggle/polite_outmuxocore_uo[4]htb_polite_outmux.dut' 9104
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl15n23ttogglepagev_toggle/polite_outmuxocore_uo[5]htb_polite_outmux.dut' 7067
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl15n23ttogglepagev_toggle/polite_outmuxocore_uo[6]htb_polite_outmux.dut' 3778
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl15n23ttogglepagev_toggle/polite_outmuxocore_uo[7]htb_polite_outmux.dut' 4925
+C 'f/home/vitthalps/polite-mini/rtl/polite_outmux.svl9n23ttogglepagev_toggle/polite_outmuxodbg_tickhtb_polite_outmux.dut' 4925

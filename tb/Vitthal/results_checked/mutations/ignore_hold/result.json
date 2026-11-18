@@ -1,0 +1,7 @@
+{
+  "mutation": "ignore_hold",
+  "command": "make run VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator RTL_DIR=/tmp/polite-checked-mutants/ignore_hold BUILD_DIR=/tmp/polite-checked-mutants/ignore_hold/build RUN_DIR=/home/vitthalps/polite-mini/tb/Vitthal/results_checked/mutations/ignore_hold TEST=hold_pause CHECK=1 INJECT=0 SEED=1 NUM=1 WAVE=0 JOBS=2",
+  "make_exit": 2,
+  "expected": "OUTBUF_MISMATCH",
+  "detected": true
+}

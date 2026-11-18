@@ -1,0 +1,44 @@
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outmux run TEST=unknown NUM=1 RUN_DIR=/home/vitthalps/polite-mini/tb/Vitthal/build/infrastructure/invalid_test VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=2
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outmux run TEST=idle NUM=0 RUN_DIR=/home/vitthalps/polite-mini/tb/Vitthal/build/infrastructure/invalid_num VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=2
+
+Old PATH tool 4.038 rejected before build, exit 2
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outbuf -n wave VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outbuf -n clean VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outbuf lint VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outmux -n wave VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outmux -n clean VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outmux lint VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_output_path -n wave VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_output_path -n clean VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_output_path lint VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outbuf run TEST=random NUM=20 SEED=99 RUN_DIR=/home/vitthalps/polite-mini/tb/Vitthal/build/infrastructure/reproducibility VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+COMMAND: make -C /home/vitthalps/polite-mini/tb/Vitthal/tb_polite_outbuf run TEST=random NUM=20 SEED=99 RUN_DIR=/home/vitthalps/polite-mini/tb/Vitthal/build/infrastructure/reproducibility VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator VERILATOR_COVERAGE=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage JOBS=3
+EXIT=0
+
+Repeated TEST=random NUM=20 SEED=99 produced identical raw coverage SHA-256: 6044c782720fa6e828790b55a5c09ec65c8c13df39b9d6acb6ca9e8350652b58
+
+Final flow-only adjustments after full-seed execution: deferred RUN_ARGS expansion fixes make wave; core dumps disabled. No SV/RTL stimulus or coverage logic changed. Named-test and infrastructure runs exercised the final flow.

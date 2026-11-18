@@ -1,0 +1,11 @@
+--- original/polite_outbuf.sv
++++ mutant/polite_outbuf.sv
+@@ -62,7 +62,7 @@
+                 idx  <= 5'd0;
+                 busy <= 1'b1;
+             end else begin
+-                if (clr)
++                if (1'b0)
+                     for (k = 0; k < 4; k = k + 1)
+                         word[k] <= 24'd0;
+                 if (step)

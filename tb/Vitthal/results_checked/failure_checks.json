@@ -1,0 +1,41 @@
+[
+  {
+    "module": "polite_outbuf",
+    "command": "make run VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator CHECK=1 INJECT=1 TEST=stream_order SEED=77 NUM=10 WAVE=0",
+    "make_exit": 2,
+    "expected": "OUTBUF_MISMATCH",
+    "verified": true
+  },
+  {
+    "module": "polite_outmux",
+    "command": "make run VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator CHECK=1 INJECT=1 TEST=idle SEED=77 NUM=10 WAVE=0",
+    "make_exit": 2,
+    "expected": "OUTMUX_MISMATCH",
+    "verified": true
+  },
+  {
+    "module": "output_path",
+    "command": "make run VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator CHECK=1 INJECT=1 TEST=stream_order SEED=77 NUM=10 WAVE=0",
+    "make_exit": 2,
+    "expected": "OUTPUT_PATH_MISMATCH",
+    "verified": true
+  },
+  {
+    "command": "make run VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator CHECK=0 INJECT=0 TEST=stream_order SEED=777 NUM=10 WAVE=0",
+    "make_exit": 0,
+    "expected": "STIMULUS COMPLETED: coverage only",
+    "verified": true
+  },
+  {
+    "command": "make run VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator CHECK=0 INJECT=1 TEST=stream_order SEED=778 NUM=10 WAVE=0",
+    "make_exit": 2,
+    "expected": "STIMULUS_ERROR CHECK/INJECT",
+    "verified": true
+  },
+  {
+    "command": "make run VERILATOR=/home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator CHECK=1 INJECT=0 TEST=bogus SEED=779 NUM=10 WAVE=0",
+    "make_exit": 2,
+    "expected": "STIMULUS_ERROR unknown TEST",
+    "verified": true
+  }
+]

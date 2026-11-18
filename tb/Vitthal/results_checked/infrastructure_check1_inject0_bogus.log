@@ -1,0 +1,6 @@
+/bin/bash: line 1: 65851 Aborted                 (core dumped) "/home/vitthalps/polite-mini/tb/Vitthal/build/polite_outbuf/obj_dir/Vtb_polite_outbuf" +TEST=bogus +SEED=779 +NUM=10 +CHECK=1 +INJECT=0 +verilator+seed+779 +verilator+coverage+file+coverage.dat > run.log 2>&1
+CONFIG checking=1 integrated=0 seed=779 num=10 test=bogus inject=0
+[0] %Fatal: tb_polite_outbuf.sv:280: Assertion failed in tb_polite_outbuf.stimulus: STIMULUS_ERROR unknown TEST=bogus
+%Error: tb_polite_outbuf.sv:280: Verilog $stop
+Aborting...
+make: *** [../common.mk:43: run] Error 134

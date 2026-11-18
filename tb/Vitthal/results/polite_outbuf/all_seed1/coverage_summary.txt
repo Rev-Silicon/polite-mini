@@ -1,0 +1,16 @@
+COVERAGE BEGIN outbuf
+COVERPOINT scenarios: 15/15 bins (100.00%)
+COVERPOINT stream_position: 24/24 bins (100.00%)
+COVERPOINT stream_nibble_value: 16/16 bins (100.00%)
+COVERPOINT position_x_value: 384/384 bins (100.00%)
+COVERPOINT en_phase_hold_busy: 16/16 bins (100.00%)
+COVERPOINT load_phase_x_hold: 4/4 bins (100.00%)
+COVERPOINT abort_busy_hold_phase: 8/8 bins (100.00%)
+COVERPOINT clear_phase_x_hold: 4/4 bins (100.00%)
+COVERPOINT reset_busy_x_enable: 4/4 bins (100.00%)
+COVERPOINT terminal_hold_abort_outputtick: 3/3 bins (100.00%)
+COVERPOINT observed_busy: 2/2 bins (100.00%)
+OBSERVED samples=11695 output_ticks=1573 busy_falls=3082 abnormal_index=0 idle_nonzero=0
+COVERAGE END outbuf
+Total coverage (47/49) 95.00%
+See lines with '%00' in /home/vitthalps/polite-mini/tb/Vitthal/results/polite_outbuf/all_seed1/annotated

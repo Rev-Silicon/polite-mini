@@ -1,0 +1,13 @@
+COVERAGE BEGIN outmux
+COVERPOINT scenarios: 7/7 bins (100.00%)
+COVERPOINT independent_input_vectors: 4096/4096 bins (100.00%)
+COVERPOINT dbg_dump_illegal_ovf: 16/16 bins (100.00%)
+COVERPOINT debug_nibble: 16/16 bins (100.00%)
+COVERPOINT dump_nibble: 16/16 bins (100.00%)
+COVERPOINT observed_output_bits: 16/16 bins (100.00%)
+COVERPOINT observed_output_nibble: 16/16 bins (100.00%)
+COVERPOINT observed_output_encodings: 192/192 bins (100.00%)
+OBSERVED samples=14164 marker11_samples=0
+EXCLUSION output marker 11 is outside the three documented source encodings; raw marker11 observations are reported without failure.
+COVERAGE END outmux
+Total coverage (7/7) 100.00%

@@ -1,0 +1,34 @@
+{
+  "points": {
+    "v_toggle": [
+      264,
+      266
+    ],
+    "v_branch": [
+      18,
+      18
+    ],
+    "v_line": [
+      12,
+      12
+    ],
+    "v_expr": [
+      6,
+      6
+    ]
+  },
+  "zero_hit": [
+    {
+      "f": "/home/vitthalps/polite-mini/rtl/polite_outbuf.sv",
+      "l": "32",
+      "o": "sub[3]",
+      "page": "v_toggle/polite_outbuf"
+    },
+    {
+      "f": "/home/vitthalps/polite-mini/rtl/polite_outbuf.sv",
+      "l": "32",
+      "o": "sub[4]",
+      "page": "v_toggle/polite_outbuf"
+    }
+  ]
+}

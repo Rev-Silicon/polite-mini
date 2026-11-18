@@ -1,0 +1,4 @@
+CONFIG checking=1 seed=1 num=1 test=overlap inject=0
+[1000] %Fatal: polite_outmux_sb_pkg.sv:37: Assertion failed in polite_outmux_sb_pkg.polite_outmux_scoreboard.check: OUTMUX_MISMATCH t=1000 context=overlap uo=8f expected=80 injected=0
+%Error: polite_outmux_sb_pkg.sv:37: Verilog $stop
+Aborting...

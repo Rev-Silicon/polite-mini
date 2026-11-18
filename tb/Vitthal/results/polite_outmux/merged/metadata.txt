@@ -1,0 +1,3 @@
+Merged seeds: 1 42 123
+COMMAND: /home/vitthalps/polite-mini/tb/Vitthal/.tools/verilator-5.038/bin/verilator_coverage --write /home/vitthalps/polite-mini/tb/Vitthal/results/polite_outmux/merged/coverage.dat /home/vitthalps/polite-mini/tb/Vitthal/results/polite_outmux/all_seed1/coverage.dat /home/vitthalps/polite-mini/tb/Vitthal/results/polite_outmux/all_seed42/coverage.dat /home/vitthalps/polite-mini/tb/Vitthal/results/polite_outmux/all_seed123/coverage.dat
+SOURCE: per-seed raw coverage.dat; no RTL waivers

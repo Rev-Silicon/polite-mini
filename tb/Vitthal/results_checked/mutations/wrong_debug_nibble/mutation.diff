@@ -1,0 +1,10 @@
+--- original/polite_outmux.sv
++++ mutant/polite_outmux.sv
+@@ -18,6 +18,6 @@
+                       dbg_tick ? 1'b0 : dump_busy,
+                       illegal,
+                       ovf,
+-                      dbg_tick ? dbg_nib : dump_nib};
++                      dbg_tick ? dump_nib : dump_nib};
+ endmodule
+ `default_nettype wire

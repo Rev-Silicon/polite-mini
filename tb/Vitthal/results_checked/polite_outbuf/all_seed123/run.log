@@ -1,0 +1,51 @@
+CONFIG checking=1 integrated=0 seed=123 num=10000 test=all inject=0
+STIMULUS reset_idle
+SCENARIO COMPLETED reset_idle (stimulus completion only)
+STIMULUS load_phases
+SCENARIO COMPLETED load_phases (stimulus completion only)
+STIMULUS stream_order
+SCENARIO COMPLETED stream_order (stimulus completion only)
+STIMULUS capture_change
+SCENARIO COMPLETED capture_change (stimulus completion only)
+STIMULUS nibble_values
+SCENARIO COMPLETED nibble_values (stimulus completion only)
+STIMULUS enable_pause
+SCENARIO COMPLETED enable_pause (stimulus completion only)
+STIMULUS hold_pause
+SCENARIO COMPLETED hold_pause (stimulus completion only)
+STIMULUS load_held
+SCENARIO COMPLETED load_held (stimulus completion only)
+STIMULUS abort
+SCENARIO COMPLETED abort (stimulus completion only)
+STIMULUS clear_idle
+SCENARIO COMPLETED clear_idle (stimulus completion only)
+STIMULUS reset_active
+SCENARIO COMPLETED reset_active (stimulus completion only)
+STIMULUS terminal_hold
+SCENARIO COMPLETED terminal_hold (stimulus completion only)
+STIMULUS terminal_abort
+SCENARIO COMPLETED terminal_abort (stimulus completion only)
+STIMULUS back_to_back
+SCENARIO COMPLETED back_to_back (stimulus completion only)
+STIMULUS random
+SCENARIO COMPLETED random (stimulus completion only)
+COVERAGE BEGIN outbuf
+COVERPOINT scenarios: 15/15 bins (100.00%)
+COVERPOINT stream_position: 24/24 bins (100.00%)
+COVERPOINT stream_nibble_value: 16/16 bins (100.00%)
+COVERPOINT position_x_value: 384/384 bins (100.00%)
+COVERPOINT en_phase_hold_busy: 16/16 bins (100.00%)
+COVERPOINT load_phase_x_hold: 4/4 bins (100.00%)
+COVERPOINT abort_busy_hold_phase: 8/8 bins (100.00%)
+COVERPOINT clear_phase_x_hold: 4/4 bins (100.00%)
+COVERPOINT reset_busy_x_enable: 4/4 bins (100.00%)
+COVERPOINT terminal_hold_abort_outputtick: 3/3 bins (100.00%)
+COVERPOINT observed_busy: 2/2 bins (100.00%)
+OBSERVED samples=11695 output_ticks=1575 busy_falls=3020 abnormal_index=0 idle_nonzero=0
+COVERAGE END outbuf
+SCOREBOARD PASS outbuf checkpoints=35089 storage_checks=35089 completed_frames=31 checked_nibbles=1575 loads=3020 aborts=3395 resets=10
+TEST PASS: all enabled checks completed without mismatches.
+- tb_polite_outbuf.sv:296: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.038 2025-07-08
+- Verilator: $finish at 177us; walltime 276.397 s; speed 17.513 us/s
+- Verilator: cpu 10.124 s on 1 threads; alloced 93 MB

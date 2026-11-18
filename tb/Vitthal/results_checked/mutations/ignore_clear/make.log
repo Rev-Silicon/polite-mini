@@ -1,0 +1,35 @@
+[BUILD] polite_outbuf
+%Warning-UNUSEDSIGNAL: /tmp/polite-checked-mutants/ignore_clear/polite_outbuf.sv:20:24: Signal is not used: 'clr'
+                                                                                      : ... note: In instance 'tb_polite_outbuf.u_outbuf'
+   20 |     input  wire        clr,         
+      |                        ^~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.038
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.038 2025-07-08 rev UNKNOWN.REV
+- Verilator: Built from 0.181 MB sources in 13 modules, into 7.046 MB in 43 C++ files needing 0.009 MB
+- Verilator: Walltime 78.509 s (elab=0.034, cvt=2.411, bld=75.676); cpu 3.122 s on 2 threads; alloced 65.980 MB
+/bin/bash: line 1: 66594 Aborted                 (core dumped) "/tmp/polite-checked-mutants/ignore_clear/build/obj_dir/Vtb_polite_outbuf" +TEST=all +SEED=1 +NUM=1 +CHECK=1 +INJECT=0 +verilator+seed+1 +verilator+coverage+file+coverage.dat > run.log 2>&1
+CONFIG checking=1 integrated=0 seed=1 num=1 test=all inject=0
+STIMULUS reset_idle
+SCENARIO COMPLETED reset_idle (stimulus completion only)
+STIMULUS load_phases
+SCENARIO COMPLETED load_phases (stimulus completion only)
+STIMULUS stream_order
+SCENARIO COMPLETED stream_order (stimulus completion only)
+STIMULUS capture_change
+SCENARIO COMPLETED capture_change (stimulus completion only)
+STIMULUS nibble_values
+SCENARIO COMPLETED nibble_values (stimulus completion only)
+STIMULUS enable_pause
+SCENARIO COMPLETED enable_pause (stimulus completion only)
+STIMULUS hold_pause
+SCENARIO COMPLETED hold_pause (stimulus completion only)
+STIMULUS load_held
+SCENARIO COMPLETED load_held (stimulus completion only)
+STIMULUS abort
+SCENARIO COMPLETED abort (stimulus completion only)
+STIMULUS clear_idle
+[19191000] %Fatal: polite_outbuf_sb_pkg.sv:45: Assertion failed in polite_outbuf_sb_pkg.polite_outbuf_scoreboard.check: OUTBUF_STORAGE_MISMATCH t=19191000 context=post_edge:clear_idle stored=fedcba765432abcdef123456 expected=000000000000000000000000
+%Error: polite_outbuf_sb_pkg.sv:45: Verilog $stop
+Aborting...
+make: *** [../common.mk:43: run] Error 134

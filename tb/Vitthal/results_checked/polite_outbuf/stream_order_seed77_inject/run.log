@@ -1,0 +1,6 @@
+CONFIG checking=1 integrated=0 seed=77 num=10 test=stream_order inject=1
+STIMULUS stream_order
+INJECT_ERROR domain=outbuf context=post_edge:stream_order
+[54000] %Fatal: polite_outbuf_sb_pkg.sv:39: Assertion failed in polite_outbuf_sb_pkg.polite_outbuf_scoreboard.check: OUTBUF_MISMATCH t=54000 context=post_edge:stream_order busy=1 expected_busy=1 nib=6 expected_nib=7 position=0 injected=1
+%Error: polite_outbuf_sb_pkg.sv:39: Verilog $stop
+Aborting...

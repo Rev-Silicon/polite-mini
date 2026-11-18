@@ -1,0 +1,4 @@
+CONFIG checking=1 integrated=0 seed=779 num=10 test=bogus inject=0
+[0] %Fatal: tb_polite_outbuf.sv:280: Assertion failed in tb_polite_outbuf.stimulus: STIMULUS_ERROR unknown TEST=bogus
+%Error: tb_polite_outbuf.sv:280: Verilog $stop
+Aborting...
