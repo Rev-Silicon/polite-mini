@@ -1,0 +1,4 @@
+| Covergroup description | Type of coverage                        | Coverpoints and bin description                                       | Implementation status |
+| ---------------------- | --------------------------------------- | --------------------------------------------------------------------- | --------------------- |
+| opcode                 | Cover debug operations and PE selection | op (0x6–0xB), pe (0–3), with cross                                    | Done                  |
+| control                | Cover control signals and interactions  | en, start, phase, run_busy, with start × phase and start × en crosses | Done                  |
